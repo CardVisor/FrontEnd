@@ -7,7 +7,10 @@ import {
   MdHome,
   MdLock,
   MdOutlineShoppingCart,
+  MdPayment,
+  MdDashboardCustomize
 } from "react-icons/md";
+import { BsGlobe2 ,BsPeopleFill,BsCardChecklist } from "react-icons/bs";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -24,18 +27,17 @@ const routes = [
     name: "Main Dashboard",
     layout: "/admin",
     path: "/default",
-    icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdDashboardCustomize} width='20px' height='20px' color='inherit' />,
     component: MainDashboard,
   },
   {
-    name: "NFT Marketplace",
+    name: "International",
     layout: "/admin",
     path: "/nft-marketplace",
     icon: (
       <Icon
-        as={MdOutlineShoppingCart}
-        width='20px'
-        height='20px'
+        as={BsGlobe2}
+        width='20px' height='20px'
         color='inherit'
       />
     ),
@@ -43,33 +45,79 @@ const routes = [
     secondary: true,
   },
   {
-    name: "Data Tables",
-    layout: "/admin",
-    icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
-    path: "/data-tables",
-    component: DataTables,
-  },
-  {
-    name: "Profile",
+    name: "Customer",
     layout: "/admin",
     path: "/profile",
-    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={BsPeopleFill} width='20px' height='20px' color='inherit' />,
     component: Profile,
   },
   {
-    name: "Sign In",
-    layout: "/auth",
-    path: "/sign-in",
-    icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
-    component: SignInCentered,
+    name: "Cards",
+    layout: "/admin",
+    path: "/data-tables",
+    icon: <Icon as={MdPayment} width='20px' height='20px' color='inherit' />,
+    component: DataTables,
   },
   {
-    name: "RTL Admin",
-    layout: "/rtl",
-    path: "/rtl-default",
-    icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
-    component: RTL,
+    name: "Payments",
+    layout: "/admin",
+    path: "/data-tables",
+    icon: <Icon as={BsCardChecklist} width='20px' height='20px' color='inherit' />,
+    component: DataTables,
   },
 ];
+
+// const routes = [
+//   {
+//     name: "Main Dashboard",
+//     layout: "/admin",
+//     path: "/default",
+//     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+//     component: MainDashboard,
+//   },
+//   {
+//     name: "NFT Marketplace",
+//     layout: "/admin",
+//     path: "/nft-marketplace",
+//     icon: (
+//       <Icon
+//         as={MdOutlineShoppingCart}
+//         width='20px'
+//         height='20px'
+//         color='inherit'
+//       />
+//     ),
+//     component: NFTMarketplace,
+//     secondary: true,
+//   },
+//   {
+//     name: "Data Tables",
+//     layout: "/admin",
+//     icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
+//     path: "/data-tables",
+//     component: DataTables,
+//   },
+//   {
+//     name: "Profile",
+//     layout: "/admin",
+//     path: "/profile",
+//     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+//     component: Profile,
+//   },
+//   {
+//     name: "Sign In",
+//     layout: "/auth",
+//     path: "/sign-in",
+//     icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
+//     component: SignInCentered,
+//   },
+//   {
+//     name: "RTL Admin",
+//     layout: "/rtl",
+//     path: "/rtl-default",
+//     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+//     component: RTL,
+//   },
+// ];
 
 export default routes;
