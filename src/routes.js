@@ -8,9 +8,9 @@ import {
   MdLock,
   MdOutlineShoppingCart,
   MdPayment,
-  MdDashboardCustomize
+  MdDashboardCustomize,
 } from "react-icons/md";
-import { BsGlobe2 ,BsPeopleFill,BsCardChecklist } from "react-icons/bs";
+import { BsGlobe2, BsPeopleFill, BsCardChecklist } from "react-icons/bs";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -27,20 +27,21 @@ const routes = [
     name: "Main Dashboard",
     layout: "/admin",
     path: "/default",
-    icon: <Icon as={MdDashboardCustomize} width='20px' height='20px' color='inherit' />,
+    icon: (
+      <Icon
+        as={MdDashboardCustomize}
+        width="20px"
+        height="20px"
+        color="inherit"
+      />
+    ),
     component: MainDashboard,
   },
   {
     name: "International",
     layout: "/admin",
     path: "/nft-marketplace",
-    icon: (
-      <Icon
-        as={BsGlobe2}
-        width='20px' height='20px'
-        color='inherit'
-      />
-    ),
+    icon: <Icon as={BsGlobe2} width="20px" height="20px" color="inherit" />,
     component: NFTMarketplace,
     secondary: true,
   },
@@ -48,21 +49,23 @@ const routes = [
     name: "Customer",
     layout: "/admin",
     path: "/profile",
-    icon: <Icon as={BsPeopleFill} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={BsPeopleFill} width="20px" height="20px" color="inherit" />,
     component: Profile,
   },
   {
     name: "Cards",
     layout: "/admin",
     path: "/data-tables",
-    icon: <Icon as={MdPayment} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdPayment} width="20px" height="20px" color="inherit" />,
     component: DataTables,
   },
   {
     name: "Payments",
     layout: "/admin",
-    path: "/data-tables",
-    icon: <Icon as={BsCardChecklist} width='20px' height='20px' color='inherit' />,
+    path: "/payments",
+    icon: (
+      <Icon as={BsCardChecklist} width="20px" height="20px" color="inherit" />
+    ),
     component: DataTables,
   },
 ];
