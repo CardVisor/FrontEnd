@@ -29,7 +29,9 @@ export default function Footer() {
           This dashboard is a group project. Please refer to 
           <Link
             fontWeight='500'
-            href='https://github.com/CardVisor'>
+            href='https://github.com/CardVisor'
+            target='_blank'            
+            >
             &nbsp;GitHub&nbsp;
           </Link>
           &nbsp;&copy; 2024
