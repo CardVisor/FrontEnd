@@ -1,16 +1,19 @@
 // Chakra imports
 // Chakra imports
+
+// Custom components
+
+// Custom icons
 import {
   Flex,
   Stat,
   StatLabel,
   StatNumber,
-  useColorModeValue,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
-// Custom components
+
 import Card from "components/card/Card.js";
-// Custom icons
 import React from "react";
 
 export default function Default(props) {
@@ -28,7 +31,7 @@ export default function Default(props) {
       >
         {startContent}
 
-        <Stat my="auto" ms={startContent ? "18px" : "0px"}>
+        <Stat Cardmy="auto" ms={startContent ? "18px" : "0px"}>
           <StatLabel
             lineHeight="100%"
             color={textColorSecondary}
