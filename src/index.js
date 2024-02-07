@@ -23,5 +23,5 @@ ReactDOM.render(
       </ThemeEditorProvider>
     </React.StrictMode>
   </ChakraProvider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
