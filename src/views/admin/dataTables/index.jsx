@@ -21,7 +21,7 @@
 */
 
 // Chakra imports
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid, Grid } from "@chakra-ui/react";
 import DevelopmentTable from "views/admin/dataTables/components/DevelopmentTable";
 import CheckTable from "views/admin/dataTables/components/CheckTable";
 import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
@@ -37,16 +37,130 @@ import tableDataCheck from "views/admin/dataTables/variables/tableDataCheck.json
 import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns.json";
 import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
 import React from "react";
+import NFT from "components/card/NFT_boh";
+import NFT2 from "components/card/NFT_boh2"
+import AssetDoughnutChart from "./components/DonutChart";
 
 export default function Settings() {
   // Chakra Color Mode
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid
-        mb='20px'
-        columns={{ sm: 1, md: 2 }}
-        spacing={{ base: "20px", xl: "20px" }}>
-        <DevelopmentTable
+       <Grid
+       mb='30px'
+       mr='60px'
+       ml='60px'
+        templateColumns={{
+          base: "1fr",
+          lg: "1.2fr 3.5fr",
+        }}
+        templateRows={{
+          base: "repeat(1, 1fr)",
+          lg: "1fr",
+        }}
+        gap={{ base: "20px", xl: "20px" }}>
+            <NFT
+            />
+            <NFT2 
+            val="MY DEEP BLUE CARD 군집 요약" 
+            image={"https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/cdCreaditBNBC47.png" }
+
+            />
+           
+      </Grid>
+      <Grid
+       mb='30px'
+       mr='60px'
+       ml='60px'
+       //mt = '10px'
+        templateColumns={{
+          base: "1fr",
+          lg: "1.2fr 3.5fr",
+        }}
+        templateRows={{
+          base: "repeat(1, 1fr)",
+          lg: "1fr",
+        }}
+        gap={{ base: "20px", xl: "20px" }}>
+            <NFT
+              //image={"https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/cdCreaditBNBC47.png" }
+              currentbid="0.91 ETH"
+              download="#"
+            />
+            <NFT2 
+            val="MY DEEP BLUE CARD 군집 요약" 
+            image={"https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/cdCreaditBNBC47.png" }
+
+            />
+           
+      </Grid>
+      <Grid
+       mb='30px'
+       mr='60px'
+       ml='60px'
+       //mt = '10px'
+        templateColumns={{
+          base: "1fr",
+          lg: "1.2fr 3.5fr",
+        }}
+        templateRows={{
+          base: "repeat(1, 1fr)",
+          lg: "1fr",
+        }}
+        gap={{ base: "20px", xl: "20px" }}>
+            <NFT
+              currentbid="0.91 ETH"
+              download="#"
+            />
+            <NFT2 
+            val="MY DEEP BLUE CARD 군집 요약" 
+            image={"https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/cdCreaditBNBC47.png" }
+
+            />
+           
+      </Grid>
+      <Grid
+       mb='20px'
+        templateColumns={{
+          base: "1fr",
+          lg: "1fr 3.5fr",
+        }}
+        templateRows={{
+          base: "repeat(3, 1fr)",
+          lg: "1fr",
+        }}
+        gap={{ base: "20px", xl: "20px" }}>
+            <NFT
+              //image={"https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/cdCreaditBNBC47.png" }
+              currentbid="0.91 ETH"
+              download="#"
+            />
+            <NFT2 val="MY SHINAN GOGO CARD 군집 요약"></NFT2>
+           
+      </Grid>
+      <Grid
+       mb='20px'
+        templateColumns={{
+          base: "1fr",
+          lg: "1fr 3.5fr",
+        }}
+        templateRows={{
+          base: "repeat(3, 1fr)",
+          lg: "1fr",
+        }}
+        gap={{ base: "20px", xl: "20px" }}>
+            <NFT
+              //image={"https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/cdCreaditBNBC47.png" }
+              currentbid="0.91 ETH"
+              download="#"
+            />
+            <NFT2 val="MY DEEP 어쩔티비 CARD 군집 요약"></NFT2>
+           
+      </Grid>
+    </Box>
+  );
+}
+
+{/* <DevelopmentTable
           columnsData={columnsDataDevelopment}
           tableData={tableDataDevelopment}
         />
@@ -58,8 +172,4 @@ export default function Settings() {
         <ComplexTable
           columnsData={columnsDataComplex}
           tableData={tableDataComplex}
-        />
-      </SimpleGrid>
-    </Box>
-  );
-}
+        /> */}
