@@ -21,6 +21,6 @@ ReactDOM.render(
         </HashRouter>
       </ThemeEditorProvider>
     </React.StrictMode>
-  </ChakraProvider>
-  document.getElementById("root")
+  </ChakraProvider>,
+  document.getElementById('root')
 );
