@@ -21,98 +21,111 @@
 */
 
 // Chakra imports
-import { Box, Grid } from "@chakra-ui/react";
-
-// Custom components
-import Banner from "views/admin/profile/components/Banner";
-import General from "views/admin/profile/components/General";
-import Notifications from "views/admin/profile/components/Notifications";
-import Projects from "views/admin/profile/components/Projects";
-import Storage from "views/admin/profile/components/Storage";
-import Upload from "views/admin/profile/components/Upload";
+import { Box, Button, ButtonGroup, Grid, SimpleGrid, Text, VStack, grid, useColorModeValue } from "@chakra-ui/react";
 
 // Assets
-import banner from "assets/img/auth/banner.png";
-import avatar from "assets/img/avatars/avatar4.png";
-import React from "react";
+import React, { useRef } from "react";
+import Card from "components/card/Card";
+import GenderInformation from "./components/Gender";
+import AgeInformation from "./components/Age";
+import JobInformation from "./components/Job";
+import SalaryInformation from "./components/Salary";
+import Projects from "./components/Projects";
+import AgeData from "./components/AgeData";
+import JobData from "./components/JobData";
+import SalaryData from "./components/SalaryData";
+
 
 export default function Overview() {
+  const textColor = useColorModeValue("secondaryGray.900", "white");
+  // 각 섹션에 대한 참조 생성
+  const genderRef = useRef();
+  const ageRef = useRef();
+  const jobRef = useRef();
+  const salaryRef = useRef();
+
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      {/* Main Fields */}
-      <Grid
-        templateColumns={{
-          base: "1fr",
-          lg: "1.34fr 1fr 1.62fr",
-        }}
-        templateRows={{
-          base: "repeat(3, 1fr)",
-          lg: "1fr",
-        }}
-        gap={{ base: "20px", xl: "20px" }}>
-        <Banner
-          gridArea='1 / 1 / 2 / 2'
-          banner={banner}
-          avatar={avatar}
-          name='Adela Parkson'
-          job='Product Designer'
-          posts='17'
-          followers='9.7k'
-          following='274'
-        />
-        <Storage
-          gridArea={{ base: "2 / 1 / 3 / 2", lg: "1 / 2 / 2 / 3" }}
-          used={25.6}
-          total={50}
-        />
-        <Upload
-          gridArea={{
-            base: "3 / 1 / 4 / 2",
-            lg: "1 / 3 / 2 / 4",
-          }}
-          minH={{ base: "auto", lg: "420px", "2xl": "365px" }}
-          pe='20px'
-          pb={{ base: "100px", lg: "20px" }}
-        />
-      </Grid>
-      <Grid
-        mb='20px'
-        templateColumns={{
-          base: "1fr",
-          lg: "repeat(2, 1fr)",
-          "2xl": "1.34fr 1.62fr 1fr",
-        }}
-        templateRows={{
-          base: "1fr",
-          lg: "repeat(2, 1fr)",
-          "2xl": "1fr",
-        }}
-        gap={{ base: "20px", xl: "20px" }}>
-        <Projects
-          gridArea='1 / 2 / 2 / 2'
-          banner={banner}
-          avatar={avatar}
-          name='Adela Parkson'
-          job='Product Designer'
-          posts='17'
-          followers='9.7k'
-          following='274'
-        />
-        <General
-          gridArea={{ base: "2 / 1 / 3 / 2", lg: "1 / 2 / 2 / 3" }}
-          minH='365px'
-          pe='20px'
-        />
-        <Notifications
-          used={25.6}
-          total={50}
-          gridArea={{
-            base: "3 / 1 / 4 / 2",
-            lg: "2 / 1 / 3 / 3",
-            "2xl": "1 / 3 / 2 / 4",
-          }}
-        />
-      </Grid>
-    </Box>
+    <>
+      <Box pt={{ base: "auto", md: "80px", xl: "80px" }}>
+        {/* Main Fields */}
+        <Card>
+          <ButtonGroup>
+            <Button colorScheme="teal" onClick={() => genderRef.current.scrollIntoView({ behavior: 'smooth' })}>성별</Button>
+            <Button colorScheme="teal" onClick={() => ageRef.current.scrollIntoView({ behavior: 'smooth' })}>나이</Button>
+            <Button colorScheme="teal" onClick={() => jobRef.current.scrollIntoView({ behavior: 'smooth' })}>직업</Button>
+            <Button colorScheme="teal" onClick={() => salaryRef.current.scrollIntoView({ behavior: 'smooth' })}>연봉</Button>
+          </ButtonGroup>
+        </Card>
+        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px" ref={genderRef}>
+          성별 조회
+        </Text>
+        {/* GeneralInformation component */}
+        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="1fr 2fr">
+          <GenderInformation
+            gridArea={{ base: "1", lg: "1" }}  // Adjust the grid area
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+          />
+          <Projects
+          gridArea={{ base: "1", lg: "1" }}  // Adjust the grid area
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+            />
+        </Grid>
+        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px" ref={ageRef}>
+          나이 별 조회
+        </Text>
+        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="2fr 4fr">
+          <AgeInformation
+            gridArea={{ base: "1", lg: "1" }}
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+          />
+           <AgeData
+          gridArea={{ base: "1", lg: "1" }}  // Adjust the grid area
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+            />
+        </Grid>
+        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px" ref={jobRef}>
+          직업 별 조회
+        </Text>
+        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="2fr 4fr">
+          <JobInformation
+            gridArea={{ base: "1", lg: "1" }}
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+          />
+           <JobData
+          gridArea={{ base: "1", lg: "1" }}  // Adjust the grid area
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+            />
+        </Grid>
+        <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px" ref={salaryRef}>
+          연봉 별 조회
+        </Text>
+        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="2fr 4fr">
+          <SalaryInformation
+            gridArea={{ base: "1", lg: "1" }}
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+          />
+           <SalaryData
+          gridArea={{ base: "1", lg: "1" }}  // Adjust the grid area
+            maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
+            minH='400px'
+            pe='20px'
+            />
+        </Grid>
+      </Box>
+    </>
   );
 }

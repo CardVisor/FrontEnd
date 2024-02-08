@@ -3,7 +3,7 @@ import Card from "components/card/Card.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Projects(props) {
+export default function JobData(props) {
   const [filter, setFilter] = useState('all');
   const [data, setData] = useState([]);
 
@@ -53,8 +53,15 @@ export default function Projects(props) {
         <div>
         <Select value={filter} onChange={handleFilterChange} borderColor="blue.500">
           <option value="all">All</option>
-          <option value="option1">남성</option>
-          <option value="option2">여성</option>
+          <option value="option1">직장인</option>
+          <option value="option2">공무원</option>
+          <option value="option3">전문직</option>
+          <option value="option4">프리랜서</option>
+          <option value="option5">개인사업자</option>
+          <option value="option6">법인사업자</option>
+          <option value="option7">대학생</option>
+          <option value="option8">전업주부</option>
+          <option value="option9">무직</option>
         </Select>
       </div>
       </div>
