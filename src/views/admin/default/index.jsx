@@ -58,6 +58,8 @@ import {
 import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 import CustomerCount from "./components/CustomerCount";
+import KrwTotalAmount from "./components/KrwTotalAmount";
+import AbroadTotalAmount from "./components/AbroadTotalAmount";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -72,35 +74,9 @@ export default function UserReports() {
       >
         <CustomerCount></CustomerCount>
 
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="월 총 결제 금액"
-          value="$642.39"
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          growth="+23%"
-          name="월 해외 결제 금액"
-          value="$574.34"
-        />
+        <KrwTotalAmount></KrwTotalAmount>
+        <AbroadTotalAmount></AbroadTotalAmount>
+
         <MiniStatistics
           endContent={
             <Flex me="-16px" mt="10px">
