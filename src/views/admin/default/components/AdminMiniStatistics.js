@@ -134,7 +134,7 @@ export default function Default(props) {
               base: "2xl",
             }}
           >
-            {formatNumber(value)}
+            {value ? formatNumber(value) : null}
           </StatNumber>
 
           {growthnum ? (
