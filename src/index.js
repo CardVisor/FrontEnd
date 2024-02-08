@@ -9,14 +9,17 @@ import theme from 'theme/theme';
 import { ThemeEditorProvider } from '@hypertheme-editor/chakra-ui';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <ChakraProvider theme={theme}>
-            <BrowserRouter>
-                <Switch>
-                    <Route path={'/'} component={AdminLayout} />
-                </Switch>
-            </BrowserRouter>
-        </ChakraProvider>{' '}
-    </React.StrictMode>,
+    <ChakraProvider theme={theme}>
+        <React.StrictMode>
+            <ThemeEditorProvider>
+                <BrowserRouter>
+                    <Switch>
+                        <Redirect exact from="/" to="/main" />
+                        <Route path={'/'} component={AdminLayout} />
+                    </Switch>
+                </BrowserRouter>
+            </ThemeEditorProvider>
+        </React.StrictMode>
+    </ChakraProvider>,
     document.getElementById('root')
 );

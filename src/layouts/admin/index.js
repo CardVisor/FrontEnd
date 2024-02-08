@@ -24,7 +24,7 @@ export default function Dashboard(props) {
     };
 
     const getActiveRoute = (routes) => {
-        let activeRoute = '/dashboard';
+        let activeRoute = '/main';
         for (let i = 0; i < routes.length; i++) {
             if (window.location.href.indexOf(routes[i].path) !== -1) {
                 return routes[i].name;
@@ -33,7 +33,7 @@ export default function Dashboard(props) {
         return activeRoute;
     };
     const getActiveNavbar = (routes) => {
-        let activeNavbar = '/dashboard';
+        let activeNavbar = '/Main Dashboard';
         for (let i = 0; i < routes.length; i++) {
             if (window.location.href.indexOf(routes[i].path) !== -1) {
                 return routes[i].path;
@@ -42,7 +42,7 @@ export default function Dashboard(props) {
         return activeNavbar;
     };
     const getActiveNavbarText = (routes) => {
-        let activeNavbar = '/dashboard';
+        let activeNavbar = '/Main Dashboard';
         for (let i = 0; i < routes.length; i++) {
             if (window.location.href.indexOf(routes[i].path) !== -1) {
                 return routes[i].name;
@@ -58,7 +58,7 @@ export default function Dashboard(props) {
     };
 
     document.documentElement.dir = 'ltr';
-    const { onOpen } = useDisclosure();
+    // const { onOpen } = useDisclosure();
     document.documentElement.dir = 'ltr';
     return (
         <Box>
@@ -87,12 +87,12 @@ export default function Dashboard(props) {
                         <Portal>
                             <Box>
                                 <Navbar
-                                    onOpen={onOpen}
-                                    logoText={'Horizon UI Dashboard PRO'}
+                                    // onOpen={onOpen}
+                                    // logoText={'Horizon UI Dashboard PRO'}
                                     brandText={getActiveRoute(routes)}
-                                    secondary={getActiveNavbar(routes)}
-                                    message={getActiveNavbarText(routes)}
-                                    fixed={fixed}
+                                    // secondary={getActiveNavbar(routes)}
+                                    // message={getActiveNavbarText(routes)}
+                                    // fixed={fixed}
                                     {...rest}
                                 />
                             </Box>
@@ -101,13 +101,7 @@ export default function Dashboard(props) {
                             <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="100vh" pt="50px">
                                 <Switch>{getRoutes(routes)}</Switch>
                             </Box>
-                        ) : (
-                            <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="100vh" pt="50px">
-                                <Switch>
-                                    <Route path={'/dashboard'} component={MainDashboard}></Route>
-                                </Switch>
-                            </Box>
-                        )}
+                        ) : null}
                         <Box>
                             <Footer />
                         </Box>
