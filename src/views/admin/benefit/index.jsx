@@ -1,9 +1,22 @@
 import { Box, Grid, SimpleGrid } from '@chakra-ui/react';
 import React from 'react';
-import BenefitTreemap from '../default/components/BenefitTreemap';
-
+import BenefitTreemap from './components/BenefitTreemap';
+import * as am5 from '@amcharts/amcharts5';
+  
 export default function Settings() {
-    // Chakra Color Mode
+    let data = {
+        "Acura": {
+          "ILX": 11757,
+          "MDX": 54886,
+        },
+        "Alfa Romeo": {
+          "4C": 407,
+          "Giulia": 8903,
+          
+        }
+    };
+
+    
     return (
         <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
             <Grid
@@ -20,7 +33,7 @@ export default function Settings() {
                 }}
                 gap={{ base: '20px', xl: '20px' }}
             >
-                <BenefitTreemap></BenefitTreemap>
+                <BenefitTreemap data={data}></BenefitTreemap>
             </Grid>
         </Box>
     );
