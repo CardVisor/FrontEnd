@@ -2,7 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import Card from "components/card/Card";
 import { useEffect } from "react";
 
-function BenefitUsingPieOfPie(props) {
+function BenefitUsingPieSlice(props) {
   const clickedChartEl = props.data;
   useEffect(() => {}, [clickedChartEl]);
   return (
@@ -16,4 +16,4 @@ function BenefitUsingPieOfPie(props) {
   );
 }
 
-export default BenefitUsingPieOfPie;
+export default BenefitUsingPieSlice;

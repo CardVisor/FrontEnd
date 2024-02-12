@@ -209,7 +209,7 @@ function BenefitPieOfPieForBottom5(props) {
     container.appear(1000, 10);
 
     series.events.on("datavalidated", function () {
-      selectSlice(series.slices.getIndex(1));
+      selectSlice(series.slices.getIndex(0));
     });
 
     // Create legend

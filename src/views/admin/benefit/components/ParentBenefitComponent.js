@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BenefitPieOfPie from "./BenefitPieOfPie";
-import BenefitUsingPieOfPie from "./BenefitUsingPieOfPie";
+import BenefitUsingPieSlice from "./BenefitUsingPieSlice";
 
 function ParentBenefitComponent(props) {
   const benefitTopList = props.data;
@@ -19,7 +19,7 @@ function ParentBenefitComponent(props) {
         id="chart1"
         onSliceClick={handleChartClick}
       />
-      <BenefitUsingPieOfPie data={clickedChartEl} />
+      <BenefitUsingPieSlice data={clickedChartEl} />
     </div>
   );
 }
