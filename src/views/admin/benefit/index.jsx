@@ -1,92 +1,49 @@
-import { Box, Grid, SimpleGrid } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Grid,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import BenefitTreemap from "./components/BenefitTreemap";
 import axios from "axios";
+import BenefitPieOfPie from "./components/BenefitPieOfPie";
+import ParentBenefitComponent from "./components/ParentBenefitComponent";
+import BenefitPieOfPieForBottom5 from "./components/BenefitPieOfPieForBottom5";
 
 export default function Settings() {
-  const [benefitList, setBenefitList] = useState([]);
+  const [benefitTopList, setBenefitTopList] = useState([]);
+  const [benefitTreeList, setbBenefitTreeList] = useState([]);
+  const [benefitBottompList, setBenefitBottompList] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    axios({
-      method: "get",
-      url: "/benefitCluster/mcc",
-    })
-      .then((res) => {
-        console.log(res.data);
-        setBenefitList(res.data);
-      })
-      .catch((err) => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("/benefitCluster/benefitTopAndBottom");
+        const res2 = await axios.get("/benefitCluster/benefitTreeChart");
+        // const res3 = await axios.get("/benefitCluster/benefitBottom");
+
+        setBenefitTopList(res.data.top);
+        setbBenefitTreeList(res2.data);
+        setBenefitBottompList(res.data.bottom);
+        setLoading(true);
+        console.log(res.data.top);
+      } catch (err) {
         console.log(err);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
-  var data = [
-    {
-      name: "Beer styles",
-      children: [
-        {
-          name: "Pale Ales",
-          children: [
-            { name: "American Amber Ale", value: 1 },
-            { name: "American Pale Ale", value: 1 },
-            { name: "Blonde Ale", value: 1 },
-            { name: "English-Style Bitter", value: 1 },
-            { name: "English-Style", value: 1 },
-          ],
-        },
-        {
-          name: "Dark Lagers",
-          children: [
-            { name: "American Amber Lager", value: 1 },
-            { name: "German-Style Dunkel", value: 1 },
-            { name: "German-Style Marzen / Oktoberfest", value: 1 },
-            { name: "German-Style Schwarzbier", value: 1 },
-            { name: "Vienna-Style Lager", value: 1 },
-          ],
-        },
-        {
-          name: "Brown Ales",
-          children: [
-            { name: "American Brown Ale", value: 1 },
-            { name: "English-Style Brown Ale", value: 1 },
-            { name: "English-Style Mild", value: 1 },
-          ],
-        },
-        {
-          name: "India Pale Ales",
-          children: [
-            { name: "American IPA", value: 1 },
-            { name: "English-Style IPA", value: 1 },
-            { name: "Imperial India Pale Ale", value: 1 },
-            { name: "New England IPA", value: 1 },
-          ],
-        },
-        {
-          name: "Wheat Beers",
-          children: [
-            { name: "American-Style Wheat Wine Ale", value: 1 },
-            { name: "American Wheat", value: 1 },
-            { name: "Belgian-Style Witbier", value: 1 },
-            { name: "Berliner-Style Weisse", value: 1 },
-            { name: "German-Style Dunkelweizen", value: 1 },
-            { name: "German-Style Hefeweizen", value: 1 },
-          ],
-        },
-        {
-          name: "Strong Ales",
-          children: [
-            { name: "American Barley Wine", value: 1 },
-            { name: "American Imperial Red Ale", value: 1 },
-            { name: "British-S", value: 1 },
-            { name: "English-Style Old Ale", value: 1 },
-          ],
-        },
-      ],
-    },
-  ];
+  var data = [];
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <Grid
+      {/* <Grid
         mb="30px"
         mr="60px"
         ml="60px"
@@ -101,9 +58,66 @@ export default function Settings() {
         gap={{ base: "20px", xl: "20px" }}
       >
         <BenefitTreemap
-          data={benefitList}
-          val={"Benefit 군집 요약"}
+          data={benefitTreeList}
+          val={"Card Benefit Map"}
         ></BenefitTreemap>
+      </Grid> */}
+      <Accordion allowMultiple>
+        <AccordionItem mr="60px" ml="60px">
+          <h2>
+            <AccordionButton _expanded={{ color: "white" }}>
+              <Box as="span" flex="1" textAlign="left">
+                Card Benefit Tree Map
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+          </h2>
+          <AccordionPanel pb={4}>
+            <BenefitTreemap
+              data={benefitTreeList}
+              val={"Card Benefit Map"}
+            ></BenefitTreemap>
+          </AccordionPanel>
+        </AccordionItem>
+        {loading && (
+          <AccordionItem mb="10px" mr="60px" ml="60px">
+            <h2>
+              <AccordionButton _expanded={{ color: "white" }}>
+                <Box as="span" flex="1" textAlign="left">
+                  Card Benefit Bottom 5
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <BenefitPieOfPieForBottom5
+                data={benefitBottompList}
+                val="Card Benefit Bottom 5"
+                id="chartBottom5"
+              ></BenefitPieOfPieForBottom5>
+            </AccordionPanel>
+          </AccordionItem>
+        )}
+      </Accordion>
+      <Grid
+        mb="30px"
+        mr="60px"
+        ml="60px"
+        templateColumns={{
+          base: "1fr",
+          lg: "4.7fr",
+        }}
+        templateRows={{
+          base: "repeat(1, 1fr)",
+          lg: "1fr",
+        }}
+        gap={{ base: "20px", xl: "20px" }}
+      >
+        {loading && (
+          <ParentBenefitComponent
+            data={benefitTopList}
+          ></ParentBenefitComponent>
+        )}
       </Grid>
     </Box>
   );

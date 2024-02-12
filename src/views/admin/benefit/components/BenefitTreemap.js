@@ -12,6 +12,10 @@ function BenefitTreemap(props) {
   useEffect(() => {
     if (chartDiv.current) {
       const root = am5.Root.new(chartDiv.current);
+      if (root._logo) {
+        root._logo.dispose();
+      }
+      root.interfaceColors.set("grid", am5.color(0xff0000));
       root.setThemes([am5themes_Animated.new(root)]);
       const myTheme = am5.Theme.new(root);
       myTheme
@@ -22,7 +26,7 @@ function BenefitTreemap(props) {
       myTheme
         .rule("RoundedRectangle", ["hierarchy", "node", "shape", "depth2"])
         .setAll({
-          strokeWidth: 1,
+          strokeWidth: 5,
           strokeOpacity: 1,
         });
 
@@ -62,6 +66,13 @@ function BenefitTreemap(props) {
         var customColor = target.dataItem.dataContext.color;
         return customColor || fill;
       });
+      series.rectangles.template.setAll({
+        fillOpacity: 0.7,
+        cornerRadiusTL: 4,
+        cornerRadiusTR: 4,
+        cornerRadiusBL: 4,
+        cornerRadiusBR: 4,
+      });
 
       /*
       툴팁(마우스 오버시 나오는 텍스트)
@@ -88,10 +99,14 @@ function BenefitTreemap(props) {
       []태그를 활용해 bold, fontSize 설정 가능
       [/] 뒤 부터는 기본 폰트로 초기화
       */
+      // series.labels.template.setAll({
+      //   text: "[fontSize:16px;]{name}",
+      // });
       series.labels.template.setAll({
-        text: "[bold;fontSize:16px;]{name}",
+        fontSize: 20,
+        fill: am5.color(0xffffff),
+        text: "{category}",
       });
-
       container.children.moveValue(
         am5hierarchy.BreadcrumbBar.new(root, {
           series: series,
