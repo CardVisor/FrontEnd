@@ -32,24 +32,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import Usa from "assets/img/dashboards/usa.png";
 // Custom components
 import MiniCalendar from "components/calendar/MiniCalendar";
-import MiniStatistics from "components/card/MiniStatistics";
-import IconBox from "components/icons/IconBox";
-import React from "react";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdBarChart,
-  MdFileCopy,
-} from "react-icons/md";
+
+import React, { useState } from "react";
+
 import CheckTable from "views/admin/default/components/CheckTable";
 import ComplexTable from "views/admin/default/components/ComplexTable";
 import DailyTraffic from "views/admin/default/components/DailyTraffic";
 import PieCard from "views/admin/default/components/PieCard";
 import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
 import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
 import {
   columnsDataCheck,
@@ -60,11 +52,22 @@ import tableDataComplex from "views/admin/default/variables/tableDataComplex.jso
 import CustomerCount from "./components/CustomerCount";
 import KrwTotalAmount from "./components/KrwTotalAmount";
 import AbroadTotalAmount from "./components/AbroadTotalAmount";
+import LatestCurrencyData from "./components/LatestCurrencyData";
+import AdminMonthTotalSpent from "./components/AdminMonthTotalSpent";
+import AdminWeeklyTotalSpent from "./components/AdminWeeklyTotalSpent";
+import AdminMonthTraffic from "./components/AdminMonthTraffic";
+import AdminWeeklyTraffic from "./components/AdminWeeklyTraffic";
+import AdminCheckTable from "./components/AdminCheckTable";
+
+
 
 export default function UserReports() {
   // Chakra Color Mode
-  const brandColor = useColorModeValue("brand.500", "white");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const [showMonthly, setShowMonthly] = useState(true);
+
+  const handleToggle = () => {
+    setShowMonthly((prevShowMonthly) => !prevShowMonthly);
+  };
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -76,37 +79,29 @@ export default function UserReports() {
 
         <KrwTotalAmount></KrwTotalAmount>
         <AbroadTotalAmount></AbroadTotalAmount>
-
-        <MiniStatistics
-          endContent={
-            <Flex me="-16px" mt="10px">
-              <FormLabel htmlFor="balance">
-                <Avatar src={Usa} />
-              </FormLabel>
-              <Select
-                id="balance"
-                variant="mini"
-                mt="5px"
-                me="0px"
-                defaultValue="usd"
-              >
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="gba">GBA</option>
-              </Select>
-            </Flex>
-          }
-          name="환율"
-          value="$1,000"
-        />
+      <LatestCurrencyData></LatestCurrencyData>
       </SimpleGrid>
-
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <TotalSpent />
+      {showMonthly ? (
+          <>
+            <AdminMonthTotalSpent handleToggle={handleToggle}/>
+            <AdminMonthTraffic />
+          </>
+        ) : (
+          <>
+            <AdminWeeklyTotalSpent handleToggle={handleToggle} />
+            <AdminWeeklyTraffic />
+          </>
+        )}
+      </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <AdminWeeklyTotalSpent />
         <WeeklyRevenue />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
+          <AdminCheckTable />
         <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
+      
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
           <DailyTraffic />
           <PieCard />
