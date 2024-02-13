@@ -18,7 +18,7 @@ import { RiArrowUpSFill } from "react-icons/ri";
 import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
-} from "variables/charts";
+} from "./AdminChart";
 
 export default function TotalSpent(props) {
   const { ...rest } = props;
