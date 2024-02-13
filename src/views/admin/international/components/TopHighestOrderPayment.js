@@ -5,6 +5,7 @@ import InterMiniStatistics from "views/admin/international/components/InterMiniS
 import { FaChartPie } from "react-icons/fa6";
 import axios from "axios";
 import "assets/css/International.css";
+import { chartNationInfo } from "../variables/chartNationInfo";
 
 function TopHighestOrderPayment(props) {
     const brandColor = useColorModeValue("brand.500", "white");
@@ -74,7 +75,16 @@ function TopHighestOrderPayment(props) {
                 {paymentRank && (
                   <>
                     <span className="toplist">No.{currentIndex + 1}</span>
-                    {paymentRank[currentIndex].CURRENCY_NATION.split(" ")[0]}{" "}
+                    {chartNationInfo.filter( target => {
+                      //console.log("+++filterfilter++++++++++"+JSON.stringify(target)+"target.nationCode"+target.nationCode); 
+                      //console.log("조건111111111111111" + target.currencyCode === paymentRank[currentIndex].CURRENCY_CODE);
+                      //console.log("조건2"+target.nationCode === paymentRank[currentIndex].NATION);
+                        return target.currencyCode === paymentRank[currentIndex].CURRENCY_CODE && target.nationCode === paymentRank[currentIndex].NATION
+                    }).map(target => { 
+                        //console.log("+++++++++++++"+JSON.stringify(target));
+                        if(target.currencyCode === "EUR") return "유럽";
+                        return target.kName;
+                    })}{" "}
                     {numberWithCommas(paymentRank[currentIndex].PAYMENT_CNT)}건
                   </>
                 )}
