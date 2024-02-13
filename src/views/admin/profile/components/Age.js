@@ -60,10 +60,10 @@ export default function AgeInformation(props) {
             }
           }
         });
-
+    
         return () => {
           myBarChart.destroy();
-        };
+        };  
       });
   }, []);
 
