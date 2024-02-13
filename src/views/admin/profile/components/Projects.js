@@ -88,7 +88,7 @@ export default function Projects(props) {
               포함된 고객 수 : {data}명 <br></br>
               평균 연령 : {averageAge}세 <br></br>
               평균 연봉 : {averageSalary} <br></br>
-              평균 사용금액 : {averagePayment} <br></br>
+              일 평균 사용금액 : {averagePayment} <br></br>
               가장 많이 사용한 카드 : {topCards && topCards.join(', ')} <br></br>
               주 사용처 : {topMccCodes && topMccCodes.join(', ')}
             </Text>

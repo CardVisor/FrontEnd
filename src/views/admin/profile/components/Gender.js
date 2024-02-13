@@ -27,7 +27,7 @@ export default function GenderInformation(props) {
       chartRef.current.destroy();
     }
 
-    const ctx = document.getElementById("genderChart").getContext("2d");
+    const ctx = document.getElementById("genderChart");
     const config = {
       type: "doughnut",
       data: {

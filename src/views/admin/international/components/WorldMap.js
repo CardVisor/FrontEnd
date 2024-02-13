@@ -49,7 +49,7 @@ fetch(mapUrl)
 
         //차트 생성
         const mapChart = new Chart(
-            document.getElementById("mapChart").getContext("2d"),
+            document.getElementById("mapChart"),
             {
                 type: "choropleth", //차트 모양 > 지구본 타입 설정
                 data: chartData,
