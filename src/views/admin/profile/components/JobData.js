@@ -65,7 +65,14 @@ export default function JobData(props) {
         </Select>
       </div>
       </div>
-      {/* 데이터를 보여주는 코드... */}
+      <Text color={textColorPrimary} fontSize='xl'>
+              포함된 고객 수 : <br></br>
+              평균 연령 : <br></br>
+              평균 연봉 : <br></br>
+              일 평균 사용금액 : <br></br>
+              가장 많이 사용한 카드 :<br></br>
+              주 사용처 : 
+            </Text>
     </Card>
   );
 }
