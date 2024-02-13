@@ -24,6 +24,7 @@
         "babel-preset-react": "^6.24.1",
         "babel-register": "^6.26.0",
         "chart.js": "^4.4.1",
+        "chartjs-chart-geo": "^4.2.8",
         "color": "^4.2.3",
         "framer-motion": "^4.1.17",
         "install": "^0.13.0",
@@ -73,7 +74,8 @@
         ]
     },
     "devDependencies": {
-        "gh-pages": "^3.2.3"
+      "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+      "gh-pages": "^3.2.3"
     },
     "proxy": "http://localhost:7777"
 }
