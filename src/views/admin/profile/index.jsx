@@ -43,6 +43,7 @@ export default function Overview() {
   const ageRef = useRef();
   const jobRef = useRef();
   const salaryRef = useRef();
+  
 
   return (
     <>
@@ -50,10 +51,10 @@ export default function Overview() {
         {/* Main Fields */}
         <Card>
           <ButtonGroup>
-            <Button colorScheme="teal" onClick={() => genderRef.current.scrollIntoView({ behavior: 'smooth' })}>성별</Button>
-            <Button colorScheme="teal" onClick={() => ageRef.current.scrollIntoView({ behavior: 'smooth' })}>나이</Button>
-            <Button colorScheme="teal" onClick={() => jobRef.current.scrollIntoView({ behavior: 'smooth' })}>직업</Button>
-            <Button colorScheme="teal" onClick={() => salaryRef.current.scrollIntoView({ behavior: 'smooth' })}>연봉</Button>
+            <Button colorScheme="teal" onClick={() => genderRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}>성별</Button>
+            <Button colorScheme="teal" onClick={() => ageRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}> 나이</Button>
+            <Button colorScheme="teal" onClick={() => jobRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}>직업</Button>
+            <Button colorScheme="teal" onClick={() => salaryRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}>연봉</Button>
           </ButtonGroup>
         </Card>
         <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px" ref={genderRef}>
