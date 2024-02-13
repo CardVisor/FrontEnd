@@ -35,11 +35,10 @@ function AbroadTotalAmount(props) {
   useEffect(() => {
     axios({
       method: "get",
-      url: "/main/LastMonthTotalAmountPayments",
+      url: "/main/abroadLastMonthTotalAmount",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
+      
         setAbroadLastMonthTotalAmount(res.data);
       })
       .catch((err) => {
