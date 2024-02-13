@@ -21,7 +21,7 @@ export default function AgeInformation(props) {
         const sortedLabels = ageOrder;
         const sortedData = sortedLabels.map(age => data[age] || 0);
         // Chart rendering logic
-        const ctx = document.getElementById('ageChart').getContext('2d');
+        const ctx = document.getElementById('ageChart');
         const myBarChart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -60,10 +60,10 @@ export default function AgeInformation(props) {
             }
           }
         });
-
+    
         return () => {
           myBarChart.destroy();
-        };
+        };  
       });
   }, []);
 
