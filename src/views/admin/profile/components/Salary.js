@@ -94,7 +94,7 @@ export default function SalaryInformation(props) {
         chartRef.current.destroy();
       }
 
-      const ctx = document.getElementById('salaryChart').getContext('2d');
+      const ctx = document.getElementById('salaryChart');
       chartRef.current = new Chart(ctx, config);
     });
   }, []);  // 의존성 배열은 비어있음
