@@ -42,7 +42,7 @@ function BenefitPieOfPie(props) {
                 alignLabels: false,
                 // legendLabelText: "[{fill}]{category}[/]",
                 // legendValueText: "[bold {fill}]{value}[/]",
-                legendLabelText: '[#808080 fontSize: 12px fontWeight: 700]{category}[/]',
+                legendLabelText: '[#808080 fontSize: 12px fontWeight: 700]{category} [/]',
                 legendValueText: '[#808080 fontSize: 12px fontWeight: 300]{value}[/]',
             })
         );
