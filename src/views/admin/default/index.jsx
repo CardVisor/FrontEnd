@@ -58,8 +58,7 @@ import AdminWeeklyTotalSpent from "./components/AdminWeeklyTotalSpent";
 import AdminMonthTraffic from "./components/AdminMonthTraffic";
 import AdminWeeklyTraffic from "./components/AdminWeeklyTraffic";
 import AdminCheckTable from "./components/AdminCheckTable";
-
-
+import TotalSpent from "./components/TotalSpent";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -79,12 +78,12 @@ export default function UserReports() {
 
         <KrwTotalAmount></KrwTotalAmount>
         <AbroadTotalAmount></AbroadTotalAmount>
-      <LatestCurrencyData></LatestCurrencyData>
+        <LatestCurrencyData></LatestCurrencyData>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-      {showMonthly ? (
+        {showMonthly ? (
           <>
-            <AdminMonthTotalSpent handleToggle={handleToggle}/>
+            <AdminMonthTotalSpent handleToggle={handleToggle} />
             <AdminMonthTraffic />
           </>
         ) : (
@@ -94,14 +93,10 @@ export default function UserReports() {
           </>
         )}
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <AdminWeeklyTotalSpent />
-        <WeeklyRevenue />
-      </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-          <AdminCheckTable />
+        <AdminCheckTable />
         <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-      
+
         <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
           <DailyTraffic />
           <PieCard />
