@@ -22,7 +22,7 @@ const routes = [
         layout: '/',
         path: '/main',
         icon: <Icon as={MdDashboardCustomize} width="20px" height="20px" color="inherit" />,
-        component: MainDashboard,
+        element: <MainDashboard />,
         secondary: true,
     },
     {
@@ -30,7 +30,7 @@ const routes = [
         layout: '/',
         path: '/international',
         icon: <Icon as={BsGlobe2} width="20px" height="20px" color="inherit" />,
-        component: International,
+        element: <International />,
         secondary: true,
     },
     {
@@ -38,7 +38,7 @@ const routes = [
         layout: '/',
         path: '/customercluster',
         icon: <Icon as={BsPeopleFill} width="20px" height="20px" color="inherit" />,
-        component: Profile,
+        element: <Profile />,
         secondary: true,
     },
     {
@@ -46,7 +46,7 @@ const routes = [
         layout: '/',
         path: '/cardcluster',
         icon: <Icon as={MdPayment} width="20px" height="20px" color="inherit" />,
-        component: CardCluster,
+        element: <CardCluster />,
         secondary: true,
     },
     {
@@ -54,7 +54,7 @@ const routes = [
         layout: '/',
         path: '/benefit',
         icon: <Icon as={MdAddCard} width="20px" height="20px" color="inherit" />,
-        component: Benefit,
+        element: <Benefit />,
         secondary: true,
     },
     {
@@ -62,7 +62,7 @@ const routes = [
         layout: '/',
         path: '/payments',
         icon: <Icon as={BsCardChecklist} width="20px" height="20px" color="inherit" />,
-        component: Payments,
+        element: <Payments />,
         secondary: true,
     },
 ];
