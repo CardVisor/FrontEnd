@@ -1,11 +1,19 @@
-import { Text, useColorModeValue, Select } from "@chakra-ui/react";
+import { Text, useColorModeValue, Select, Spinner } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function AgeData(props) {
+  //상태 변수 
   const [filter, setFilter] = useState('all');
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); 
+  const [averageAgeGroups, setAverageAgeGroups] = useState(null); // 평균 연령을 저장할 상태 추가
+  const [topSalaryByAgeRange, setTopSalaryByAgeRange] = useState(null); //평균 연봉을 저장할 상태 추가
+  const [averageByAgeRange, setAverageByAgeRange] = useState(null); // 평균 소비 금액을 저장할 상태 추가
+  const [topCardsAgeRange, setTopCardsAgeRange] = useState(null); 
+  const [alltop3CardTypes, setAlltop3CardTypes] = useState(null); 
+  const [topMccCodes, setTopMccCodes] = useState(null); // 주 사용처를 저장할 상태 추가
+  const [loading, setLoading] = useState(false); //로딩 스피너 사용을 위한 로딩 상태를 나타내는 상태 변수 추가
 
   const textColorPrimary = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = "gray.400";
@@ -15,15 +23,32 @@ export default function AgeData(props) {
   );
 
   useEffect(() => {
-    // 필터에 따라 다른 엔드포인트에서 데이터를 가져옵니다.
-    const endpoint = filter === 'all' ? '/data/all' : `/data/${filter}`;
-    axios.get(endpoint)
-      .then(response => {
-        const data = response.data;
-        setData(data);
+    setLoading(true); // API 요청 시작 전에 로딩 상태를 true로 설정
+
+    Promise.all([
+      axios.get('/customer/ageGroup'),
+      axios.get('customer/averageAgeGroups'),
+      axios.get('/customer/topSalaryByAgeRange'),
+      axios.get('/customer/averageByAgeRange'),
+      axios.get('/customer/alltop3CardTypes'),
+      axios.get('/customer/top3MccCodeByAgeRange')
+    ])
+    .then(([ageGroupResponse,averageAgeGroupsResponse,topSalaryByAgeRangeResponse,averageByAgeRangeResponse,alltop3CardTypesResponse,topMccCodesResponse]) => {
+
+      setAlltop3CardTypes(alltop3CardTypesResponse.data);
+      const selectedCards = alltop3CardTypesResponse.data.filter(card => card.ageRange === filter);
+
+      setData(ageGroupResponse.data[filter]);
+      setAverageAgeGroups(averageAgeGroupsResponse.data[filter]);
+      setTopSalaryByAgeRange(topSalaryByAgeRangeResponse.data.find(row => row[0] === filter)[1]);
+      setAverageByAgeRange(averageByAgeRangeResponse.data.find(row => row.age_range === filter)?.pay_amount || '데이터가 없습니다.');
+      setTopCardsAgeRange(selectedCards);
+      setTopMccCodes(topMccCodesResponse.data);
+      setLoading(false); // 모든 요청이 완료되었으므로 로딩 상태를 false로 설정
       })
       .catch(error => {
         console.error('Error fetching data: ', error);
+        setLoading(false); // 요청 중 오류가 발생하면 로딩 상태를 false로 설정
       });
   }, [filter]);
 
@@ -34,35 +59,50 @@ export default function AgeData(props) {
 
   // 나머지 코드...
 
-    return (
-        <Card mb={{ base: "0px", "2xl": "20px" }}>
+  return (
+    <>
+      <Card mb={{ base: "0px", "2xl": "20px" }}>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div>
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                <div>
-                    <Text
-                        color={textColorPrimary}
-                        fontWeight='bold'
-                        fontSize='2xl'
-                        mt='10px'
-                        mb='4px'>
-                        All DATA
-                    </Text>
-                    <Text color={textColorSecondary} fontSize='md' me='26px' mb='40px'>
-                        종합데이터
-                    </Text>
-                </div>
-                <div>
-                    <Select value={filter} onChange={handleFilterChange} borderColor="blue.500">
-                        <option value="all">All</option>
-                        <option value="option1">20대</option>
-                        <option value="option2">30대</option>
-                        <option value="option3">40대</option>
-                        <option value="option4">50대</option>
-                        <option value="option5">60대</option>
-                        <option value="option6">70대 이상</option>
-                    </Select>
-                </div>
+              <div>
+                <Text
+                  color={textColorPrimary}
+                  fontWeight='bold'
+                  fontSize='2xl'
+                  mt='10px'
+                  mb='4px'>
+                  All DATA
+                </Text>
+                <Text color={textColorSecondary} fontSize='md' me='26px' mb='40px'>
+                  종합데이터
+                </Text>
+              </div>
+              <div>
+                <Select value={filter} onChange={handleFilterChange} borderColor="blue.500">
+                <option value="all">All</option>
+                        <option value="20대">20대</option>
+                        <option value="30대">30대</option>
+                        <option value="40대">40대</option>
+                        <option value="50대">50대</option>
+                        <option value="60대">60대</option>
+                        <option value="70대 이상">70대 이상</option>
+                </Select>
+              </div>
             </div>
-            {/* 데이터를 보여주는 코드... */}
-        </Card>
-    );
+            <Text color={textColorPrimary} fontSize='xl'>
+              포함된 고객 수 : {data}명 <br></br>
+              평균 연령 : {averageAgeGroups}세 <br></br>
+              평균 연봉 : {topSalaryByAgeRange}<br></br>
+              일 평균 사용금액 : {averageByAgeRange}<br></br>
+              가장 많이 사용한 카드 : {topCardsAgeRange && topCardsAgeRange.map(card => card.cardName).join(', ')} <br></br>
+              주 사용처 : {topMccCodes && topMccCodes.filter(code => code[0] === filter).map(code => code[1]).join(', ')}
+            </Text>
+          </div>
+        )}
+      </Card>
+    </>
+  );
 }
