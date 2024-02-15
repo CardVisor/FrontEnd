@@ -117,7 +117,7 @@ export default function Default(props) {
               base: "2xl",
             }}
           >
-            {totalperson}
+            {totalperson ? totalperson + "명" : null}
           </StatNumber>
           <StatNumber
             color={textColor}
