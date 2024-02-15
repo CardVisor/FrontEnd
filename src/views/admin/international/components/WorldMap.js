@@ -76,6 +76,7 @@ function WorldMap(props) {
                     dataPoint,
                     dataPoint.objects.countries
                 ).features;
+
                 const chartData = {
                     labels: countriesRef.current.map(
                         (country) => country.properties.name
@@ -91,26 +92,28 @@ function WorldMap(props) {
                     ],
                 };
 
+                const chartOptions = {
+                    showOutline: true,
+                    showGraticule: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        projection: {
+                            axis: "x",
+                            projection: "equalEarth",
+                        },
+                    },
+                }
+
                 mapChartRef.current = new Chart(
-                    document.getElementById("mapChart"),
+                    mapChartRef.current,
                     {
                         type: "choropleth",
                         data: chartData,
-                        options: {
-                            showOutline: true,
-                            showGraticule: true,
-                            plugins: {
-                                legend: {
-                                    display: false,
-                                },
-                            },
-                            scales: {
-                                projection: {
-                                    axis: "x",
-                                    projection: "equalEarth",
-                                },
-                            },
-                        },
+                        options: chartOptions
                     }
                 );
 
@@ -157,15 +160,13 @@ function WorldMap(props) {
                         colorScheme="red"
                         aria-label="Search database"
                         icon={<FaFilePdf />}
-                        pl={3}
-                        pr={3}
                     />
                     <Button colorScheme="teal" onClick={toggleAnimation}>
                         {animationRunning ? "STOP" : "PLAY"}
                     </Button>
                 </Flex>
                 <Box>
-                    <canvas id="mapChart"></canvas>
+                    <canvas ref={mapChartRef} />
                 </Box>
             </Card>
         </>
