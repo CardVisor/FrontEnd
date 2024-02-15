@@ -22,7 +22,7 @@ import axios from "axios";
 
 export const TotalSpentcontext = createContext();
 export const TotalProvider = (props) => {
-  var data = [];
+  var data1 = [];
   var lastmonthdata = [];
   var month = [];
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -44,7 +44,7 @@ export const TotalProvider = (props) => {
     { bg: "whiteAlpha.100" }
   );
   const [memo, setMemo] = useState();
-
+  const [checkstat, setCheckstat] = useState(false);
   // 6개월간 총결제내역 작년 올해 비교 상승률
   const formatpercent = (number) => {
     // Check if the input is a valid number
@@ -61,20 +61,6 @@ export const TotalProvider = (props) => {
       return "Invalid input"; // Handle invalid input
     }
   };
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: "/main/totalIncrese",
-    })
-      .then((res) => {
-        setIncrese(res.data);
-        let Message = "백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.";
-        setMemo(Message);
-      })
-      .catch((err) => {
-        console.log("Error fetching currency data:", err);
-      });
-  });
 
   //총 결제내역 숫자바꾸기
   const formatabroad = (number) => {
@@ -95,27 +81,48 @@ export const TotalProvider = (props) => {
   };
 
   // 6개월간 총결제내역
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: "/main/perMonthTotalAmount",
-    })
-      .then((res) => {
-        setPerTotal(res.data);
-      })
-      .catch((err) => {
-        console.log("Error fetching currency data:", err);
-      });
-  });
+  // useEffect(() => {
+  //   axios({
+  //     method: "get",
+  //     url: "/main/perMonthTotalAmount",
+  //   })
+  //     .then((res) => {
+
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error fetching currency data:", err);
+  //     });
+  // });
+  // useEffect(() => {
+  //   axios({
+  //     method: "get",
+  //     url: "",
+  //   })
+  //     .then((res) => {
+  //       setIncrese(res.data);
+  //       let Message = "백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.";
+  //       setMemo(Message);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error fetching currency data:", err);
+  //     });
+  // });
 
   useEffect(() => {
     axios
       .all([
         axios.get("/main/selectLastYearPerMonthamount"),
         axios.get("/main/selectPerMonthamount"),
+        axios.get("/main/perMonthTotalAmount"),
+        axios.get("/main/totalIncrese"),
       ])
       .then(
-        axios.spread((res1, res2) => {
+        axios.spread((res1, res2, res3, res4) => {
+          setPerTotal(res3.data);
+          setIncrese(res4.data);
+          let Message =
+            "백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.";
+          setMemo(Message);
           const monthname = res2.data.map((item) => item.month);
 
           const formattedMonths = monthname.map((month) => {
@@ -132,7 +139,7 @@ export const TotalProvider = (props) => {
               return item.total_amount.toLocaleString(); // Format number with comma separators
             }
           });
-          data = formattedNumbers1; //data
+          data1 = formattedNumbers1; //data
 
           const formattedNumbers = res1.data.map((item) => {
             if (item.total_amount >= 1000000) {
@@ -148,7 +155,7 @@ export const TotalProvider = (props) => {
         const lineChartDataTotalSpent1 = [
           {
             name: "올해",
-            data: data,
+            data: data1,
           },
           {
             name: "작년",
@@ -230,32 +237,35 @@ export const TotalProvider = (props) => {
           color: ["#7551FF", "#39B8FF"],
         };
         setOptionLineChart(lineChartOptionsTotalSpent1);
+        setCheckstat(true);
       })
       .catch((err) => console.log(err));
   }, []);
   return (
     <>
-      <TotalSpentcontext.Provider
-        value={{
-          memo,
-          month,
-          lineChartOptionsTotalSpent,
-          increse,
-          lineChartDataTotalSpent,
-          formatpercent,
-          textColor,
-          pertotal,
-          formatabroad,
-          textColorSecondary,
-          boxBg,
-          iconColor,
-          bgButton,
-          bgHover,
-          bgFocus,
-        }}
-      >
-        {props.children}
-      </TotalSpentcontext.Provider>
+      {checkstat && (
+        <TotalSpentcontext.Provider
+          value={{
+            memo,
+            month,
+            lineChartOptionsTotalSpent,
+            increse,
+            lineChartDataTotalSpent,
+            formatpercent,
+            textColor,
+            pertotal,
+            formatabroad,
+            textColorSecondary,
+            boxBg,
+            iconColor,
+            bgButton,
+            bgHover,
+            bgFocus,
+          }}
+        >
+          {props.children}
+        </TotalSpentcontext.Provider>
+      )}
     </>
   );
 };

@@ -94,7 +94,7 @@ export default function Banner({ memo }) {
           <Flex align="center">
             <Icon as={MdOutlineLightbulb} h="16px" w="16px" me="8px" />
             <Text fontSize="sm" fontWeight="400">
-              {memo}{" "}
+              {memo}
             </Text>
           </Flex>
         </MenuItem>

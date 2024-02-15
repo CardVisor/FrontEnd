@@ -129,7 +129,7 @@ export const TrafficProvider = (props) => {
                   {
                     offset: 100,
                     color: "rgba(67, 24, 255, 1)", //색바꾸기
-                    opacity: 0.28,
+                    opacity: 0.7,
                   },
                 ],
               ],

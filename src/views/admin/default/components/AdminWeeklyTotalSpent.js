@@ -29,19 +29,11 @@ export const TotalProvider = (props) => {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondarybody.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-  const iconColor = useColorModeValue("brand.500", "white");
-  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+
   const [Weekpertotal, setWeekPerTotal] = useState();
   const [increse, setIncrese] = useState();
-  const bgHover = useColorModeValue(
-    { bg: "secondaryGray.400" },
-    { bg: "whiteAlpha.50" }
-  );
-  const bgFocus = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.100" }
-  );
   const [memo, setMemo] = useState();
+  const [checkstat, setCheckstat] = useState(false);
   // 6주간 총결제내역 작년 올해 비교 상승률
   const formatpercent = (number) => {
     // Check if the input is a valid number
@@ -58,21 +50,6 @@ export const TotalProvider = (props) => {
       return "Invalid input"; // Handle invalid input
     }
   };
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: "/main/weektotalIncrese",
-    })
-      .then((res) => {
-        console.log(res.data);
-        setIncrese(res.data);
-        let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
-        setMemo(Message);
-      })
-      .catch((err) => {
-        console.log("Error fetching currency data:", err);
-      });
-  }, []);
 
   //총 결제내역 숫자바꾸기
   const formatabroad = (number) => {
@@ -93,49 +70,71 @@ export const TotalProvider = (props) => {
   };
 
   // 6개월간 총결제내역
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: "/main/perWeekTotalAmount",
-    })
-      .then((res) => {
-        console.log(res.data);
-        setWeekPerTotal(res.data);
-      })
-      .catch((err) => {
-        console.log("Error fetching currency data:", err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios({
+  //     method: "get",
+  //     url: "/main/perWeekTotalAmount",
+  //   })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setWeekPerTotal(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error fetching currency data:", err);
+  //     });
+  // }, []);
+  // useEffect(() => {
+  //   axios({
+  //     method: "get",
+  //     url: "/main/weektotalIncrese",
+  //   })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setIncrese(res.data);
+  //       let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
+  //       setMemo(Message);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error fetching currency data:", err);
+  //     });
+  // }, []);
+
   useEffect(() => {
     axios
       .all([
         axios.get("/main/selectPerWeeklyamount"),
         axios.get("/main/selectLastYearPerMonthamount"),
+        axios.get("/main/weektotalIncrese"),
+        axios.get("/main/perWeekTotalAmount"),
       ])
       .then(
-        axios.spread((res1, res2) => {
+        axios.spread((res1, res2, res3, res4) => {
+          setWeekPerTotal(res4.data);
+          setIncrese(res3.data);
+          let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
+          setMemo(Message);
           const weeklyname = res1.data.map((item) => item.week);
           week = weeklyname;
-          const formattedNumbers = res1.data.map((item) => {
+          const formattedweeknumber = res1.data.map((item) => {
             if (item.total_amount >= 1000000) {
               return (item.total_amount / 1000000).toFixed(2); // Convert to millions and append 'M'
             } else {
               return item.total_amount.toLocaleString(); // Format number with comma separators
             }
           });
-          data = formattedNumbers;
-          const formattedNumbers1 = res2.data.map((item) => {
+          data = formattedweeknumber;
+          const formattedweeknumbers = res2.data.map((item) => {
             if (item.total_amount >= 1000000) {
               return (item.total_amount / 1000000).toFixed(2); // Convert to millions and append 'M'
             } else {
               return item.total_amount.toLocaleString(); // Format number with comma separators
             }
           });
-          lastweeklydata = formattedNumbers1; //lastmonthdata
+          lastweeklydata = formattedweeknumbers; //lastmonthdata
         })
       )
       .then(() => {
-        const lineChartDataTotalSpent1 = [
+        const lineChartDataTotalSpent2 = [
           {
             name: "올해",
             data: data,
@@ -145,8 +144,8 @@ export const TotalProvider = (props) => {
             data: lastweeklydata,
           },
         ];
-        setLineChartDataWeekTotalSpent(lineChartDataTotalSpent1);
-        const lineChartOptionsTotalSpent1 = {
+        setLineChartDataWeekTotalSpent(lineChartDataTotalSpent2);
+        const lineChartOptionsTotalSpent2 = {
           chart: {
             toolbar: {
               show: false,
@@ -218,28 +217,31 @@ export const TotalProvider = (props) => {
           },
           color: ["#7551FF", "#39B8FF"],
         };
-        setOptionWeekLineChart(lineChartOptionsTotalSpent1);
+        setOptionWeekLineChart(lineChartOptionsTotalSpent2);
+        setCheckstat(true);
       })
       .catch((err) => console.log(err));
   }, []);
   return (
     <>
-      <TotalWeekSpentcontext.Provider
-        value={{
-          textColor,
-          formatabroad,
-          increse,
-          lineChartOptionsWeekTotalSpent,
-          formatpercent,
-          lineChartDataWeekTotalSpent,
-          Weekpertotal,
-          textColorSecondary,
-          boxBg,
-          memo,
-        }}
-      >
-        {props.children}
-      </TotalWeekSpentcontext.Provider>
+      {checkstat && (
+        <TotalWeekSpentcontext.Provider
+          value={{
+            textColor,
+            formatabroad,
+            increse,
+            lineChartOptionsWeekTotalSpent,
+            formatpercent,
+            lineChartDataWeekTotalSpent,
+            Weekpertotal,
+            textColorSecondary,
+            boxBg,
+            memo,
+          }}
+        >
+          {props.children}
+        </TotalWeekSpentcontext.Provider>
+      )}
     </>
   );
 };

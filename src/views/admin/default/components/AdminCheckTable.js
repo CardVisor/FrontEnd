@@ -70,7 +70,7 @@ export default function AdminCheckTable(props) {
           fontWeight="700"
           lineHeight="100%"
         >
-          회원 TOP5
+          이용회원 수 기준 카드 TOP5
         </Text>
         <Menu memo={memo} />
       </Flex>
