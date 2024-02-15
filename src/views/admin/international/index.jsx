@@ -70,7 +70,7 @@ export default function Marketplace() {
         <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
             {/* Main Fields */}
             <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 3, "2xl": 3 }}
+                columns={{ base: 3, md: 2, lg: 3, "2xl": 3 }}
                 gap="20px"
                 mb="20px"
             >
@@ -78,8 +78,8 @@ export default function Marketplace() {
                 <TopComparePaymentSamePeriod />
                 <TopHighestOrderPayment />
             </SimpleGrid>
-            <SimpleGrid columns={{ base: 1 }} gap='20px' mb='20px'>
-              <WorldMap />
+            <SimpleGrid columns={{ base: 1 }} gap="20px">
+                <WorldMap />
             </SimpleGrid>
         </Box>
     );
