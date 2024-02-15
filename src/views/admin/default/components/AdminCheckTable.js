@@ -35,8 +35,6 @@ export default function AdminCheckTable(props) {
       url: "/main/selectTop5CardList",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setCList(res.data);
         let Message =
           "카드 만료기한이 되지않은 카드중 회원들이 제일 많이 사용하는 카드입니다. ";
@@ -52,8 +50,6 @@ export default function AdminCheckTable(props) {
       url: "/main/totalCardRegAmount",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setTotalCount(res.data);
       })
       .catch((err) => {

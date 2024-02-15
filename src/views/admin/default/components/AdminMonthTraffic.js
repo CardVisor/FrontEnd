@@ -146,7 +146,6 @@ export const TrafficProvider = (props) => {
           },
         };
         setBarChartOptionsDailyTraffic(barChartOptionsDailyTraffic1);
-        console.log(barChartDataMonthTraffic1);
       })
       .catch((err) => {
         console.log("Error fetching currency data:", err);

@@ -116,14 +116,13 @@ export const TotalProvider = (props) => {
       ])
       .then(
         axios.spread((res1, res2) => {
-          console.log("1");
           const monthname = res2.data.map((item) => item.month);
-          console.log(monthname);
+
           const formattedMonths = monthname.map((month) => {
             const [year, monthNumber] = month.split("-");
             return monthNumber + "월";
           });
-          console.log(formattedMonths);
+
           month = formattedMonths;
 
           const formattedNumbers1 = res2.data.map((item) => {
@@ -146,8 +145,6 @@ export const TotalProvider = (props) => {
         })
       )
       .then(() => {
-        console.log("2", data);
-        console.log("2", lastmonthdata);
         const lineChartDataTotalSpent1 = [
           {
             name: "올해",
@@ -158,7 +155,7 @@ export const TotalProvider = (props) => {
             data: lastmonthdata,
           },
         ];
-        console.log("lineChartDataTotalSpent1", lineChartDataTotalSpent1);
+
         setLineChartDataTotalSpent(lineChartDataTotalSpent1);
         const lineChartOptionsTotalSpent1 = {
           chart: {

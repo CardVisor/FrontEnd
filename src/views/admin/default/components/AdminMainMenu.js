@@ -77,7 +77,6 @@ export default function Banner({ memo }) {
       >
         <MenuItem
           display="flex"
-          flex-Direction="row-revrese"
           width={300}
           transition="0.2s linear"
           p="0px"

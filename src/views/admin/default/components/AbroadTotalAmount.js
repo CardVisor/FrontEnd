@@ -18,8 +18,6 @@ function AbroadTotalAmount(props) {
       url: "/main/abroadTotalAmount",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setAbroadTotalAmount(res.data);
       })
       .catch((err) => {
