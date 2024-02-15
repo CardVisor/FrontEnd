@@ -9,10 +9,19 @@ import {
     Title,
     Legend,
 } from "chart.js";
-import { Box, Button, Flex, IconButton, Select, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Flex,
+    IconButton,
+    Select,
+    Text,
+    useColorModeValue,
+} from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { TopDateFilter, TopMonthFilter } from "./TopDateFilter";
+import { FaFilePdf } from "react-icons/fa";
 
 const COUNTRIES_URL = "https://unpkg.com/world-atlas/countries-50m.json";
 const ANIMATION_INTERVAL = 2000; // 1.5초
@@ -38,37 +47,12 @@ function WorldMap(props) {
 
     const [selectStartMonth, setSelectStartMonth] = useState(null);
     const [selectEndMonth, setSelectEndMonth] = useState(null);
-/*
-    useEffect(() => {
-        if (selectedMonth) {
-            axios({
-                method: "get",
-                //url: `/CardCluster/Cards?month=${selectedMonth}&sort=${selectedSort}`,
-            })
-                .then((res) => {
-                    const filteredCards = res.data.map((card) => {
-                        return {
-                            card_name: card.cardName,
-                            card_img_url: card.cardImgUrl,
-                            card_annual_fee: card.cardAnnualFee,
-                            cardType: card.cardType,
-                        };
-                    });
-                    // 추출된 카드 정보 배열을 상태로 설정
-                    setCards(filteredCards);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-    }, [selectedMonth]);
- */
     useEffect(() => {
         animationRunningRef.current = animationRunning; // 애니메이션 상태가 변경될 때마다 ref를 업데이트
     }, [animationRunning]);
 
     const animate = () => {
-        if (!animationRunningRef.current) {
+        if (!animationRunningRef.current || !mapChartRef.current) {
             return; // 애니메이션이 정지된 상태라면 함수를 종료
         }
 
@@ -92,6 +76,7 @@ function WorldMap(props) {
                     dataPoint,
                     dataPoint.objects.countries
                 ).features;
+
                 const chartData = {
                     labels: countriesRef.current.map(
                         (country) => country.properties.name
@@ -107,26 +92,28 @@ function WorldMap(props) {
                     ],
                 };
 
+                const chartOptions = {
+                    showOutline: true,
+                    showGraticule: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        projection: {
+                            axis: "x",
+                            projection: "equalEarth",
+                        },
+                    },
+                }
+
                 mapChartRef.current = new Chart(
-                    document.getElementById("mapChart"),
+                    mapChartRef.current,
                     {
                         type: "choropleth",
                         data: chartData,
-                        options: {
-                            showOutline: true,
-                            showGraticule: true,
-                            plugins: {
-                                legend: {
-                                    display: false,
-                                },
-                            },
-                            scales: {
-                                projection: {
-                                    axis: "x",
-                                    projection: "equalEarth",
-                                },
-                            },
-                        },
+                        options: chartOptions
                     }
                 );
 
@@ -151,28 +138,35 @@ function WorldMap(props) {
         setAnimationRunning(!animationRunning); // 애니메이션 토글
     };
 
-
     const textColor = useColorModeValue("secondaryGray.900", "white");
 
     return (
         <>
             <Card>
                 <Text
-                color={textColor}
-                fontSize="20px"
-                fontWeight="700"
-                lineHeight="100%"
+                    color={textColor}
+                    fontSize="20px"
+                    fontWeight="700"
+                    lineHeight="100%"
                 >
                     월간 해외 결제 리포트
                 </Text>
-                <Flex justifyContent="flex-end" gap={2}
-                my="20px">
-                    <TopMonthFilter setSelectStartMonth={setSelectStartMonth} setSelectEndMonth={setSelectEndMonth} />
-                    <Button colorScheme='teal'  onClick={toggleAnimation}
-                        >{animationRunning ? "STOP" : "PLAY"}</Button>
+                <Flex justifyContent="flex-end" gap={2} my="20px">
+                    <TopMonthFilter
+                        setSelectStartMonth={setSelectStartMonth}
+                        setSelectEndMonth={setSelectEndMonth}
+                    />
+                    <IconButton
+                        colorScheme="red"
+                        aria-label="Search database"
+                        icon={<FaFilePdf />}
+                    />
+                    <Button colorScheme="teal" onClick={toggleAnimation}>
+                        {animationRunning ? "STOP" : "PLAY"}
+                    </Button>
                 </Flex>
                 <Box>
-                    <canvas id="mapChart"></canvas>
+                    <canvas ref={mapChartRef} />
                 </Box>
             </Card>
         </>
