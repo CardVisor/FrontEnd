@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import AdminMiniStatistics from "views/admin/default/components/AdminMiniStatistics";
 
 import IconBox from "components/icons/IconBox";
-import { Box, Icon, useColorModeValue } from "@chakra-ui/react";
+import { Icon, useColorModeValue } from "@chakra-ui/react";
 import { MdBarChart } from "react-icons/md";
 
 function CustomerCount(props) {
@@ -18,8 +18,6 @@ function CustomerCount(props) {
       url: "/main/totalCustomer",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setCustCount(res.data);
       })
       .catch((err) => {
@@ -33,8 +31,6 @@ function CustomerCount(props) {
       url: "/main/addOneDayCustomer",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setAddCustCount(res.data);
       })
       .catch((err) => {

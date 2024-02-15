@@ -160,7 +160,7 @@ export default function Default(props) {
                 fontWeight="700"
                 me="5px"
               >
-                {growth ? formatNumber(growth) : null}
+                {growth ? formatabroad(growth) : null}
               </Text>
             </Flex>
           ) : null}

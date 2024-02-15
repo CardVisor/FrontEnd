@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Chakra imports
-import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import BarChart from "components/charts/BarChart";
 
 // Custom components
 import Card from "components/card/Card.js";
-
+import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
 
@@ -19,7 +19,7 @@ export const TrafficProvider = (props) => {
   var total6transaction = [];
   const [transaction, setTransaction] = useState([]);
   var month = [];
-
+  const [memo, SetMemo] = useState();
   useEffect(() => {
     axios
       .all([
@@ -28,6 +28,8 @@ export const TrafficProvider = (props) => {
       ])
       .then(
         axios.spread((res1, res2) => {
+          let Message = "6개월간 매달 거래건수를 나타낸 차트입니다.";
+          SetMemo(Message);
           const monthname = res1.data.map((item) => item.month);
           const formattedMonths = monthname.map((month) => {
             const [year, monthNumber] = month.split("-");
@@ -155,6 +157,7 @@ export const TrafficProvider = (props) => {
     <>
       <MonthTrafficContext.Provider
         value={{
+          memo,
           textColor,
           transaction,
           barChartDataMonthTraffic,
@@ -179,6 +182,7 @@ export default function AdminMonthTraffic(props) {
 
 function AdminMonthTrafficDisplay(props) {
   const {
+    memo,
     textColor,
     barChartDataMonthTraffic,
     barChartOptionsDailyTraffic,
@@ -188,17 +192,15 @@ function AdminMonthTrafficDisplay(props) {
   return (
     <>
       <Flex justify="space-between" align="start" px="10px" pt="5px">
-        <Flex flexDirection="column" align="start" me="20px">
-          <Flex w="100%">
-            <Text
-              me="auto"
-              color="secondaryGray.600"
-              fontSize="sm"
-              fontWeight="500"
-            >
-              월 거래건수
-            </Text>
-          </Flex>
+        <Flex w="100%" display="flex" direction="column">
+          <Text
+            me="auto"
+            color="secondaryGray.600"
+            fontSize="sm"
+            fontWeight="500"
+          >
+            월 거래건수
+          </Text>
           <Flex align="end">
             <Text
               color={textColor}
@@ -213,11 +215,14 @@ function AdminMonthTrafficDisplay(props) {
               color="secondaryGray.600"
               fontSize="sm"
               fontWeight="500"
+              display="flex"
+              align-items="center"
             >
-              Visitors
+              건
             </Text>
           </Flex>
         </Flex>
+        <Menu memo={memo} />
       </Flex>
       <Box h="240px" mt="auto">
         {barChartDataMonthTraffic.length > 0 &&

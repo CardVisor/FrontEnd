@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Chakra imports
-import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import BarChart from "components/charts/BarChart";
 
 // Custom components
 import Card from "components/card/Card.js";
-
+import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
 
@@ -20,6 +20,7 @@ export const TrafficProvider = (props) => {
   const [barChartOptionsWeekTraffic, setBarChartOptionsWeekTraffic] = useState(
     []
   );
+  const [memo, SetMemo] = useState();
   useEffect(() => {
     axios
       .all([
@@ -28,6 +29,8 @@ export const TrafficProvider = (props) => {
       ])
       .then(
         axios.spread((res1, res2) => {
+          let Message = "6주간 매주 건수를 나타낸 차트입니다.";
+          SetMemo(Message);
           setTotal6Transaction(res1.data);
           const weekname = res2.data.map((item) => item.week);
           week = weekname;
@@ -147,6 +150,7 @@ export const TrafficProvider = (props) => {
     <>
       <WeekTrafficContext.Provider
         value={{
+          memo,
           textColor,
           barChartDataWeekTraffic,
           barChartOptionsWeekTraffic,
@@ -171,6 +175,7 @@ export default function AdminWeeklyTraffic(props) {
 
 function AdminMonthTrafficDisplay(props) {
   const {
+    memo,
     textColor,
     barChartDataWeekTraffic,
     barChartOptionsWeekTraffic,
@@ -205,11 +210,14 @@ function AdminMonthTrafficDisplay(props) {
               color="secondaryGray.600"
               fontSize="sm"
               fontWeight="500"
+              display="flex"
+              alignItems="center"
             >
-              Visitors
+              건
             </Text>
           </Flex>
         </Flex>
+        <Menu memo={memo} />
       </Flex>
       <Box h="240px" mt="auto">
         {barChartDataWeekTraffic.length > 0 &&
