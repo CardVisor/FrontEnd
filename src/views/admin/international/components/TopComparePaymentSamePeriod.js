@@ -8,7 +8,7 @@ import axios from "axios";
 function TopComparePaymentSamePeriod(props) {
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-    const today = new Date();   
+    const today = new Date();
     const [comparePayment, setComparePayment]  = useState();
     const month = today.getMonth() + 1;  // 월
 

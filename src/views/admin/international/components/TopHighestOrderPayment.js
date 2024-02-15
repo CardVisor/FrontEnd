@@ -26,7 +26,7 @@ function TopHighestOrderPayment(props) {
             url: "/international/highestOrderPayment",
         })
             .then((res) => {
-                console.log(res.data);
+                //console.log(res.data);
                 setPaymentRank(res.data);
                 setIsVisible(true);
             })
@@ -45,7 +45,7 @@ function TopHighestOrderPayment(props) {
                     setCurrentIndex((currentIndex) => (currentIndex + 1) % paymentRank.length);
                     setIsVisible(true);
                 }, 500);
-            }, 3000);
+            }, 3500);
     
             return () => clearInterval(timer);
         }
@@ -69,19 +69,15 @@ function TopHighestOrderPayment(props) {
                 }
               />
             }
-            name={paymentRank && `올해 결제 건별 나라 순위`}
+            name={paymentRank && `올해 결제 TOP 20`}
             value={
               <Box className={isVisible ? 'fade-in' : 'fade-out'}>
                 {paymentRank && (
                   <>
                     <span className="toplist">No.{currentIndex + 1}</span>
-                    {chartNationInfo.filter( target => {
-                      //console.log("+++filterfilter++++++++++"+JSON.stringify(target)+"target.nationCode"+target.nationCode); 
-                      //console.log("조건111111111111111" + target.currencyCode === paymentRank[currentIndex].CURRENCY_CODE);
-                      //console.log("조건2"+target.nationCode === paymentRank[currentIndex].NATION);
-                        return target.currencyCode === paymentRank[currentIndex].CURRENCY_CODE && target.nationCode === paymentRank[currentIndex].NATION
-                    }).map(target => { 
-                        //console.log("+++++++++++++"+JSON.stringify(target));
+                    {chartNationInfo.filter( target => 
+                        target.currencyCode === paymentRank[currentIndex].CURRENCY_CODE && target.nationCode === paymentRank[currentIndex].NATION
+                    ).map(target => { 
                         if(target.currencyCode === "EUR") return "유럽";
                         return target.kName;
                     })}{" "}
