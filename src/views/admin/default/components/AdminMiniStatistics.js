@@ -101,7 +101,7 @@ export default function Default(props) {
         justify={{ base: "center", xl: "center" }}
       >
         {startContent}
-        <Stat Cardmy="auto" ms={startContent ? "18px" : "0px"}>
+        <Stat cardmy="auto" ms={startContent ? "18px" : "0px"}>
           <StatLabel
             lineHeight="100%"
             color={textColorSecondary}

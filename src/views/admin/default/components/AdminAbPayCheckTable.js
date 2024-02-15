@@ -50,8 +50,6 @@ export default function AdminAbPayCheckTable(props) {
       url: "/main/benefitTotalAmount",
     })
       .then((res) => {
-        console.log("??");
-        console.log("+sdsdsf", res.data);
         setTotalAmount(res.data);
       })
       .catch((err) => {
