@@ -21,7 +21,7 @@
 */
 
 // Chakra imports
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, useColorMode } from "@chakra-ui/react";
 // Assets
 // Custom components
 
@@ -45,8 +45,9 @@ export default function UserReports() {
   const [showMonthly, setShowMonthly] = useState(true);
 
   const handleToggle = () => {
-    setShowMonthly((prevShowMonthly) => !prevShowMonthly);
+    setShowMonthly(!showMonthly);
   };
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -73,6 +74,7 @@ export default function UserReports() {
           </>
         )}
       </SimpleGrid>
+
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
         <AdminCheckTable />
         <AdminPayCheckTable></AdminPayCheckTable>
