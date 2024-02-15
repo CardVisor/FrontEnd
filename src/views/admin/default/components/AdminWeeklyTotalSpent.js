@@ -11,10 +11,10 @@ import {
 import Card from "components/card/Card.js";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
+import { MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
-
+import Menu from "./AdminMainMenu";
 import axios from "axios";
 import AdminLineChart from "./AdminLineChart";
 
@@ -27,7 +27,7 @@ export const TotalProvider = (props) => {
   const [lineChartDataWeekTotalSpent, setLineChartDataWeekTotalSpent] =
     useState([]);
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
+  const textColorSecondary = useColorModeValue("secondarybody.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const iconColor = useColorModeValue("brand.500", "white");
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -41,7 +41,7 @@ export const TotalProvider = (props) => {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
-
+  const [memo, setMemo] = useState();
   // 6주간 총결제내역 작년 올해 비교 상승률
   const formatpercent = (number) => {
     // Check if the input is a valid number
@@ -66,6 +66,8 @@ export const TotalProvider = (props) => {
       .then((res) => {
         console.log(res.data);
         setIncrese(res.data);
+        let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
+        setMemo(Message);
       })
       .catch((err) => {
         console.log("Error fetching currency data:", err);
@@ -224,19 +226,16 @@ export const TotalProvider = (props) => {
     <>
       <TotalWeekSpentcontext.Provider
         value={{
-          lineChartOptionsWeekTotalSpent,
-          increse,
-          lineChartDataWeekTotalSpent,
-          formatpercent,
           textColor,
-          Weekpertotal,
           formatabroad,
+          increse,
+          lineChartOptionsWeekTotalSpent,
+          formatpercent,
+          lineChartDataWeekTotalSpent,
+          Weekpertotal,
           textColorSecondary,
           boxBg,
-          iconColor,
-          bgButton,
-          bgHover,
-          bgFocus,
+          memo,
         }}
       >
         {props.children}
@@ -270,46 +269,27 @@ export function DisplayTotal({ handleToggle }) {
     Weekpertotal,
     textColorSecondary,
     boxBg,
-    iconColor,
-    bgButton,
-    bgHover,
-    bgFocus,
+    memo,
   } = useContext(TotalWeekSpentcontext);
   return (
     <>
-      <Flex justify="space-between" ps="0px" pe="20px" pt="5px">
-        <Flex align="center" w="100%">
-          <Button
-            bg={boxBg}
-            fontSize="sm"
-            fontWeight="500"
+      <Flex justify="space-between" align="center" w="100%">
+        <Button
+          bg={boxBg}
+          fontSize="sm"
+          fontWeight="500"
+          color={textColorSecondary}
+          borderRadius="7px"
+          onClick={handleToggle}
+        >
+          <Icon
+            as={MdOutlineCalendarToday}
             color={textColorSecondary}
-            borderRadius="7px"
-            onClick={handleToggle}
-          >
-            <Icon
-              as={MdOutlineCalendarToday}
-              color={textColorSecondary}
-              me="4px"
-            />
-            This Week
-          </Button>
-          <Button
-            ms="auto"
-            align="center"
-            justifyContent="center"
-            bg={bgButton}
-            _hover={bgHover}
-            _focus={bgFocus}
-            _active={bgFocus}
-            w="37px"
-            h="37px"
-            lineHeight="100%"
-            borderRadius="10px"
-          >
-            <Icon as={MdBarChart} color={iconColor} w="24px" h="24px" />
-          </Button>
-        </Flex>
+            me="4px"
+          />
+          This Week
+        </Button>
+        <Menu memo={memo} />
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <Flex flexDirection="column" me="20px" mt="28px">

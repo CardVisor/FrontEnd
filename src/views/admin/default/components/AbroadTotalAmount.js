@@ -3,12 +3,7 @@ import { useColorModeValue } from "@chakra-ui/system";
 import IconBox from "components/icons/IconBox";
 import React, { useEffect, useState } from "react";
 import AdminMiniStatistics from "views/admin/default/components/AdminMiniStatistics";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdBarChart,
-  MdFileCopy,
-} from "react-icons/md";
+import { MdAttachMoney } from "react-icons/md";
 import axios from "axios";
 function AbroadTotalAmount(props) {
   const brandColor = useColorModeValue("brand.500", "white");
@@ -38,7 +33,6 @@ function AbroadTotalAmount(props) {
       url: "/main/abroadLastMonthTotalAmount",
     })
       .then((res) => {
-      
         setAbroadLastMonthTotalAmount(res.data);
       })
       .catch((err) => {

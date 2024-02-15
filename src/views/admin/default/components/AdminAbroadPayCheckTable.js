@@ -15,11 +15,10 @@ import React, { useEffect, useState } from "react";
 import Card from "components/card/Card";
 import Menu from "./AdminMainMenu";
 import axios from "axios";
-export default function AdminCheckTable(props) {
+export default function AdminAbroadPayCheckTable(props) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const [clist, setCList] = useState([]);
-  const [totalcount, setTotalCount] = useState();
   const [memo, setMemo] = useState();
 
   const formatNumber = (number) => {
@@ -32,34 +31,18 @@ export default function AdminCheckTable(props) {
   useEffect(() => {
     axios({
       method: "get",
-      url: "/main/selectTop5CardList",
+      url: "/main/abroadPayAmountTop5Card",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setCList(res.data);
-        let Message =
-          "카드 만료기한이 되지않은 카드중 회원들이 제일 많이 사용하는 카드입니다. ";
+        let Message = "해외에서 결제한 금액이 가장 가장 큰 나라입니다.";
         setMemo(Message);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-  useEffect(() => {
-    axios({
-      method: "get",
-      url: "/main/totalCardRegAmount",
-    })
-      .then((res) => {
-        console.log("??");
-        console.log(res.data);
-        setTotalCount(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+
   return (
     <Card
       direction="column"
@@ -74,7 +57,7 @@ export default function AdminCheckTable(props) {
           fontWeight="700"
           lineHeight="100%"
         >
-          회원 TOP5
+          해외결제금액 기준 상위 TOP5
         </Text>
         <Menu memo={memo} />
       </Flex>
@@ -89,7 +72,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                NAME
+                나라
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -100,7 +83,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                PROGRESS
+                결제코드
               </Flex>
             </Th>
 
@@ -112,7 +95,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                QUANTITY
+                결제건수
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -123,7 +106,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                ANUALFEE
+                총결제 금액
               </Flex>
             </Th>
           </Tr>
@@ -134,7 +117,7 @@ export default function AdminCheckTable(props) {
               <Tr key={`id${index}`}>
                 <Td>
                   <Text color={textColor} fontSize="sm" fontWeight="700">
-                    {card.card_name}
+                    {card.currency_nation}
                   </Text>
                 </Td>
                 <Td>
@@ -145,7 +128,7 @@ export default function AdminCheckTable(props) {
                       fontSize="sm"
                       fontWeight="700"
                     >
-                      {((card.col / totalcount) * 100).toFixed(1)}%
+                      {card.currency_code}
                     </Text>
                   </Flex>
                 </Td>
@@ -157,7 +140,7 @@ export default function AdminCheckTable(props) {
                       fontSize="sm"
                       fontWeight="700"
                     >
-                      {card.col}
+                      {card.countable}건
                     </Text>
                   </Flex>
                 </Td>
@@ -169,7 +152,7 @@ export default function AdminCheckTable(props) {
                       fontSize="sm"
                       fontWeight="700"
                     >
-                      {formatNumber(card.card_annual_fee)}원
+                      {formatNumber(card.amountable)}원
                     </Text>
                   </Flex>
                 </Td>
