@@ -85,7 +85,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                NAME
+                카드이름
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -96,7 +96,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                PROGRESS
+                비율
               </Flex>
             </Th>
 
@@ -108,7 +108,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                QUANTITY
+                사용개수
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -119,7 +119,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                ANUALFEE
+                연회비
               </Flex>
             </Th>
           </Tr>
@@ -128,12 +128,22 @@ export default function AdminCheckTable(props) {
           {clist &&
             clist.map((card, index) => (
               <Tr key={`id${index}`}>
-                <Td>
+                <Td
+                  borderColor={borderColor}
+                  borderRight={"1px"}
+                  borderRightColor={borderColor}
+                  borderBottom={"1px"}
+                  borderBottomStyle={"dashed"}
+                >
                   <Text color={textColor} fontSize="sm" fontWeight="700">
                     {card.card_name}
                   </Text>
                 </Td>
-                <Td>
+                <Td
+                  borderColor={borderColor}
+                  borderBottom={"1px"}
+                  borderBottomStyle={"dashed"}
+                >
                   <Flex align="center">
                     <Text
                       me="10px"
@@ -145,7 +155,11 @@ export default function AdminCheckTable(props) {
                     </Text>
                   </Flex>
                 </Td>
-                <Td>
+                <Td
+                  borderColor={borderColor}
+                  borderBottom={"1px"}
+                  borderBottomStyle={"dashed"}
+                >
                   <Flex align="center">
                     <Text
                       me="10px"
@@ -157,7 +171,11 @@ export default function AdminCheckTable(props) {
                     </Text>
                   </Flex>
                 </Td>
-                <Td>
+                <Td
+                  borderColor={borderColor}
+                  borderBottom={"1px"}
+                  borderBottomStyle={"dashed"}
+                >
                   <Flex align="center">
                     <Text
                       me="10px"
