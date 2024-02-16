@@ -1,25 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'assets/css/App.css';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import AuthLayout from 'layouts/auth';
+import './assets/css/App.css';
+
 import AdminLayout from 'layouts/admin';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from 'theme/theme';
 import { ThemeEditorProvider } from '@hypertheme-editor/chakra-ui';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 ReactDOM.render(
-    <ChakraProvider theme={theme}>
-        <React.StrictMode>
+    <React.StrictMode>
+        <ChakraProvider theme={theme}>
             <ThemeEditorProvider>
                 <BrowserRouter>
-                    <Switch>
-                        <Redirect exact from="/" to="/main" />
-                        <Route path={'/'} component={AdminLayout} />
-                    </Switch>
+                    <Routes>
+                        <Route path="/*" element={<AdminLayout />} />
+                        <Route path="/" element={<Navigate replace to="/main" />} />
+                    </Routes>
                 </BrowserRouter>
             </ThemeEditorProvider>
-        </React.StrictMode>
-    </ChakraProvider>,
+        </ChakraProvider>
+    </React.StrictMode>,
     document.getElementById('root')
 );
