@@ -96,7 +96,7 @@ export default function AgeData(props) {
               포함된 고객 수 : {data}명 <br></br>
               평균 연령 : {averageAgeGroups}세 <br></br>
               평균 연봉 : {topSalaryByAgeRange}<br></br>
-              일 평균 사용금액 : {averageByAgeRange}<br></br>
+              평균 소비금액 : {averageByAgeRange}<br></br>
               가장 많이 사용한 카드 : {topCardsAgeRange && topCardsAgeRange.map(card => card.cardName).join(', ')} <br></br>
               주 사용처 : {topMccCodes && topMccCodes.filter(code => code[0] === filter).map(code => code[1]).join(', ')}
             </Text>
