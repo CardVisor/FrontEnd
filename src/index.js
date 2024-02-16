@@ -14,8 +14,8 @@ ReactDOM.render(
             <ThemeEditorProvider>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Navigate replace to="/main" />} />
                         <Route path="/*" element={<AdminLayout />} />
+                        <Route path="/" element={<Navigate replace to="/main" />} />
                     </Routes>
                 </BrowserRouter>
             </ThemeEditorProvider>
