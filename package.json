@@ -74,8 +74,8 @@
         ]
     },
     "devDependencies": {
-      "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-      "gh-pages": "^3.2.3"
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "gh-pages": "^3.2.3"
     },
     "proxy": "http://localhost:7777"
 }

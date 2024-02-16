@@ -34,6 +34,8 @@ import Projects from "./components/Projects";
 import AgeData from "./components/AgeData";
 import JobData from "./components/JobData";
 import SalaryData from "./components/SalaryData";
+import CustomFilter from "./components/CustomFilter";
+
 
 
 export default function Overview() {
@@ -50,12 +52,13 @@ export default function Overview() {
       <Box pt={{ base: "auto", md: "80px", xl: "80px" }}>
         {/* Main Fields */}
         <Card>
-          <ButtonGroup>
+          {/* <ButtonGroup>
             <Button colorScheme="teal" onClick={() => genderRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}>성별</Button>
             <Button colorScheme="teal" onClick={() => ageRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}> 나이</Button>
             <Button colorScheme="teal" onClick={() => jobRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}>직업</Button>
             <Button colorScheme="teal" onClick={() => salaryRef.current.scrollIntoView({ behavior: 'smooth' })} style={{ backgroundColor:"#5E3AFF"}}>연봉</Button>
-          </ButtonGroup>
+          </ButtonGroup> */}
+          <CustomFilter></CustomFilter>
         </Card>
         <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px" ref={genderRef}>
           성별 조회
