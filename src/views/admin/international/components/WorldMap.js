@@ -14,19 +14,23 @@ import {
     Button,
     Flex,
     IconButton,
-    Select,
     Text,
     useColorModeValue,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import { TopDateFilter, TopMonthFilter } from "./TopDateFilter";
-import { FaFilePdf } from "react-icons/fa";
+import { TopMonthFilter } from "./TopDateFilter";
+import {
+    FaFilePdf,
+    FaPlayCircle,
+    FaRegFilePdf,
+    FaRegStopCircle,
+} from "react-icons/fa";
 
+// 국가 데이터를 가져오기 위한 API URL
 const COUNTRIES_URL = "https://unpkg.com/world-atlas/countries-50m.json";
-const ANIMATION_INTERVAL = 2000; // 1.5초
+const ANIMATION_INTERVAL = 2000;
 
-// 필요한 모듈 등록
+// 필요한 Chart.js 모듈 등록
 ChartJS.register(
     Title,
     Tooltip,
@@ -39,21 +43,23 @@ ChartJS.register(
 );
 
 function WorldMap(props) {
-    const [animationRunning, setAnimationRunning] = useState(true); // 애니메이션 상태를 관리하는 state
-    const animationRunningRef = useRef(animationRunning); // 애니메이션 상태를 참조하는 ref
-    const mapChartRef = useRef(null); // mapChart를 참조하는 ref
-    const countriesRef = useRef(null); // countries를 참조하는 ref
+    const [animationRunning, setAnimationRunning] = useState(true);
+    const animationRunningRef = useRef(animationRunning);
+    const mapChartRef = useRef(null);
+    const countriesRef = useRef(null);
     let animationFrameId = null;
 
     const [selectStartMonth, setSelectStartMonth] = useState(null);
     const [selectEndMonth, setSelectEndMonth] = useState(null);
+
     useEffect(() => {
-        animationRunningRef.current = animationRunning; // 애니메이션 상태가 변경될 때마다 ref를 업데이트
+        animationRunningRef.current = animationRunning;
     }, [animationRunning]);
 
+    // 차트 데이터 업데이트를 위한 애니메이션 함수
     const animate = () => {
         if (!animationRunningRef.current || !mapChartRef.current) {
-            return; // 애니메이션이 정지된 상태라면 함수를 종료
+            return;
         }
 
         mapChartRef.current.data.datasets[0].data = countriesRef.current.map(
@@ -69,14 +75,19 @@ function WorldMap(props) {
     };
 
     useEffect(() => {
-        fetch(COUNTRIES_URL)
-            .then((res) => res.json())
-            .then((dataPoint) => {
+        // 국가 데이터를 가져와 차트 초기화
+        const fetchData = async () => {
+            try {
+                const res = await fetch(COUNTRIES_URL);
+                const dataPoint = await res.json();
+
+                // TopoJSON 형식의 데이터를 GeoJSON 형식으로 변환하여 countriesRef에 저장
                 countriesRef.current = ChartGeo.topojson.feature(
                     dataPoint,
                     dataPoint.objects.countries
                 ).features;
 
+                // 차트에 표시할 데이터 구조
                 const chartData = {
                     labels: countriesRef.current.map(
                         (country) => country.properties.name
@@ -92,7 +103,10 @@ function WorldMap(props) {
                     ],
                 };
 
+                // 차트 구성 옵션
                 const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     showOutline: true,
                     showGraticule: true,
                     plugins: {
@@ -106,66 +120,121 @@ function WorldMap(props) {
                             projection: "equalEarth",
                         },
                     },
-                }
+                };
 
-                mapChartRef.current = new Chart(
-                    mapChartRef.current,
-                    {
+                if (mapChartRef && mapChartRef.current) {
+                    // 차트 초기화
+                    mapChartRef.current = new Chart(mapChartRef.current, {
                         type: "choropleth",
                         data: chartData,
-                        options: chartOptions
+                        options: chartOptions,
+                    });
+
+                    if (mapChartRef.current) {
+                        animate();
                     }
-                );
+                }
+            } catch (error) {
+                console.error("데이터 가져오기 오류:", error);
+            }
+        };
 
-                animate();
-            });
+        // 데이터 가져와 차트 초기화
+        fetchData();
 
+        // 정리 함수
         return () => {
             clearTimeout(animationFrameId);
-            if (mapChartRef.current) {
+            if (mapChartRef && mapChartRef.current) {
                 mapChartRef.current.destroy();
             }
         };
     }, []);
 
     useEffect(() => {
+        // 애니메이션이 실행 중이고 차트가 존재하며 국가 데이터가 있는 경우 애니메이션을 계속 진행
         if (animationRunning && mapChartRef.current && countriesRef.current) {
             animate();
         }
     }, [animationRunning]);
 
+    // 애니메이션 재생/일시정지 토글
     const toggleAnimation = () => {
-        setAnimationRunning(!animationRunning); // 애니메이션 토글
+        setAnimationRunning(!animationRunning);
     };
 
+    // 컬러 모드에 따른 텍스트 색상
     const textColor = useColorModeValue("secondaryGray.900", "white");
 
     return (
         <>
             <Card>
+                {/* 리포트 제목 */}
                 <Text
                     color={textColor}
                     fontSize="20px"
                     fontWeight="700"
-                    lineHeight="100%"
                 >
                     월간 해외 결제 리포트
+                    {/* 
+                    <IconButton
+                    colorScheme="blue"
+                        aria-label="애니메이션 제어"
+                        icon={
+                            animationRunning ? (
+                                <FaRegStopCircle />
+                            ) : (
+                                <FaPlayCircle />
+                            )
+                        }
+                        onClick={toggleAnimation}
+                    />
+                     */}
+                    <Button
+                        colorScheme="blue"
+                        aria-label="애니메이션 제어"
+                        onClick={toggleAnimation}
+                        borderRadius="10px"
+                        fontSize="12px"
+                        h="30px"
+                        pl="10px"
+                        pr="10px"
+                        ml="10px"
+                        leftIcon={
+                            animationRunning ? (
+                                <FaRegStopCircle />
+                            ) : (
+                                <FaPlayCircle />
+                            )
+                        }
+                    >
+                        {animationRunning ? "Stop" : "Play"}
+                    </Button>
                 </Text>
-                <Flex justifyContent="flex-end" gap={2} my="20px">
+                {/* 필터 및 내보내기 버튼 */}
+                <Flex justifyContent="flex-end" gap={1} pr="80px" mt="20px" mb="30px">
                     <TopMonthFilter
                         setSelectStartMonth={setSelectStartMonth}
                         setSelectEndMonth={setSelectEndMonth}
                     />
                     <IconButton
-                        colorScheme="red"
-                        aria-label="Search database"
-                        icon={<FaFilePdf />}
+                        colorScheme="green"
+                        aria-label="엑셀로 내보내기"
+                        icon={<FaRegFilePdf />}
+                        borderRadius="10px"
+                        w="auto"
+                        ml="10px"
                     />
-                    <Button colorScheme="teal" onClick={toggleAnimation}>
-                        {animationRunning ? "STOP" : "PLAY"}
-                    </Button>
+                    <IconButton
+                        colorScheme="red"
+                        aria-label="PDF로 내보내기"
+                        icon={<FaFilePdf />}
+                        borderRadius="10px"
+                        w="auto"
+                    />
                 </Flex>
-                <Box>
+                {/* 차트 캔버스 */}
+                <Box minH="calc(100vh - 399px)">
                     <canvas ref={mapChartRef} />
                 </Box>
             </Card>
