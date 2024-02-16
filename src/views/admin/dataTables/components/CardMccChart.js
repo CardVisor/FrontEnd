@@ -70,7 +70,7 @@ function PieChartComponent(props) {
     legend.data.setAll(series.dataItems);
 
     // Play initial series animation
-    //series.appear(1000, 100);
+    // series.appear(1000, 100);
 
     return () => {
       // root가 존재하면 차트를 제거
