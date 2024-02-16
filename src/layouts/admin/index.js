@@ -6,11 +6,12 @@ import Navbar from 'components/navbar/NavbarAdmin.js';
 import Sidebar from 'components/sidebar/Sidebar.js';
 import { SidebarContext } from 'contexts/SidebarContext';
 import { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import routes from 'routes.js';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
+    const location = useLocation();
     const { ...rest } = props;
 
     // states and functions
@@ -23,13 +24,11 @@ export default function Dashboard(props) {
     };
 
     const getActiveRoute = (routes) => {
-        let activeRoute = '/main';
         for (let i = 0; i < routes.length; i++) {
             if (window.location.href.indexOf(routes[i].path) !== -1) {
                 return routes[i].name;
             }
         }
-        return activeRoute;
     };
     const getActiveNavbar = (routes) => {
         let activeNavbar = '/Main Dashboard';

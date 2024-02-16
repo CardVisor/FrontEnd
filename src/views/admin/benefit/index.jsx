@@ -22,7 +22,6 @@ export default function Settings() {
                 setbBenefitTreeList(res2.data);
                 setBenefitBottompList(res.data.bottom);
                 setLoading(true);
-                console.log(res.data.top);
             } catch (err) {
                 console.log(err);
             }

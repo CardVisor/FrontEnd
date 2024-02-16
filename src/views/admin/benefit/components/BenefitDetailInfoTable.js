@@ -27,7 +27,6 @@ export default function BenefitDetailInfoTable(props) {
                 data: senddata,
             })
                 .then((res) => {
-                    console.log(res.data);
                     setBenefitList(res.data);
                 })
                 .catch((err) => {
