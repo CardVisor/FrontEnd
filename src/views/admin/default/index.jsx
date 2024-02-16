@@ -21,35 +21,13 @@
 */
 
 // Chakra imports
-import {
-  Avatar,
-  Box,
-  Flex,
-  FormLabel,
-  Icon,
-  Select,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, useColorMode } from "@chakra-ui/react";
 // Assets
 // Custom components
-import MiniCalendar from "components/calendar/MiniCalendar";
 
 import React, { useState } from "react";
 
-import CheckTable from "views/admin/default/components/CheckTable";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import {
-  columnsDataCheck,
-  columnsDataComplex,
-} from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
-import CustomerCount from "./components/CustomerCount";
+import CustomerCount from "./components/AdminCustomerCount";
 import KrwTotalAmount from "./components/KrwTotalAmount";
 import AbroadTotalAmount from "./components/AbroadTotalAmount";
 import LatestCurrencyData from "./components/LatestCurrencyData";
@@ -58,16 +36,18 @@ import AdminWeeklyTotalSpent from "./components/AdminWeeklyTotalSpent";
 import AdminMonthTraffic from "./components/AdminMonthTraffic";
 import AdminWeeklyTraffic from "./components/AdminWeeklyTraffic";
 import AdminCheckTable from "./components/AdminCheckTable";
-
-
+import AdminPayCheckTable from "./components/AdminPayCheckTable";
+import AdminAbroadPayCheckTable from "./components/AdminAbroadPayCheckTable";
+import AdminAbPayCheckTable from "./components/AdminAbPayCheckTable";
 
 export default function UserReports() {
   // Chakra Color Mode
   const [showMonthly, setShowMonthly] = useState(true);
 
   const handleToggle = () => {
-    setShowMonthly((prevShowMonthly) => !prevShowMonthly);
+    setShowMonthly(!showMonthly);
   };
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -79,12 +59,12 @@ export default function UserReports() {
 
         <KrwTotalAmount></KrwTotalAmount>
         <AbroadTotalAmount></AbroadTotalAmount>
-      <LatestCurrencyData></LatestCurrencyData>
+        <LatestCurrencyData></LatestCurrencyData>
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-      {showMonthly ? (
+        {showMonthly ? (
           <>
-            <AdminMonthTotalSpent handleToggle={handleToggle}/>
+            <AdminMonthTotalSpent handleToggle={handleToggle} />
             <AdminMonthTraffic />
           </>
         ) : (
@@ -94,28 +74,14 @@ export default function UserReports() {
           </>
         )}
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <AdminWeeklyTotalSpent />
-        <WeeklyRevenue />
-      </SimpleGrid>
+
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-          <AdminCheckTable />
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-      
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <DailyTraffic />
-          <PieCard />
-        </SimpleGrid>
+        <AdminCheckTable />
+        <AdminPayCheckTable></AdminPayCheckTable>
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <Tasks />
-          <MiniCalendar h="100%" minW="100%" selectRange={false} />
-        </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px">
+        <AdminAbroadPayCheckTable />
+        <AdminAbPayCheckTable />
       </SimpleGrid>
     </Box>
   );
