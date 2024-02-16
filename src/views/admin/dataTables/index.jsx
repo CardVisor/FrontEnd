@@ -83,9 +83,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
       </Card>
       <Card>
         <Box bg="white.200" p={4}>
-          <Flex>
-            <SearchBar></SearchBar>
-          </Flex>
+          <Flex>{/* <SearchBar></SearchBar> */}</Flex>
         </Box>
       </Card>
     </Grid>
