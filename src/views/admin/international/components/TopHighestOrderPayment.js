@@ -5,6 +5,7 @@ import InterMiniStatistics from "views/admin/international/components/InterMiniS
 import { FaChartPie } from "react-icons/fa6";
 import axios from "axios";
 import "assets/css/International.css";
+import { chartNationInfo } from "../variables/chartNationInfo";
 
 function TopHighestOrderPayment(props) {
     const brandColor = useColorModeValue("brand.500", "white");
@@ -25,7 +26,7 @@ function TopHighestOrderPayment(props) {
             url: "/international/highestOrderPayment",
         })
             .then((res) => {
-                console.log(res.data);
+                //console.log(res.data);
                 setPaymentRank(res.data);
                 setIsVisible(true);
             })
@@ -44,7 +45,7 @@ function TopHighestOrderPayment(props) {
                     setCurrentIndex((currentIndex) => (currentIndex + 1) % paymentRank.length);
                     setIsVisible(true);
                 }, 500);
-            }, 3000);
+            }, 3500);
     
             return () => clearInterval(timer);
         }
@@ -68,13 +69,18 @@ function TopHighestOrderPayment(props) {
                 }
               />
             }
-            name={paymentRank && `올해 결제 건별 나라 순위`}
+            name={paymentRank && `올해 결제 TOP 20`}
             value={
               <Box className={isVisible ? 'fade-in' : 'fade-out'}>
                 {paymentRank && (
                   <>
                     <span className="toplist">No.{currentIndex + 1}</span>
-                    {paymentRank[currentIndex].CURRENCY_NATION.split(" ")[0]}{" "}
+                    {chartNationInfo.filter( target => 
+                        target.currencyCode === paymentRank[currentIndex].CURRENCY_CODE && target.nationCode === paymentRank[currentIndex].NATION
+                    ).map(target => { 
+                        if(target.currencyCode === "EUR") return "유럽";
+                        return target.kName;
+                    })}{" "}
                     {numberWithCommas(paymentRank[currentIndex].PAYMENT_CNT)}건
                   </>
                 )}

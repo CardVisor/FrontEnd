@@ -1,17 +1,17 @@
 // Chakra imports
-import { Portal, Box, useDisclosure, Text, Button, Link } from '@chakra-ui/react';
+import { Box, Portal } from '@chakra-ui/react';
 import Footer from 'components/footer/FooterAdmin.js';
 // Layout components
 import Navbar from 'components/navbar/NavbarAdmin.js';
 import Sidebar from 'components/sidebar/Sidebar.js';
 import { SidebarContext } from 'contexts/SidebarContext';
-import React, { useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { useState } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import routes from 'routes.js';
-import MainDashboard from 'views/admin/default';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
+    const location = useLocation();
     const { ...rest } = props;
 
     // states and functions
@@ -24,13 +24,11 @@ export default function Dashboard(props) {
     };
 
     const getActiveRoute = (routes) => {
-        let activeRoute = '/main';
         for (let i = 0; i < routes.length; i++) {
             if (window.location.href.indexOf(routes[i].path) !== -1) {
                 return routes[i].name;
             }
         }
-        return activeRoute;
     };
     const getActiveNavbar = (routes) => {
         let activeNavbar = '/Main Dashboard';
@@ -52,8 +50,8 @@ export default function Dashboard(props) {
     };
 
     const getRoutes = (routes) => {
-        return routes.map((prop, key) => {
-            return <Route path={prop.path} component={prop.component} key={key} />;
+        return routes.map((route, key) => {
+            return <Route path={route.path} element={route.element} key={key} />;
         });
     };
 
@@ -97,11 +95,11 @@ export default function Dashboard(props) {
                                 />
                             </Box>
                         </Portal>
-                        {getRoute() ? (
-                            <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="100vh" pt="50px">
-                                <Switch>{getRoutes(routes)}</Switch>
-                            </Box>
-                        ) : null}
+
+                        <Box mx="auto" p={{ base: '20px', md: '30px' }} pe="20px" minH="100vh" pt="50px">
+                            <Routes>{getRoutes(routes)}</Routes>
+                        </Box>
+
                         <Box>
                             <Footer />
                         </Box>
