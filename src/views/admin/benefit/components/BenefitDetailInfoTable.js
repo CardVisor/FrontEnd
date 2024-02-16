@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 // Custom components
 import axios from 'axios';
 import Card from 'components/card/Card';
-import Menu from 'components/menu/MainMenu';
-import { string } from '@amcharts/amcharts4/core';
 export default function BenefitDetailInfoTable(props) {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');

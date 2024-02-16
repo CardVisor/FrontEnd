@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import BenefitPieOfPie from './BenefitPieOfPie';
-import BenefitUsingPieSlice from './BenefitUsingPieSlice';
+import { useState } from 'react';
 import BenefitDetailInfoTable from './BenefitDetailInfoTable';
+import BenefitPieOfPie from './BenefitPieOfPie';
+import MonthPickingComponent from './MonthPickingComponent';
 
 function ParentBenefitComponent(props) {
     const benefitTopList = props.data;
@@ -16,6 +16,7 @@ function ParentBenefitComponent(props) {
 
     return (
         <div>
+            <MonthPickingComponent></MonthPickingComponent>
             <BenefitPieOfPie
                 data={benefitTopList}
                 val="Card Benefit Top 5"
