@@ -1,4 +1,20 @@
-import { IconButton, Box, Grid, Select, Input, Flex } from "@chakra-ui/react";
+import {
+  IconButton,
+  Box,
+  Grid,
+  Select,
+  Input,
+  Flex,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
 import NFT from "components/card/NFT_boh";
@@ -95,6 +111,25 @@ export default function Settings() {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedSort, setSelectedSort] = useState(null);
 
+  const [clickedCards, setClickedCards] = useState([]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleCardClick = (index) => {
+    setClickedCards((prevState) => {
+      // 이미 클릭되어 있으면 클릭 상태를 해제
+      if (prevState.includes(index)) {
+        //console.log(clickedCards.length + 1);
+        return prevState.filter((i) => i !== index);
+      }
+      // 아니면 클릭 상태를 저장
+      else {
+        //console.log(clickedCards.length + 1);
+        return [...prevState, index];
+      }
+    });
+  };
+
   useEffect(() => {
     if (selectedMonth && selectedSort) {
       axios({
@@ -118,6 +153,11 @@ export default function Settings() {
         });
     }
   }, [selectedMonth, selectedSort]);
+
+  useEffect(() => {
+    // 컴포넌트가 렌더링될 때마다 클릭 정보를 초기화
+    setClickedCards([]);
+  }, []);
 
   // Chakra Color Mode
   return (
@@ -149,6 +189,9 @@ export default function Settings() {
               month={selectedMonth}
             />
             <NFT2
+              key={index}
+              onClick={() => handleCardClick(index)}
+              isClicked={clickedCards.includes(index)}
               card_annual_fee={card.card_annual_fee}
               val={card.card_name}
               image={card.card_img_url}
@@ -157,6 +200,41 @@ export default function Settings() {
             />
           </Grid>
         ))}
+      <Button
+        onClick={onOpen}
+        colorScheme="blue"
+        style={{
+          borderRadius: "100",
+          height: "80px",
+          width: "100px",
+          position: "fixed",
+          right: "30px",
+          bottom: "50px",
+        }}
+        disabled={clickedCards.length !== 2}
+      >
+        Comp + {clickedCards.length}
+      </Button>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Card Comparison</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* <Lorem count={2} /> */}
+            <p>
+              ddddkdnfkdjfkdjfkdjfkdjkfjdkfjkdjfkdjfkdjkfjdkfjkdjfkdjfkdjfkdjfkdjfkdfjdkfjdkfjkdjfkdfjkdjfkdj
+            </p>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost">Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
