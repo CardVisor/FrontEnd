@@ -3,12 +3,12 @@ import React, { useRef, useEffect } from "react";
 import * as am5 from "@amcharts/amcharts5";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import * as am5hierarchy from "@amcharts/amcharts5/hierarchy";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 
 function BenefitTreemap(props) {
   const chartDiv = useRef(null);
-  const { data, val } = props;
+  const { data } = props;
   useEffect(() => {
     if (chartDiv.current) {
       const root = am5.Root.new(chartDiv.current);
@@ -126,7 +126,6 @@ function BenefitTreemap(props) {
     <Card p="20px">
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "1px", "2xl": "1px" }} position="relative">
-          <Text fontSize="xl">{val}</Text>
           <div ref={chartDiv} style={{ width: "100%", height: "400px" }}></div>
         </Box>
       </Flex>
