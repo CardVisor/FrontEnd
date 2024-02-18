@@ -22,8 +22,9 @@ import DatePickerMonthly from "./components/DatePicker";
 import ParentBenefitComponent from "./components/ParentBenefitComponent";
 import Card from "components/card/Card";
 import { SearchIcon } from "@chakra-ui/icons";
+import BenefitRecommed from "./components/BenefitRecommed";
 
-export default function Settings() {
+export default function BenefitSetting() {
   const [benefitList, setBenefitist] = useState([]);
   const [benefitTreeList, setbBenefitTreeList] = useState([]);
   const [benefitTitle, setBenefitTitle] = useState();
@@ -65,6 +66,7 @@ export default function Settings() {
       console.log(err);
     }
   };
+  //검색 상태를 설정하는 useEffect
   useEffect(() => {
     if (allPeriodChecked === true) {
       setSeachState(true);
@@ -76,6 +78,13 @@ export default function Settings() {
       setSeachState(false);
     }
   }, [date, selectOption, allPeriodChecked]);
+  useEffect(() => {
+    const fetchData = async () => {
+      await handleIconClick();
+    };
+
+    fetchData();
+  }, []);
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Grid
@@ -155,9 +164,7 @@ export default function Settings() {
                 </Flex>
               </Box>
               <Box mr={10} maxWidth="200px">
-                <Button colorScheme="purple" variant="solid" size="sm">
-                  혜택 상세 조회
-                </Button>
+                <BenefitRecommed></BenefitRecommed>
               </Box>
             </Flex>
           </Box>

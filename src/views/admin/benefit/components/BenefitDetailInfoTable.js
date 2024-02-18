@@ -10,16 +10,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-
-// Custom components
 import axios from "axios";
 import Card from "components/card/Card";
 export default function BenefitDetailInfoTable(props) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
-  const { clickedChartEl, data } = props;
-  const inputDate = props.date;
-
+  const { clickedChartEl, data, clickFlag, date } = props;
   const [benefitList, setBenefitList] = useState();
   const formatNumber = (number) => {
     if (number > 0) {
@@ -29,27 +25,32 @@ export default function BenefitDetailInfoTable(props) {
     }
   };
   useEffect(() => {
-    var formattedDate = null;
-    if (inputDate) {
-      const year = inputDate.getFullYear();
-      let month = inputDate.getMonth() + 1; // getMonth는 0부터 시작하므로 1을 더해
-      month = month < 10 ? `0${month}` : month;
-      formattedDate = `${year}-${month}`;
-    }
-    var senddata = { cateName: clickedChartEl, date: formattedDate };
+    const fetchData = async () => {
+      // 비동기 작업을 수행하는 함수를 따로 선언
+      var formattedDate = null;
+      if (date) {
+        const year = date.getFullYear();
+        let month = date.getMonth() + 1; // getMonth는 0부터 시작하므로 1을 더해
+        month = month < 10 ? `0${month}` : month;
+        formattedDate = `${year}-${month}`;
+      }
+      var senddata = { cateName: clickedChartEl, date: formattedDate };
 
-    axios({
-      method: "post",
-      url: "/benefitCluster/BenefitDetail",
-      data: senddata,
-    })
-      .then((res) => {
+      try {
+        const res = await axios({
+          method: "post",
+          url: "/benefitCluster/BenefitDetail",
+          data: senddata,
+        });
         setBenefitList(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [clickedChartEl, data]);
+      } catch (err) {}
+    };
+
+    if (clickFlag) {
+      // clickFlag가 true인 경우에만 fetchData 함수를 호출
+      fetchData();
+    }
+  }, [clickedChartEl, data, clickFlag]);
   return (
     <Card
       direction="column"

@@ -4,12 +4,12 @@ import BenefitPieOfPie from "./BenefitPieOfPie";
 
 function ParentBenefitComponent({ benefitList, benefitTitle, date }) {
   const [clickedChartEl, setClickedChartEl] = useState(null);
-  // const [clickFlag, setClickFlag] = useState(false);
+  const [clickFlag, setClickFlag] = useState(false);
 
   const handleChartClick = (data) => {
     // 클릭된 슬라이스의 데이터를 가공
     setClickedChartEl(data);
-    //setClickFlag(true);
+    setClickFlag(true);
   };
 
   return (
@@ -22,7 +22,7 @@ function ParentBenefitComponent({ benefitList, benefitTitle, date }) {
       />
       <BenefitDetailInfoTable
         clickedChartEl={clickedChartEl}
-        // clickFlag={clickFlag}
+        clickFlag={clickFlag}
         date={date}
         data={benefitList}
       />
