@@ -96,7 +96,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                비율
+                이용률
               </Flex>
             </Th>
 
@@ -108,7 +108,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                사용개수
+                개수
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -128,22 +128,12 @@ export default function AdminCheckTable(props) {
           {clist &&
             clist.map((card, index) => (
               <Tr key={`id${index}`}>
-                <Td
-                  borderColor={borderColor}
-                  borderRight={"1px"}
-                  borderRightColor={borderColor}
-                  borderBottom={"1px"}
-                  borderBottomStyle={"dashed"}
-                >
+                <Td>
                   <Text color={textColor} fontSize="sm" fontWeight="700">
                     {card.card_name}
                   </Text>
                 </Td>
-                <Td
-                  borderColor={borderColor}
-                  borderBottom={"1px"}
-                  borderBottomStyle={"dashed"}
-                >
+                <Td>
                   <Flex align="center">
                     <Text
                       me="10px"
@@ -155,11 +145,7 @@ export default function AdminCheckTable(props) {
                     </Text>
                   </Flex>
                 </Td>
-                <Td
-                  borderColor={borderColor}
-                  borderBottom={"1px"}
-                  borderBottomStyle={"dashed"}
-                >
+                <Td>
                   <Flex align="center">
                     <Text
                       me="10px"
@@ -171,11 +157,7 @@ export default function AdminCheckTable(props) {
                     </Text>
                   </Flex>
                 </Td>
-                <Td
-                  borderColor={borderColor}
-                  borderBottom={"1px"}
-                  borderBottomStyle={"dashed"}
-                >
+                <Td>
                   <Flex align="center">
                     <Text
                       me="10px"
