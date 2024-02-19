@@ -20,8 +20,8 @@ function TopTotalPayment(props) {
             method: "get",
             url:"/international/totalPayment",
         }).then((res)=>{
-            console.log("??");
-            console.log(res.data);
+            //console.log("??");
+            //console.log(res.data);
             setTotalPayment(res.data)
         }).catch((err)=>{
             console.log(err);

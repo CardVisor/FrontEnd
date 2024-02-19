@@ -6,7 +6,7 @@ const allOptions = [];
 const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
 const currentMonth = currentDate.getMonth() + 1;
-for (let year = currentYear; year >= currentYear - 2; year--) {
+for (let year = currentYear; year >= currentYear - 3; year--) {
     const endMonth = year === currentYear ? currentMonth : 12;
     for (let month = endMonth; month >= 1; month--) {
         const monthString = month < 10 ? `0${month}` : `${month}`;
@@ -17,7 +17,7 @@ for (let year = currentYear; year >= currentYear - 2; year--) {
     }
 }
 
-export const TopMonthFilter = ({ setSelectStartMonth, setSelectEndMonth }) => {
+function TopMonthFilter({setSelectStartMonth, setSelectEndMonth}) {
     const [startMonth, setStartMonth] = useState(allOptions[11]?.value);
     const [endMonth, setEndMonth] = useState(allOptions[0]?.value);
 
@@ -37,11 +37,18 @@ export const TopMonthFilter = ({ setSelectStartMonth, setSelectEndMonth }) => {
         setEndMonth(event.target.value);
     };
 
-    useEffect(() => {
-        setSelectStartMonth(startMonth);
-        setSelectEndMonth(endMonth);
-    }, [endMonth, startMonth]);
+    // useEffect(() => {
+    //     setSelectStartMonth(startMonth);
+    //     setSelectEndMonth(endMonth);
+    // }, [endMonth, startMonth]);
 
+    useEffect(() => {
+        // 최초 렌더링 시에만 값을 설정
+        if (startMonth !== null && endMonth !== null) {
+            setSelectStartMonth(startMonth);
+            setSelectEndMonth(endMonth);
+        }
+    }, []);
     return (
         <Box>
             <Flex
@@ -91,4 +98,6 @@ export const TopMonthFilter = ({ setSelectStartMonth, setSelectEndMonth }) => {
             </Flex>
         </Box>
     );
-};
+}
+
+export default TopMonthFilter;
