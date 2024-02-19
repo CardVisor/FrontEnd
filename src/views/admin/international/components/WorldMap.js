@@ -29,7 +29,6 @@ import { chartNationInfo } from "../variables/chartNationInfo";
 
 // 국가 데이터를 가져오기 위한 API URL
 const COUNTRIES_URL = "https://unpkg.com/world-atlas/countries-50m.json";
-const ANIMATION_INTERVAL = 2000;
 
 // 필요한 Chart.js 모듈 등록
 ChartJS.register(
@@ -46,6 +45,7 @@ ChartJS.register(
 function WorldMap(props) {
     const [animationRunning, setAnimationRunning] = useState(true);
     const animationRunningRef = useRef(animationRunning);
+    const [currentMonth, setCurrentMonth] = useState(null);
     const mapChartRef = useRef(null);
     const countriesRef = useRef(null);
     let animationFrameId = null;
@@ -53,32 +53,13 @@ function WorldMap(props) {
     const [selectStartMonth, setSelectStartMonth] = useState(null);
     const [selectEndMonth, setSelectEndMonth] = useState(null);
     const [chartData, setChartData] = useState(null);
-
-    // 차트 데이터 업데이트를 위한 애니메이션 함수
-    /*
-    const animate = () => {
-        if (!animationRunningRef.current || !mapChartRef.current) {
-            return;
-        }
-
-        mapChartRef.current.data.datasets[0].data = countriesRef.current.map(
-            (country) => ({
-                feature: country,
-                value: Math.random() * 100,
-            })
-        );
-
-        mapChartRef.current.update();
-
-        animationFrameId = setTimeout(animate, ANIMATION_INTERVAL);
-    };
- */
+    const firstRenderRef = useRef(true);
 
     const numberWithCommas = (x) => {
         return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
-    //tooltip
+    // tooltip
     const getOrCreateTooltip = (chart) => {
         let tooltipEl = chart.canvas.parentNode.querySelector("div");
 
@@ -116,7 +97,7 @@ function WorldMap(props) {
             tooltipEl.innerHTML = `
                 <div class="state-info">
                     <div class="state-info__label">월별 신용카드 사용정보</div>
-                    <div class="state-info__value">${bodyLines}</div>
+                    <div class="state-info__value">${bodyLines} 건</div>
                 </div>`;
         }
 
@@ -139,22 +120,25 @@ function WorldMap(props) {
     const updateChart = (month) => {
         const chartDataStructure = {
             labels: countriesRef.current.map((country) => {
-                let kName, ageGroup, totalAmount, totalCount;
+                let kName, ageGroup, totalAmount, totalCount, genderGroup;
                 const target = Object.values(chartData).find(
                     (target) => target.eName === country.properties.name
                 );
                 if (target && target.payment_month[month]) {
                     kName = target.kName;
                     ageGroup = target.payment_month[month].age_range;
+                    genderGroup = target.payment_month[month].gender_range;
                     totalAmount = target.payment_month[month].total_amount;
                     //totalCount = target.payment_month[month].total_payment_count;
                 }
                 return `<div>
-                            ${month? `<div>${month}</div>`: ""}
+                            <div>${month? `${month.split("-")[0]}년 ${month.split("-")[1]}월` : ""}</div>
                             ${kName? `<span>${kName}</span> / `: ""}
-                            <span>${country.properties.name}</span>
-                            ${ageGroup? `<div>가장 많이 방문하는 연령대: ${ageGroup}</div>`: ""}
+                            <span>${country.properties.name}</span><br />
+                            ${ageGroup?`<div>주 결제 고객층: ${ageGroup} ${genderGroup}성</div>`:""}
+                            <br />
                             ${totalAmount? `<div>총 매출액: ${numberWithCommas(totalAmount)} 원</div>`: ""}
+                            
                         </div>
                         <span>총 결제 건수</span>
                         `;
@@ -184,6 +168,32 @@ function WorldMap(props) {
         mapChartRef.current.update();
     };
 
+    const createChartData = (data) => {
+        return data.reduce((acc, curr) => {
+            const nationInfo = nationInfoByCode[curr.nation];
+            if (nationInfo) {
+                if (!acc[nationInfo.nationCode]) {
+                    acc[nationInfo.nationCode] = {
+                        nation: nationInfo.nationCode,
+                        eName: nationInfo.eName,
+                        kName: nationInfo.kName,
+                        currencyCode: nationInfo.currencyCode,
+                        payment_month: {},
+                    };
+                }
+                acc[nationInfo.nationCode].payment_month[curr.payment_month] = {
+                    month: curr.payment_month,
+                    age_range: curr.age_range,
+                    gender_range: curr.gender_range,
+                    total_amount: curr.total_amount,
+                    total_payment_count: curr.total_payment_count,
+                };
+            }
+            return acc;
+        }, {});
+    };
+
+   
     useEffect(() => {
         if (selectStartMonth !== null && selectEndMonth !== null) {
             axios({
@@ -191,33 +201,8 @@ function WorldMap(props) {
                 url: `/international/chartDataList?startMonth=${selectStartMonth}&endMonth=${selectEndMonth}`,
             })
                 .then((res) => {
-                    const dataByCountryAndMonth = res.data.reduce(
-                        (acc, curr) => {
-                            const nationInfo = nationInfoByCode[curr.nation];
-                            if (nationInfo) {
-                                if (!acc[nationInfo.nationCode]) {
-                                    acc[nationInfo.nationCode] = {
-                                        nation: nationInfo.nationCode,
-                                        eName: nationInfo.eName,
-                                        kName: nationInfo.kName,
-                                        currencyCode: nationInfo.currencyCode,
-                                        payment_month: {},
-                                    };
-                                }
-                                acc[nationInfo.nationCode].payment_month[
-                                    curr.payment_month
-                                ] = {
-                                    month: curr.payment_month,
-                                    age_range: curr.age_range,
-                                    total_amount: curr.total_amount,
-                                    total_payment_count:
-                                        curr.total_payment_count,
-                                };
-                            }
-                            return acc;
-                        },
-                        {}
-                    );
+                    console.log("?res.data???", res.data);
+                    const dataByCountryAndMonth = createChartData(res.data);
                     setChartData(dataByCountryAndMonth);
                 })
                 .catch((err) => {
@@ -225,47 +210,54 @@ function WorldMap(props) {
                 });
         }
     }, [selectStartMonth, selectEndMonth]);
-
-    const firstRenderRef = useRef(true);
-
+    
     useEffect(() => {
-        let intervalId = null;
-
-        if (
-            animationRunning &&
-            chartData &&
-            mapChartRef.current &&
-            countriesRef.current &&
-            selectStartMonth &&
-            selectEndMonth
-        ) {
-            let startMonth = selectStartMonth;
-            let endMonth = selectEndMonth;
-
-            let start = new Date(startMonth);
-            let end = new Date(endMonth);
-            let months = [];
-            for (let dt = start; dt <= end; dt.setMonth(dt.getMonth() + 1)) {
-                months.push(dt.toISOString().slice(0, 7));
-            }
-
-            updateChart(months[0]);
-
-            let index = firstRenderRef.current ? 1 : 0;
-            intervalId = setInterval(() => {
-                updateChart(months[index]);
-                index = (index + 1) % months.length;
-            }, 2000);
-
-            firstRenderRef.current = false;
+        if (selectStartMonth) {
+          setCurrentMonth(selectStartMonth);
         }
-
+      }, [selectStartMonth]);
+      useEffect(() => {
+        let intervalId = null;
+      
+        if (
+          animationRunning &&
+          chartData &&
+          mapChartRef.current &&
+          countriesRef.current &&
+          selectStartMonth &&
+          selectEndMonth
+        ) {
+          let startMonth = selectStartMonth;
+          let endMonth = selectEndMonth;
+      
+          let start = new Date(startMonth);
+          let end = new Date(endMonth);
+          let months = [];
+          for (let dt = start; dt <= end; dt.setMonth(dt.getMonth() + 1)) {
+            months.push(dt.toISOString().slice(0, 7));
+          }
+      
+          // 첫 렌더링 시에는 index 0부터 시작
+          let index = firstRenderRef.current ? 0 : months.indexOf(currentMonth);
+          updateChart(months[index]);
+      
+          intervalId = setInterval(() => {
+            index = (index + 1) % months.length;
+            setCurrentMonth(months[index]);
+            updateChart(months[index]);
+          }, 2000);
+      
+          firstRenderRef.current = false;
+        }
+      
         return () => {
-            if (intervalId !== null) {
-                clearInterval(intervalId);
-            }
+          if (intervalId !== null) {
+            clearInterval(intervalId);
+          }
         };
-    }, [animationRunning, chartData, selectStartMonth, selectEndMonth]);
+      }, [animationRunning, chartData, selectStartMonth, selectEndMonth, currentMonth]);
+      
+    
 
     useEffect(() => {
         console.log("chartData updated:", chartData);
@@ -331,15 +323,6 @@ function WorldMap(props) {
         };
     }, []);
 
-    /*
-    useEffect(() => {
-        // 애니메이션이 실행 중이고 차트가 존재하며 국가 데이터가 있는 경우 애니메이션을 계속 진행
-        if (animationRunning && mapChartRef.current && countriesRef.current) {
-            animate();
-        }
-    }, [animationRunning]);
-
- */
     // 애니메이션 재생/일시정지 토글
     const toggleAnimation = () => {
         setAnimationRunning(!animationRunning);
@@ -385,6 +368,7 @@ function WorldMap(props) {
                     <TopMonthFilter
                         setSelectStartMonth={setSelectStartMonth}
                         setSelectEndMonth={setSelectEndMonth}
+                        setAnimationRunning={setAnimationRunning}
                     />
                     <IconButton
                         colorScheme="green"
