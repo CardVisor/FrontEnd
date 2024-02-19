@@ -1,6 +1,6 @@
 import { IconButton, Box, Select, Flex } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 
 const allOptions = [];
 const currentDate = new Date();
@@ -17,17 +17,16 @@ for (let year = currentYear; year >= currentYear - 3; year--) {
     }
 }
 
-function TopMonthFilter({setSelectStartMonth, setSelectEndMonth}) {
+function TopMonthFilter({setSelectStartMonth, setSelectEndMonth, setAnimationRunning}) {
     const [startMonth, setStartMonth] = useState(allOptions[11]?.value);
     const [endMonth, setEndMonth] = useState(allOptions[0]?.value);
 
     const startMonthOptions = allOptions;
-    const endMonthOptions = useMemo(() => {
-        const endMonthIndex = allOptions.findIndex(
-            (option) => option.value === startMonth
-        );
-        return allOptions.slice(0, endMonthIndex + 1);
-    }, [startMonth]);
+    
+    const endMonthIndex = allOptions.findIndex(
+        (option) => option.value === startMonth
+    );
+    const endMonthOptions = allOptions.slice(0, endMonthIndex + 1);
 
     const handlerEndMonth = (event) => {
         setStartMonth(event.target.value);
@@ -36,11 +35,11 @@ function TopMonthFilter({setSelectStartMonth, setSelectEndMonth}) {
     const handlerStartMonth = (event) => {
         setEndMonth(event.target.value);
     };
-
-    // useEffect(() => {
-    //     setSelectStartMonth(startMonth);
-    //     setSelectEndMonth(endMonth);
-    // }, [endMonth, startMonth]);
+    const handleButtonClick = () => {
+        setSelectStartMonth(startMonth);
+        setSelectEndMonth(endMonth);
+        setAnimationRunning(true);
+    };
 
     useEffect(() => {
         // 최초 렌더링 시에만 값을 설정
@@ -49,6 +48,7 @@ function TopMonthFilter({setSelectStartMonth, setSelectEndMonth}) {
             setSelectEndMonth(endMonth);
         }
     }, []);
+
     return (
         <Box>
             <Flex
@@ -94,6 +94,7 @@ function TopMonthFilter({setSelectStartMonth, setSelectEndMonth}) {
                     icon={<SearchIcon />}
                     pl={6}
                     pr={6}
+                    onClick={handleButtonClick}
                 />
             </Flex>
         </Box>
