@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import BenefitPieOfPie from './BenefitPieOfPie';
-import BenefitUsingPieSlice from './BenefitUsingPieSlice';
+import { useState } from 'react';
 import BenefitDetailInfoTable from './BenefitDetailInfoTable';
+import BenefitPieOfPie from './BenefitPieOfPie';
 
-function ParentBenefitComponent(props) {
-    const benefitTopList = props.data;
+function ParentBenefitComponent({ benefitList, benefitTitle, date, selectOption }) {
     const [clickedChartEl, setClickedChartEl] = useState(null);
     const [clickFlag, setClickFlag] = useState(false);
 
@@ -17,12 +15,18 @@ function ParentBenefitComponent(props) {
     return (
         <div>
             <BenefitPieOfPie
-                data={benefitTopList}
-                val="Card Benefit Top 5"
+                data={benefitList}
+                val={`혜택 ${benefitTitle}`}
                 id="chart1"
                 onSliceClick={handleChartClick}
             />
-            <BenefitDetailInfoTable clickedChartEl={clickedChartEl} clickFlag={clickFlag} />
+            <BenefitDetailInfoTable
+                clickedChartEl={clickedChartEl}
+                clickFlag={clickFlag}
+                date={date}
+                data={benefitList}
+                selectOption={selectOption}
+            />
         </div>
     );
 }
