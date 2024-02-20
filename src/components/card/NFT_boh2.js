@@ -14,7 +14,6 @@ import React, { useState } from "react";
 import ShowData from "views/admin/dataTables/components/ShowData";
 
 export default function NFT(props) {
-  // const theme = useTheme();
   const {
     image,
     val,
@@ -24,6 +23,7 @@ export default function NFT(props) {
     isClicked,
     onClick,
   } = props;
+  //console.log(isClicked);
 
   return (
     <Card
@@ -32,14 +32,6 @@ export default function NFT(props) {
       borderColor={isClicked ? "blue" : "transparent"}
       borderWidth="3px"
       style={{ cursor: "pointer" }}
-      // style={{
-      //   cursor: "pointer",
-      //   animation: isClicked ? "gradient 3s ease-in-out infinite" : "none",
-      //   borderImageSlice: 1,
-      //   borderImageSource: isClicked
-      //     ? `linear-gradient(90deg, ${theme.colors.red[500]}, ${theme.colors.yellow[500]}, ${theme.colors.green[500]}, ${theme.colors.blue[500]}, ${theme.colors.purple[500]})`
-      //     : "transparent",
-      // }}
     >
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "1px", "2xl": "1px" }} position="relative">
