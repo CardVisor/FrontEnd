@@ -164,44 +164,42 @@ export default function BenefitSetting() {
             <>
                 {loading && (
                     <>
-                        <Accordion allowMultiple>
-                            <AccordionItem mr="10px" ml="10px" mb="10px">
-                                <h2>
-                                    <AccordionButton _expanded={{ color: 'white' }}>
-                                        <Box as="span" flex="1" textAlign="left">
-                                            <Text color={textColor} fontSize="22px" fontWeight="700" lineHeight="100%">
-                                                혜택 ALL
-                                            </Text>
-                                        </Box>
-                                        <AccordionIcon />
-                                    </AccordionButton>
-                                </h2>
+                        <Accordion defaultIndex={[1]} allowMultiple>
+                            <AccordionItem mr="10px" ml="10px" mb="10px" mt="10px">
+                                <AccordionButton _expanded={{ color: 'white' }}>
+                                    <Box as="span" flex="1" textAlign="left">
+                                        <Text color={textColor} fontSize="22px" fontWeight="700" lineHeight="100%">
+                                            혜택 분포 트리맵
+                                        </Text>
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+
                                 <AccordionPanel pb={4}>
                                     <BenefitTreemap data={benefitTreeList}></BenefitTreemap>
                                 </AccordionPanel>
                             </AccordionItem>
+
+                            <AccordionItem mr="10px" ml="10px" mb="10px" mt="10px">
+                                <AccordionButton _expanded={{ color: 'white' }}>
+                                    <Box as="span" flex="1" textAlign="left">
+                                        <Text color={textColor} fontSize="22px" fontWeight="700" lineHeight="100%">
+                                            혜택 순위 & 상세 정보
+                                        </Text>
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+
+                                <AccordionPanel pb={4}>
+                                    <ParentBenefitComponent
+                                        benefitList={benefitList}
+                                        benefitTitle={benefitTitle}
+                                        date={date}
+                                        selectOption={selectOption}
+                                    ></ParentBenefitComponent>
+                                </AccordionPanel>
+                            </AccordionItem>
                         </Accordion>
-                        <Grid
-                            mb="30px"
-                            mr="10px"
-                            ml="10px"
-                            templateColumns={{
-                                base: '1fr',
-                                lg: '4.7fr',
-                            }}
-                            templateRows={{
-                                base: 'repeat(1, 1fr)',
-                                lg: '1fr',
-                            }}
-                            gap={{ base: '20px', xl: '20px' }}
-                        >
-                            <ParentBenefitComponent
-                                benefitList={benefitList}
-                                benefitTitle={benefitTitle}
-                                date={date}
-                                selectOption={selectOption}
-                            ></ParentBenefitComponent>
-                        </Grid>
                     </>
                 )}
             </>
