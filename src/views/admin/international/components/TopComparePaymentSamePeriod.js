@@ -4,6 +4,7 @@ import { Icon, useColorModeValue } from "@chakra-ui/react";
 import InterMiniStatistics from "views/admin/international/components/InterMiniStatistics";
 import { AiOutlineStock } from "react-icons/ai";
 import axios from "axios";
+import { moneyFormat } from "../variables/util";
 
 function TopComparePaymentSamePeriod(props) {
     const brandColor = useColorModeValue("brand.500", "white");
@@ -11,10 +12,6 @@ function TopComparePaymentSamePeriod(props) {
     const today = new Date();
     const [comparePayment, setComparePayment]  = useState();
     const month = today.getMonth() + 1;  // 월
-
-    const numberWithCommas = (x)=> {
-        return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
 
     const roundToTwo = (num) => {
         return +(Math.round(num+'e+2')+'e-2');
@@ -63,7 +60,7 @@ return (
                     />
                 }
                 name={comparePayment && `전년 ${month}월 대비 증감`}
-                value={comparePayment && `\u{20A9} ${numberWithCommas(comparePayment.currentSum - comparePayment.lastSum)} 원`}
+                value={comparePayment && `\u{20A9} ${moneyFormat(comparePayment.currentSum - comparePayment.lastSum)} 원`}
                 comparePercentage={comparePayment && paymentPercentage(comparePayment.lastSum, comparePayment.currentSum)}
             />
         </>
