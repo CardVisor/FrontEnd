@@ -40,7 +40,6 @@ function TopHighestOrderPayment(props) {
             const timer = setInterval(() => {
                 setIsVisible(false);
     
-                // currentIndex 상태 변경 후 약간의 딜레이를 준다.
                 setTimeout(() => {
                     setCurrentIndex((currentIndex) => (currentIndex + 1) % paymentRank.length);
                     setIsVisible(true);
