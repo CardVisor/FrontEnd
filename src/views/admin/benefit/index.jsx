@@ -118,11 +118,20 @@ export default function BenefitSetting() {
                                     allPeriodChecked={allPeriodChecked}
                                 ></DatePickerMonthly>
                             </Box>
-                            <Box mr={10} maxWidth="200px">
-                                <Flex direction={{ base: 'row' }} justify="flex-start" alignItems="center">
+                            <Box mr={10} maxWidth="400px">
+                                <Flex direction={{ base: 'col' }} justify="flex-start" alignItems="center">
+                                    <Text
+                                        mr={4}
+                                        color={textColor}
+                                        fontSize="15px"
+                                        fontWeight="800"
+                                        whiteSpace={'nowrap'}
+                                    >
+                                        혜택 적용 금액
+                                    </Text>
                                     <Select defaultValue="high" size="xs" mr={2} onChange={handleSelectChange}>
-                                        <option value="high">이용률 높은순</option>
-                                        <option value="low">이용률 낮은순</option>
+                                        <option value="high">높은순</option>
+                                        <option value="low">낮은순</option>
                                     </Select>
                                     {seachState ? (
                                         <IconButton
