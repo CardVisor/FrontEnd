@@ -199,7 +199,7 @@ export default function ColumnsTable(props) {
           fontWeight="700"
           lineHeight="100%"
           textAlign="center"
-          backgroundColor={"blue.200"}
+          //backgroundColor={"#5E3AFF"}
         >
           {month} 기준 요약 데이터 비교
         </Text>
