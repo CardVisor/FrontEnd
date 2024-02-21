@@ -21,7 +21,7 @@
 */
 
 // Chakra imports
-import { Box, Button, ButtonGroup, Grid, SimpleGrid, Text, VStack, grid, useColorModeValue } from "@chakra-ui/react";
+import { Box, Grid, Text, useColorModeValue } from "@chakra-ui/react";
 
 // Assets
 import React, { useRef } from "react";

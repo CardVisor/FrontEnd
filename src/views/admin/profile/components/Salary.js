@@ -1,5 +1,4 @@
 // Chakra imports
-import { Text, useColorModeValue, Box, SimpleGrid } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
