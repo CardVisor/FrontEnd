@@ -7,6 +7,7 @@ import {
   Flex,
   Button,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
@@ -78,7 +79,6 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
                 </option>
               ))}
             </Select>
-
             <Select defaultValue="high" onChange={handleSortChange} mr={2}>
               <option value="high">이용률 높은순</option>
               <option value="low">이용률 낮은순</option>
@@ -205,7 +205,9 @@ export default function Settings() {
         ))}
       <Button
         onClick={onOpen}
-        colorScheme="blue"
+        colorScheme="purple"
+        backgroundColor={"#5E3AFF"}
+        color={"white"}
         style={{
           borderRadius: "100",
           height: "80px",
@@ -216,7 +218,7 @@ export default function Settings() {
         }}
         disabled={clickedCards.length !== 2}
       >
-        Comp + {clickedCards.length}
+        <Text>비교하기</Text>
       </Button>
       {clickedCards && (
         <Modal2

@@ -62,11 +62,26 @@ function RadarChart(props) {
       })
     );
 
+    var yRenderer = am5radar.AxisRendererRadial.new(root, {});
+    yRenderer.labels.template.setAll({
+      fontSize: 0,
+    });
+    yRenderer.ticks.template.setAll({
+      visible: false,
+    });
+    var yAxis = chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        renderer: yRenderer,
+        fixAxisSize: true,
+      })
+    );
+
     // Create series
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Adding_series
     function createSeries(name, field) {
       var series = chart.series.push(
         am5radar.RadarLineSeries.new(root, {
+          fill: "#5E3AFF",
           name: name,
           xAxis: xAxis,
           yAxis: yAxis,
@@ -79,12 +94,45 @@ function RadarChart(props) {
       );
 
       series.strokes.template.setAll({
-        strokeWidth: 2,
+        strokeWidth: 1,
+        //fill: "#5E3AFF",
+        stroke: "#5E3AFF",
       });
       series.bullets.push(function () {
         return am5.Bullet.new(root, {
           sprite: am5.Circle.new(root, {
-            radius: 5,
+            radius: 3,
+            fill: series.get("fill"),
+          }),
+        });
+      });
+      return series;
+    }
+
+    function createSeries2(name, field) {
+      var series = chart.series.push(
+        am5radar.RadarLineSeries.new(root, {
+          fill: "#56C3FF",
+          name: name,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          valueYField: "litres",
+          categoryXField: "country",
+          tooltip: am5.Tooltip.new(root, {
+            labelText: "{valueY}",
+          }),
+        })
+      );
+
+      series.strokes.template.setAll({
+        strokeWidth: 1,
+        //fill: "#5E3AFF",
+        stroke: "#56C3FF",
+      });
+      series.bullets.push(function () {
+        return am5.Bullet.new(root, {
+          sprite: am5.Circle.new(root, {
+            radius: 3,
             fill: series.get("fill"),
           }),
         });
@@ -93,7 +141,7 @@ function RadarChart(props) {
     }
 
     var series1 = createSeries(card1.card_name, "value1");
-    var series2 = createSeries(card2.card_name, "value2");
+    var series2 = createSeries2(card2.card_name, "value2");
 
     // Set data
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Setting_data
@@ -161,21 +209,11 @@ function RadarChart(props) {
 
     var legend = chart.children.push(
       am5.Legend.new(root, {
-        // centerX: am5.percent(50),
-        // x: am5.percent(50),
-        // centerY: am5.percent(50),
-        // y: am5.percent(85),
-        // layout: am5.GridLayout.new(root, {
-        //   maxColumns: 5,
-        //   fixedWidthGrid: true,
-        // }),
-        centerY: am5.percent(50),
-        y: am5.percent(60),
-        layout: root.verticalLayout,
+        y: am5.percent(100),
+        x: am5.percent(12),
+        //centerX: am5.percent(5),
+        layout: root.horizontalLayout,
         height: am5.percent(100),
-        verticalScrollbar: am5.Scrollbar.new(root, {
-          orientation: "vertical",
-        }),
       })
     );
     legend.data.setAll(chart.series.values);
