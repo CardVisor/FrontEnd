@@ -10,6 +10,9 @@
   border: thin solid var(--chakra-colors-chakra-border-color);
 }
 
+.react-date-picker__clear-button {
+  display: none;
+}
 .react-calendar__year-view .react-calendar__tile,
 .react-calendar__decade-view .react-calendar__tile,
 .react-calendar__century-view .react-calendar__tile {
