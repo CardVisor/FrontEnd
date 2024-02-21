@@ -14,12 +14,7 @@ function ParentBenefitComponent({ benefitList, benefitTitle, date, selectOption 
 
     return (
         <div>
-            <BenefitPieOfPie
-                data={benefitList}
-                val={`혜택 ${benefitTitle}`}
-                id="chart1"
-                onSliceClick={handleChartClick}
-            />
+            <BenefitPieOfPie data={benefitList} val={`${benefitTitle}`} id="chart1" onSliceClick={handleChartClick} />
             <BenefitDetailInfoTable
                 clickedChartEl={clickedChartEl}
                 clickFlag={clickFlag}

@@ -20,7 +20,10 @@ import axios from 'axios';
 
 function BenefitRecommend(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [scrollBehavior, setScrollBehavior] = React.useState('inside');
+    const [scrollBehavior, setScrollBehavior] = useState('inside');
+    const [benefitCustomData, setBenefitCustomData] = useState();
+    const [loadingDndComp, setLoadingDndComp] = useState(false);
+    const [fetchNeeded, setFetchNeeded] = useState(false); // fetchData 호출 제어를 위한 상태
     const categories = {
         성별: ['남자', '여자'],
         연령: ['20대', '30대', '40대', '50대', '60대', '70대 이상'],
@@ -52,19 +55,21 @@ function BenefitRecommend(props) {
         });
     };
 
-    const handleSearchAction = () => {
-        axios({
-            method: 'post',
-            url: '/benefitCluster/benefitRecommend',
-            data: checkedOptions,
-        })
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
+    const handleSearchAction = async () => {
+        try {
+            const res = await axios({
+                method: 'post',
+                url: '/benefitCluster/benefitRecommend',
+                data: checkedOptions,
             });
+            console.log(res.data);
+            setBenefitCustomData(res.data);
+            setLoadingDndComp(true);
+        } catch (err) {
+            console.log(err);
+        }
     };
+
     const allCategoriesChecked = () => {
         return Object.values(checkedOptions).every((category) => category.includes(true));
     };
@@ -83,7 +88,7 @@ function BenefitRecommend(props) {
                 isOpen={isOpen}
                 motionPreset="slideInBottom"
                 scrollBehavior={scrollBehavior}
-                size="5xl"
+                size="6xl"
             >
                 <ModalOverlay />
                 <ModalContent>
@@ -127,9 +132,22 @@ function BenefitRecommend(props) {
                             ))}
                         </div>
                         <hr></hr>
-                        <Stack pl={5} mt={5} spacing={1} mb="5">
-                            <BenefitRecommendResult></BenefitRecommendResult>
-                        </Stack>
+                        {loadingDndComp && (
+                            // <Stack pl={5} mt={1} spacing={1} mb="5">
+                            <Stack mt={1} mb={1}>
+                                <BenefitRecommendResult data={benefitCustomData}></BenefitRecommendResult>
+                                <Button
+                                    // size="sm"
+                                    maxWidth={180}
+                                    variant="solid"
+                                    colorScheme="facebook"
+                                    mr={3}
+                                    onClick={onClose}
+                                >
+                                    2차 조회 버튼
+                                </Button>
+                            </Stack>
+                        )}
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="gray" mr={3} onClick={onClose}>

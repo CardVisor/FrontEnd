@@ -45,7 +45,7 @@ export default function BenefitDetailInfoTable(props) {
         <Card direction="column" w="100%" px="0px" overflowX={{ sm: 'scroll', lg: 'hidden' }}>
             <Flex px="25px" justify="space-between" align="center">
                 <Text color={textColor} fontSize="22px" fontWeight="700" lineHeight="100%">
-                    혜택 상세 정보 : {clickedChartEl}
+                    선택 카테고리 : {clickedChartEl}
                 </Text>
             </Flex>
             <Table variant="simple" color="gray.500" mb="24px">
@@ -78,10 +78,9 @@ export default function BenefitDetailInfoTable(props) {
                                 fontSize={{ sm: '10px', lg: '12px' }}
                                 color="gray.400"
                             >
-                                사용 횟수
+                                혜택 적용 건수
                             </Flex>
                         </Th>
-
                         <Th pe="10px" borderColor={borderColor}>
                             <Flex
                                 justify="space-between"

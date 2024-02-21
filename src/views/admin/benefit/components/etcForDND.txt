@@ -1,0 +1,59 @@
+// const { source, destination } = result;
+// const start = columns[source.droppableId];
+// const startList = [...start.list];
+// const draggedItem = startList.splice(source.index, 1)[0];
+
+// if (!destination) {
+//   startList.splice(source.index, 0, draggedItem);
+//   setColumns({
+//     ...columns,
+//     [start.id]: {
+//       ...start,
+//       list: startList,
+//     },
+//   });
+//   return;
+// }
+
+// if (destination.droppableId === "신규 조합") {
+//   const end = columns[destination.droppableId];
+//   const endList = [...end.list];
+//   endList.splice(destination.index, 0, draggedItem);
+//   setColumns({
+//     ...columns,
+//     [start.id]: {
+//       ...start,
+//       list: startList,
+//     },
+//     [end.id]: {
+//       ...end,
+//       list: endList,
+//     },
+//   });
+// } else {
+//   startList.splice(draggedItem.originalIndex, 0, draggedItem);
+//   setColumns({
+//     ...columns,
+//     [start.id]: {
+//       ...start,
+//       list: startList,
+//     },
+//   });
+// }
+
+// 잘되는 움직임코드
+// 아이템이 다른 카테고리로 이동하려고 하거나, 원래 카테고리에서 위치를 변경하려고 하면 이를 방지합니다.
+// if (
+//   draggedItem.originalCategory !== destination.droppableId &&
+//   destination.droppableId !== "신규 조합"
+// ) {
+//   startList.splice(source.index, 0, draggedItem);
+//   setColumns({
+//     ...columns,
+//     [start.id]: {
+//       ...start,
+//       list: startList,
+//     },
+//   });
+//   return;
+// }
