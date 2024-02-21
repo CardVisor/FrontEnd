@@ -47,7 +47,7 @@ import JobData from "./components/JobData";
 import SalaryData from "./components/SalaryData";
 import CustomFilter from "./components/CustomFilter";
 import Loading from "../default/components/Loading";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { loadState } from "../../admin/Recoil/Atom";
 import { MdOpacity } from "react-icons/md";
 
@@ -63,9 +63,9 @@ export default function Overview() {
   const salaryRef = useRef();
   const [profileloading, setProfileLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (divToRemove != null) divToRemove.appendChild();
-  // }, []);
+  useEffect(() => {
+    // if (divToRemove != null) divToRemove.appendChild();
+  }, []);
 
   useEffect(() => {
     if (holy === false) {
