@@ -27,8 +27,8 @@
         "chart.js": "^4.4.1",
         "chartjs-chart-geo": "^4.2.8",
         "color": "^4.2.3",
-        "dayjs": "^1.11.10",
         "date-fns": "^3.3.1",
+        "dayjs": "^1.11.10",
         "file-saver": "^2.0.5",
         "framer-motion": "^4.1.17",
         "install": "^0.13.0",
@@ -48,6 +48,7 @@
         "react-router-dom": "^6.22.0",
         "react-scripts": "5.0.0",
         "react-table": "^7.7.0",
+        "recoil": "^0.4.1",
         "styled-components": "^6.1.8",
         "web-vitals": "^1.1.2",
         "xlsx": "^0.18.5"
