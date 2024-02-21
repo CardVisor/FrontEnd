@@ -5,7 +5,11 @@ import { Flex } from "@chakra-ui/react";
 const Loading = () => {
   return (
     <Flex marginBottom="60rem">
-      <img src={Spinner} width={480} alt="Spinner" />
+      <img
+        src="https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/output-onlinegiftools.gif"
+        width={480}
+        alt="Spinner"
+      />
     </Flex>
   );
 };

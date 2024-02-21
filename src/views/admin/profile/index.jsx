@@ -49,9 +49,12 @@ import CustomFilter from "./components/CustomFilter";
 import Loading from "../default/components/Loading";
 import { useRecoilValue } from "recoil";
 import { loadState } from "../../admin/Recoil/Atom";
+import { MdOpacity } from "react-icons/md";
 
 export default function Overview() {
   const textColor = useColorModeValue("secondaryGray.900", "white");
+  const divToRemove = document.querySelector(".hi");
+
   // 각 섹션에 대한 참조 생성
   const holy = useRecoilValue(loadState);
   const genderRef = useRef();
@@ -59,16 +62,16 @@ export default function Overview() {
   const jobRef = useRef();
   const salaryRef = useRef();
   const [profileloading, setProfileLoading] = useState(true);
-  useEffect(() => {
-    console.log(holy);
 
-    setProfileLoading(false);
-  }, [holy]);
+  // useEffect(() => {
+  //   if (divToRemove != null) divToRemove.appendChild();
+  // }, []);
 
   useEffect(() => {
-    const divToRemove = document.querySelector(".hi");
     if (holy === false) {
-      divToRemove.remove();
+      if (divToRemove != null) divToRemove.remove();
+    } else {
+      // if (divToRemove != null) divToRemove.appendChild();
     }
   }, [holy]); // Empty dependency array ensures the effect runs only once on mount
 
@@ -192,6 +195,7 @@ export default function Overview() {
           display="flex"
           justifyContent="center"
           alignItems="center"
+          filter="opacity(0.95)"
         >
           <Loading />
         </Flex>

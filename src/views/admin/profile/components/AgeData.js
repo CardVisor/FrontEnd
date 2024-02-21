@@ -2,8 +2,7 @@ import { Text, useColorModeValue, Select, Spinner } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRecoilState } from "recoil";
-import { loadState } from "../../Recoil/Atom";
+
 export default function AgeData(props) {
   //상태 변수
   const [filter, setFilter] = useState("all");
@@ -15,7 +14,7 @@ export default function AgeData(props) {
   const [alltop3CardTypes, setAlltop3CardTypes] = useState(null);
   const [topMccCodes, setTopMccCodes] = useState(null); // 주 사용처를 저장할 상태 추가
   const [loading, setLoading] = useState(false); //로딩 스피너 사용을 위한 로딩 상태를 나타내는 상태 변수 추가
-  const [chartstate, SetChartState] = useRecoilState(loadState);
+
   const textColorPrimary = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = "gray.400";
   const cardShadow = useColorModeValue(
@@ -25,7 +24,7 @@ export default function AgeData(props) {
 
   useEffect(() => {
     setLoading(true); // API 요청 시작 전에 로딩 상태를 true로 설정
-    console.log(chartstate);
+
     Promise.all([
       axios.get("/customer/ageGroup"),
       axios.get("customer/averageAgeGroups"),
@@ -61,15 +60,11 @@ export default function AgeData(props) {
           setTopCardsAgeRange(selectedCards);
           setTopMccCodes(topMccCodesResponse.data);
           setLoading(false); // 모든 요청이 완료되었으므로 로딩 상태를 false로 설정
-          SetChartState(false);
-          console.log(chartstate);
         }
       )
       .catch((error) => {
         console.error("Error fetching data: ", error);
         setLoading(false); // 요청 중 오류가 발생하면 로딩 상태를 false로 설정
-
-        SetChartState(loading);
       });
   }, [filter]);
 
