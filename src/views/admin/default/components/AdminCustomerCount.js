@@ -49,7 +49,7 @@ function CustomerCount(props) {
       }
       name="전체 회원수"
       totalperson={custCount}
-      growth={addcustCount}
+      growthPeron={addcustCount}
     ></AdminMiniStatistics>
   );
 }

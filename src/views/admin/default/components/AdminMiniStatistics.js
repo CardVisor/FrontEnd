@@ -18,6 +18,8 @@ import React from "react";
 
 export default function Default(props) {
   const {
+    Krwgrowth,
+    growthPeron,
     startContent,
     endContent,
     name,
@@ -161,6 +163,30 @@ export default function Default(props) {
                 me="5px"
               >
                 {growth ? formatabroad(growth) : null}
+              </Text>
+            </Flex>
+          ) : null}
+          {Krwgrowth ? (
+            <Flex align="center">
+              <Text
+                color={Krwgrowth > 0 ? "green.500" : "red.500"}
+                fontSize="xs"
+                fontWeight="700"
+                me="5px"
+              >
+                {Krwgrowth ? formatNumber(Krwgrowth) : null}
+              </Text>
+            </Flex>
+          ) : null}
+          {growthPeron ? (
+            <Flex align="center">
+              <Text
+                color={growthPeron > 0 ? "green.500" : "red.500"}
+                fontSize="xs"
+                fontWeight="700"
+                me="5px"
+              >
+                {growthPeron + "명"}
               </Text>
             </Flex>
           ) : null}

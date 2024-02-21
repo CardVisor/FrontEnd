@@ -56,7 +56,7 @@ function KrwTotalAmount(props) {
       }
       name="월 총 결제 금액"
       value={totalamount}
-      growth={lastmonthtotalamount}
+      Krwgrowth={lastmonthtotalamount}
     />
   );
 }
