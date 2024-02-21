@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import IconBox from "components/icons/IconBox";
-import { Box, Icon, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Icon, useColorModeValue } from "@chakra-ui/react";
 import InterMiniStatistics from "views/admin/international/components/InterMiniStatistics";
 import { FaChartPie } from "react-icons/fa6";
 import axios from "axios";
-import "assets/css/International.css";
 import { chartNationInfo } from "../variables/chartNationInfo";
+import { numberWithDots } from "../variables/util";
 
 function TopHighestOrderPayment(props) {
     const brandColor = useColorModeValue("brand.500", "white");
@@ -16,10 +16,6 @@ function TopHighestOrderPayment(props) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
     
-    const numberWithCommas = (x)=> {
-        return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
     useEffect(() => {
         axios({
             method: "get",
@@ -40,7 +36,6 @@ function TopHighestOrderPayment(props) {
             const timer = setInterval(() => {
                 setIsVisible(false);
     
-                // currentIndex 상태 변경 후 약간의 딜레이를 준다.
                 setTimeout(() => {
                     setCurrentIndex((currentIndex) => (currentIndex + 1) % paymentRank.length);
                     setIsVisible(true);
@@ -81,7 +76,7 @@ function TopHighestOrderPayment(props) {
                         if(target.currencyCode === "EUR") return "유럽";
                         return target.kName;
                     })}{" "}
-                    {numberWithCommas(paymentRank[currentIndex].PAYMENT_CNT)}건
+                    {numberWithDots(paymentRank[currentIndex].PAYMENT_CNT)}건
                   </>
                 )}
               </Box>

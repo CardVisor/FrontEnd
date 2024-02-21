@@ -1,4 +1,14 @@
-import { IconButton, Box, Grid, Select, Input, Flex } from "@chakra-ui/react";
+import {
+  IconButton,
+  Box,
+  Grid,
+  Select,
+  Input,
+  Flex,
+  Button,
+  useDisclosure,
+  Text,
+} from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
 import NFT from "components/card/NFT_boh";
@@ -6,6 +16,7 @@ import NFT2 from "components/card/NFT_boh2";
 import axios from "axios";
 import Card from "components/card/Card";
 import { SearchBar } from "components/navbar/searchBar/SearchBar_boh";
+import Modal2 from "views/admin/dataTables/components/Modal";
 
 const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
   const currentDate = new Date();
@@ -68,7 +79,6 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
                 </option>
               ))}
             </Select>
-
             <Select defaultValue="high" onChange={handleSortChange} mr={2}>
               <option value="high">이용률 높은순</option>
               <option value="low">이용률 낮은순</option>
@@ -81,11 +91,11 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
           </Flex>
         </Box>
       </Card>
-      <Card>
+      {/* <Card>
         <Box bg="white.200" p={4}>
-          <Flex>{/* <SearchBar></SearchBar> */}</Flex>
+          <Flex></Flex>
         </Box>
-      </Card>
+      </Card> */}
     </Grid>
   );
 };
@@ -94,6 +104,32 @@ export default function Settings() {
   const [cards, setCards] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedSort, setSelectedSort] = useState(null);
+
+  const [clickedCards, setClickedCards] = useState([]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  //const [clickedCardInfo, setClickedCardInfo] = useState([]);
+
+  // 찐막 ㅋㅋ
+  const handleCardClick = (index) => {
+    setClickedCards((prevState) => {
+      const clickedIndex = prevState.findIndex((card) => card.index === index);
+
+      // 이미 클릭되어 있으면 클릭 상태를 해제
+      if (clickedIndex >= 0) {
+        return prevState.filter((card) => card.index !== index);
+      }
+      // 아니면 클릭 상태를 저장
+      else {
+        return [...prevState, { ...cards[index], index }];
+      }
+    });
+  };
+
+  useEffect(() => {
+    console.log(clickedCards);
+  }, [clickedCards]);
 
   useEffect(() => {
     if (selectedMonth && selectedSort) {
@@ -117,6 +153,12 @@ export default function Settings() {
           console.log(err);
         });
     }
+  }, [selectedMonth, selectedSort]);
+
+  useEffect(() => {
+    // 컴포넌트가 렌더링될 때마다 클릭 정보를 초기화
+    setClickedCards([]);
+    //setClickedCardInfo([]);
   }, [selectedMonth, selectedSort]);
 
   // Chakra Color Mode
@@ -149,6 +191,10 @@ export default function Settings() {
               month={selectedMonth}
             />
             <NFT2
+              key={index}
+              onClick={() => handleCardClick(index)}
+              //isClicked={clickedCards.includes(index)}
+              isClicked={clickedCards.some((card) => card.index === index)}
               card_annual_fee={card.card_annual_fee}
               val={card.card_name}
               image={card.card_img_url}
@@ -157,6 +203,31 @@ export default function Settings() {
             />
           </Grid>
         ))}
+      <Button
+        onClick={onOpen}
+        colorScheme="purple"
+        backgroundColor={"#5E3AFF"}
+        color={"white"}
+        style={{
+          borderRadius: "100",
+          height: "80px",
+          width: "100px",
+          position: "fixed",
+          right: "30px",
+          bottom: "50px",
+        }}
+        disabled={clickedCards.length !== 2}
+      >
+        <Text>비교하기</Text>
+      </Button>
+      {clickedCards && (
+        <Modal2
+          isOpen={isOpen}
+          onClose={onClose}
+          clickedCardInfo={clickedCards}
+          month={selectedMonth}
+        ></Modal2>
+      )}
     </Box>
   );
 }

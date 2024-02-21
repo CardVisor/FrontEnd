@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
-import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
-import Card from 'components/card/Card';
-import { Box, Flex, Text } from '@chakra-ui/react';
 import * as am5plugins_exporting from '@amcharts/amcharts5/plugins/exporting';
+import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import Card from 'components/card/Card';
+import { useEffect } from 'react';
 
 function BenefitPieOfPie(props) {
     const { data, val, id, onSliceClick } = props;
+    const textColor = useColorModeValue('secondaryGray.900', 'white');
     useEffect(() => {
         var root = am5.Root.new(id);
         if (root._logo) {
@@ -244,10 +245,12 @@ function BenefitPieOfPie(props) {
         };
     }, [data]); // data가 변경될 때마다 차트를 새로 생성
     return (
-        <Card p="20px">
+        <Card p="20px" mb="20px" mt="5px">
             <Flex direction={{ base: 'column' }} justify="center">
                 <Box mb={{ base: '1px', '2xl': '1px' }} position="relative">
-                    <Text fontSize="xl">{val}</Text>
+                    <Text color={textColor} fontSize="22px" fontWeight="700" lineHeight="100%">
+                        {val}
+                    </Text>
                     <div id={id} style={{ width: '100%', height: '500px' }}></div>
                 </Box>
             </Flex>

@@ -4,6 +4,7 @@ import { Icon, useColorModeValue } from "@chakra-ui/react";
 import InterMiniStatistics from "views/admin/international/components/InterMiniStatistics";
 import { GiMoneyStack } from "react-icons/gi";
 import axios from "axios";
+import { moneyFormat } from "../variables/util";
 
 
 function TopTotalPayment(props) {
@@ -11,17 +12,13 @@ function TopTotalPayment(props) {
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
     const [totalPayment, setTotalPayment]  = useState();
 
-    const numberWithCommas = (x)=> {
-        return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
     useEffect(()=>{
         axios({
             method: "get",
             url:"/international/totalPayment",
         }).then((res)=>{
-            console.log("??");
-            console.log(res.data);
+            //console.log("??");
+            //console.log(res.data);
             setTotalPayment(res.data)
         }).catch((err)=>{
             console.log(err);
@@ -47,7 +44,7 @@ function TopTotalPayment(props) {
                     />
                 }
                 name={totalPayment && '연간 해외 총 결제 금액'}
-                value={totalPayment && `\u{20A9} ${numberWithCommas(totalPayment)} 원`}
+                value={totalPayment && `\u{20A9} ${moneyFormat(totalPayment)} 원`}
             />
         </>
     );

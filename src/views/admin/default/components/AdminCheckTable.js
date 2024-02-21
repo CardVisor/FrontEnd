@@ -85,7 +85,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                NAME
+                카드이름
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -96,7 +96,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                PROGRESS
+                이용률
               </Flex>
             </Th>
 
@@ -108,7 +108,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                QUANTITY
+                개수
               </Flex>
             </Th>
             <Th pe="10px" borderColor={borderColor}>
@@ -119,7 +119,7 @@ export default function AdminCheckTable(props) {
                 fontSize={{ sm: "10px", lg: "12px" }}
                 color="gray.400"
               >
-                ANUALFEE
+                연회비
               </Flex>
             </Th>
           </Tr>

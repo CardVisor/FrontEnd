@@ -13,10 +13,12 @@ function LatestCurrencyData(props) {
   const [selectedIndex, setSelectedIndex] = useState(0); // Initialize index to 0
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSelectedIndex((prevIndex) => (prevIndex + 1) % currencydata.length); // Increment index, loop back to 0 if end is reached
-    }, 3000); // Change currency every 3 seconds
-
+    let interval;
+    if (currencydata != null) {
+      interval = setInterval(() => {
+        setSelectedIndex((prevIndex) => (prevIndex + 1) % currencydata.length); // Increment index, loop back to 0 if end is reached
+      }, 3000); // Change currency every 3 seconds
+    }
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, [currencydata]); // Run effect whenever currencyData changes
 
