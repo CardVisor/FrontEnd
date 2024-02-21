@@ -28,6 +28,7 @@ import RadarChart from "./RadarChart";
 import RadarChart2 from "./RadarChart2";
 import BarChart from "./BarChart";
 import axios from "axios";
+import BarChartTest from "./BarChartClear";
 
 function Modal2(props) {
   const { isOpen, onClose, clickedCardInfo, month } = props;
@@ -37,6 +38,8 @@ function Modal2(props) {
 
   const [card1DataList, setCard1DataList] = useState([]);
   const [card2DataList, setCard2DataList] = useState([]);
+
+  const [scrollBehavior, setScrollBehavior] = useState("inside");
 
   useEffect(() => {
     if (!card1.cardType || !card2.cardType) {
@@ -96,10 +99,16 @@ function Modal2(props) {
   }, [card1.cardType, card2.cardType, month]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="6xl"
+      scrollBehavior={scrollBehavior}
+    >
       <ModalOverlay />
-      <ModalContent maxW="1200px">
-        <ModalHeader>Card Comparison</ModalHeader>
+      <ModalContent>
+        {/* maxW="1200px" */}
+        <ModalHeader fontSize={"5xl"}>Card Comparison</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Box p={5} shadow="md" borderWidth="1px">
@@ -142,7 +151,7 @@ function Modal2(props) {
               <TabList mb="1em">
                 <Tab>요약 데이터 비교</Tab>
                 <Tab>소비 군집 차트(Radar/Bar)</Tab>
-                <Tab>고객/결제 차트</Tab>
+                {/* <Tab>고객/결제 차트</Tab> */}
               </TabList>
               <TabPanels>
                 <TabPanel>
@@ -214,7 +223,12 @@ function Modal2(props) {
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button
+            colorScheme="purple"
+            backgroundColor={"#5E3AFF"}
+            mr={3}
+            onClick={onClose}
+          >
             Close
           </Button>
         </ModalFooter>

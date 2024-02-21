@@ -3,16 +3,16 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
-function BarChart(props) {
-  const { id, mccdata1, mccdata2, card1, card2 } = props;
+function BarChartClear(props) {
+  const { id, mccdata1, mccdata2 } = props;
   useEffect(() => {
     var root = am5.Root.new(id);
-    //console.log(mccdata1);
-    //console.log(mccdata2);
+
     if (root._logo) {
       root._logo.dispose();
     }
-
+    // Set themes
+    // https://www.amcharts.com/docs/v5/concepts/themes/
     root.setThemes([am5themes_Animated.new(root)]);
 
     // Create chart
@@ -23,108 +23,101 @@ function BarChart(props) {
         panY: false,
         wheelX: "panX",
         wheelY: "zoomX",
-        layout: root.verticalLayout,
-        arrangeTooltips: false,
         paddingLeft: 0,
-        paddingRight: 10,
+        layout: root.verticalLayout,
       })
     );
 
-    // Use only absolute numbers
-    chart.getNumberFormatter().set("numberFormat", "#.#s");
-    chart.getNumberFormatter().set("numberFormat", "#,###");
-
     // Add legend
     // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
-    // var legend = chart.children.push(
-    //   am5.Legend.new(root, {
-    //     centerX: am5.p50,
-    //     x: am5.p0,
-    //   })
-    // );
-    // legend.data.setAll(chart.series.values);
+    var legend = chart.children.push(
+      am5.Legend.new(root, {
+        centerX: am5.p50,
+        x: am5.p50,
+      })
+    );
 
     // Data
     var data = [
       {
-        age: "식비",
-        male: mccdata1.food,
-        female: mccdata2.food,
+        year: "식비",
+        income: mccdata1.food,
+        expenses: mccdata2.food,
       },
       {
-        age: "생활",
-        male: mccdata1.life,
-        female: mccdata2.life,
+        year: "생활",
+        income: mccdata1.life,
+        expenses: mccdata2.life,
       },
       {
-        age: "교통/자동차",
-        male: mccdata1.car,
-        female: mccdata2.car,
+        year: "교통/자동차",
+        income: mccdata1.car,
+        expenses: mccdata2.car,
       },
       {
-        age: "쇼핑",
-        male: mccdata1.shopping,
-        female: mccdata2.shopping,
+        year: "쇼핑",
+        income: mccdata1.shopping,
+        expenses: mccdata2.shopping,
       },
       {
-        age: "미용",
-        male: mccdata1.beauty,
-        female: mccdata2.beauty,
+        year: "미용",
+        income: mccdata1.beauty,
+        expenses: mccdata2.beauty,
       },
       {
-        age: "의료/건강/피트니스",
-        male: mccdata1.fit,
-        female: mccdata2.fit,
+        year: "의료/건강/피트니스",
+        income: mccdata1.fit,
+        expenses: mccdata2.fit,
       },
       {
-        age: "여행/숙박",
-        male: mccdata1.travle,
-        female: mccdata2.travle,
+        year: "여행/숙박",
+        income: mccdata1.travle,
+        expenses: mccdata2.travle,
       },
       {
-        age: "오락",
-        male: mccdata1.play,
-        female: mccdata2.play,
+        year: "오락",
+        income: mccdata1.play,
+        expenses: mccdata2.play,
       },
       {
-        age: "교육",
-        male: mccdata1.edu,
-        female: mccdata2.edu,
+        year: "교육",
+        income: mccdata1.edu,
+        expenses: mccdata2.edu,
       },
       {
-        age: "카페/간식",
-        male: mccdata1.cafe,
-        female: mccdata2.cafe,
+        year: "카페/간식",
+        income: mccdata1.cafe,
+        expenses: mccdata2.cafe,
       },
       {
-        age: "주거/통신",
-        male: mccdata1.home,
-        female: mccdata2.home,
+        year: "주거/통신",
+        income: mccdata1.home,
+        expenses: mccdata2.home,
       },
       {
-        age: "편의점/마트/잡화",
-        male: mccdata1.mart,
-        female: mccdata2.mart,
+        year: "편의점/마트/잡화",
+        income: mccdata1.mart,
+        expenses: mccdata2.mart,
       },
       {
-        age: "취미/여가",
-        male: mccdata1.hobby,
-        female: mccdata2.hobby,
+        year: "취미/여가",
+        income: mccdata1.hobby,
+        expenses: mccdata2.hobby,
       },
       {
-        age: "술/유흥",
-        male: mccdata1.alchol,
-        female: mccdata2.alchol,
+        year: "술/유흥",
+        income: mccdata1.alchol,
+        expenses: mccdata2.alchol,
       },
       {
-        age: "보험/세금/기타금융",
-        male: mccdata1.cash,
-        female: mccdata2.cash,
+        year: "보험/세금/기타금융",
+        income: mccdata1.cash,
+        expenses: mccdata2.cash,
       },
       {
-        age: "기타",
-        male: mccdata1.etc,
-        female: mccdata2.etc,
+        year: "기타",
+        income: mccdata1.etc,
+        expenses: mccdata2.etc,
       },
     ];
 
@@ -132,13 +125,12 @@ function BarChart(props) {
     // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
     var yAxis = chart.yAxes.push(
       am5xy.CategoryAxis.new(root, {
-        categoryField: "age",
+        categoryField: "year",
         renderer: am5xy.AxisRendererY.new(root, {
           inversed: true,
           cellStartLocation: 0.1,
           cellEndLocation: 0.9,
           minorGridEnabled: true,
-          minGridDistance: 20,
         }),
       })
     );
@@ -148,34 +140,27 @@ function BarChart(props) {
     var xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(root, {
         renderer: am5xy.AxisRendererX.new(root, {
-          minGridDistance: 100,
-          strokeOpacity: 0.5,
+          strokeOpacity: 0.1,
+          minGridDistance: 50,
         }),
+        min: 0,
       })
     );
 
     // Add series
     // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-    function createSeries(
-      field,
-      labelCenterX,
-      pointerOrientation,
-      rangeValue,
-      name,
-      color
-    ) {
+    function createSeries(field, name) {
       var series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
           name: name,
           xAxis: xAxis,
           yAxis: yAxis,
           valueXField: field,
-          categoryYField: "age",
+          categoryYField: "year",
           sequencedInterpolation: true,
-          clustered: true,
           tooltip: am5.Tooltip.new(root, {
-            pointerOrientation: pointerOrientation,
-            labelText: "{categoryY}: {valueX}",
+            pointerOrientation: "horizontal",
+            labelText: "[bold]{name}[/]\n{categoryY}: {valueX}",
           }),
         })
       );
@@ -183,39 +168,52 @@ function BarChart(props) {
       series.columns.template.setAll({
         height: am5.p100,
         strokeOpacity: 0,
-        fillOpacity: 0.8,
-        fill: color,
       });
 
       series.bullets.push(function () {
-        return am5.Bullet.new(root, {});
+        return am5.Bullet.new(root, {
+          locationX: 1,
+          locationY: 0.5,
+          sprite: am5.Label.new(root, {
+            centerY: am5.p50,
+            text: "{valueX}",
+            populateText: true,
+          }),
+        });
+      });
+
+      series.bullets.push(function () {
+        return am5.Bullet.new(root, {
+          locationX: 1,
+          locationY: 0.5,
+          sprite: am5.Label.new(root, {
+            centerX: am5.p100,
+            centerY: am5.p50,
+            text: "{name}",
+            fill: am5.color(0xffffff),
+            populateText: true,
+          }),
+        });
       });
 
       series.data.setAll(data);
       series.appear();
 
-      var rangeDataItem = xAxis.makeDataItem({
-        value: rangeValue,
-      });
-      xAxis.createAxisRange(rangeDataItem);
-      rangeDataItem.get("grid").setAll({
-        strokeOpacity: 0,
-        //strokeWidth: 1,
-        stroke: series.get("stroke"),
-      });
-
       return series;
     }
 
-    createSeries("male", am5.p100, "right", 1, card1.card_name, "#5E3AFF");
-    createSeries("female", 0, "left", 1, card2.card_name, "#56C3FF");
+    createSeries("income", "Income");
+    createSeries("expenses", "Expenses");
 
+    // Add legend
+    // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
     var legend = chart.children.push(
       am5.Legend.new(root, {
         centerX: am5.p50,
         x: am5.p50,
       })
     );
+
     legend.data.setAll(chart.series.values);
 
     // Add cursor
@@ -240,4 +238,4 @@ function BarChart(props) {
   return <div id={id} style={{ width: "100%", height: "500px" }}></div>;
 }
 
-export default BarChart;
+export default BarChartClear;

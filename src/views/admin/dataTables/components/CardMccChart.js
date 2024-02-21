@@ -7,6 +7,7 @@ function PieChartComponent(props) {
   const { chartId, data } = props;
 
   useEffect(() => {
+    console.log(data);
     var root = am5.Root.new(chartId);
 
     if (root._logo) {

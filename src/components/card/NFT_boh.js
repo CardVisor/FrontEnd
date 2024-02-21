@@ -7,7 +7,7 @@ import axios from "axios";
 // Assets
 import React, { useState, useEffect } from "react";
 import PieChartComponent from "views/admin/dataTables/components/CardMccChart";
-
+import PieChartComponent2 from "views/admin/dataTables/components/CardMccTest";
 export default function NFT(props) {
   const { cardId, cardType, month } = props;
   const [mccChartDataList, setMccChartDataList] = useState([]);
@@ -41,8 +41,15 @@ export default function NFT(props) {
           position="relative"
           style={{ width: "100%", height: "100%" }}
         >
-          {mccChartDataList.length > 0 && (
+          {/* {mccChartDataList.length > 0 && (
             <PieChartComponent
+              chartId={cardId}
+              data={mccChartDataList}
+              style={{ width: "100%", height: "100%" }}
+            />
+          )} */}
+          {mccChartDataList.length > 0 && (
+            <PieChartComponent2
               chartId={cardId}
               data={mccChartDataList}
               style={{ width: "100%", height: "100%" }}

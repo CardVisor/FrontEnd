@@ -25,13 +25,17 @@ export default function NFT(props) {
   } = props;
   //console.log(isClicked);
 
+  const transitionStyle = {
+    transition: "border-color 0.5s ease-in-out", // 원하는 애니메이션 시간과 타이밍 함수를 설정합니다.
+  };
+
   return (
     <Card
       p="20px"
       onClick={onClick}
-      borderColor={isClicked ? "blue" : "transparent"}
+      borderColor={isClicked ? "#5E3AFF" : "transparent"}
       borderWidth="3px"
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "pointer", ...transitionStyle }}
     >
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "1px", "2xl": "1px" }} position="relative">
