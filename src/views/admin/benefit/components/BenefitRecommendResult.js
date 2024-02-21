@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { useEffect, useState } from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
 import { styled } from './stitches.config';
+import { Flex } from '@chakra-ui/react';
 
 const StyledColumns = styled('div', {
     display: 'grid',
@@ -12,9 +13,9 @@ const StyledColumns = styled('div', {
     gap: '8px',
 });
 
-function BenefitRecommendResult({ data }) {
+function BenefitRecommendResult({ data, setNewCombination }) {
     const [columns, setColumns] = useState({});
-    const [newCombination, setNewCombination] = useState([]);
+
     useEffect(() => {
         const newData = {};
         for (let category in data) {
@@ -33,10 +34,6 @@ function BenefitRecommendResult({ data }) {
         };
         setColumns(newData);
     }, [data]);
-    useEffect(() => {
-        console.log('조합배열!!!!!!!!');
-        console.log(newCombination);
-    }, [newCombination]);
 
     const onDragEnd = (result) => {
         const { source, destination } = result;
@@ -96,13 +93,29 @@ function BenefitRecommendResult({ data }) {
     };
 
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <StyledColumns>
-                {Object.values(columns).map((col) => (
-                    <Column col={col} key={col.id} />
-                ))}
-            </StyledColumns>
-        </DragDropContext>
+        <>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Flex>
+                    <StyledColumns>
+                        {Object.values(columns)
+                            .filter((col) => col.id !== '신규 조합')
+                            .map((col) => (
+                                <Column col={col} key={col.id} />
+                            ))}
+                    </StyledColumns>
+                    <Flex>
+                        {Object.values(columns)
+                            .filter((col) => col.id === '신규 조합')
+                            .map((col) => (
+                                <>
+                                    <h1>ㅎㅇㅎ</h1>
+                                    <Column col={col} key={col.id} />
+                                </>
+                            ))}
+                    </Flex>
+                </Flex>
+            </DragDropContext>
+        </>
     );
 }
 

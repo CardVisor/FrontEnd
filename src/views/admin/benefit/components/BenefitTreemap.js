@@ -1,9 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import * as am5 from '@amcharts/amcharts5';
-import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5hierarchy from '@amcharts/amcharts5/hierarchy';
-import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import { Box, Flex } from '@chakra-ui/react';
 import Card from 'components/card/Card.js';
 
 function BenefitTreemap(props) {
