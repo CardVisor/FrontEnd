@@ -16,7 +16,7 @@ import Card from "components/card/Card.js";
 import React from "react";
 
 export default function Default(props) {
-  const { startContent, endContent, name, growth, value, comparePercentage } = props;
+  const { startContent, name, value, comparePercentage } = props;
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = "secondaryGray.600";
 
@@ -25,8 +25,8 @@ export default function Default(props) {
       <Flex
         my="auto"
         h="100%"
-        align={{ base: "center", xl: "start" }}
-        justify={{ base: "center", xl: "center" }}
+        align="center"
+        justify="center"
       >
         {startContent}
 
@@ -48,22 +48,12 @@ export default function Default(props) {
           >
             {value}
           </StatNumber>
-          {comparePercentage?(
+          {comparePercentage ? (
             <StatHelpText>
             <StatArrow type={comparePercentage>=0?'increase':'decrease'} />
             {comparePercentage}%
           </StatHelpText>
           ):null}
-          {growth ? (
-            <Flex align="center">
-              <Text color="green.500" fontSize="xs" fontWeight="700" me="5px">
-                {growth}
-              </Text>
-              <Text color="secondaryGray.600" fontSize="xs" fontWeight="400">
-                since last month
-              </Text>
-            </Flex>
-          ) : null}
         </Stat>
         {/* <Flex ms="auto" w="max-content">
           {endContent}

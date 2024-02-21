@@ -39,9 +39,11 @@ function TopMonthFilter({
     };
 
     const handleButtonClick = () => {
+        console.log("/startMonth??", startMonth);
+        console.log("/endMonth??", endMonth);
         setSelectStartMonth(formatDate(startMonth));
         setSelectEndMonth(formatDate(endMonth));
-        setAnimationRunning(true);
+        setAnimationRunning && setAnimationRunning(true);
     };
 
     useEffect(() => {
@@ -54,14 +56,14 @@ function TopMonthFilter({
     //datepickerCustom
     const CustomInput = forwardRef(({ value, onClick }, ref) => (
         <button className="custom-input" onClick={onClick} ref={ref}>
-          {value}
+            {value}
         </button>
-      ));
+    ));
 
     return (
         <Box>
             <Flex alignItems="center" gap="2" fontSize="sm">
-                조회 기간
+                {setAnimationRunning && "조회 기간"}
                 <Box>
                     <ReactDatePicker
                         selected={startMonth}
@@ -93,14 +95,16 @@ function TopMonthFilter({
                         customInput={<CustomInput />}
                     />
                 </Box>
-                <IconButton
-                    colorScheme="blue"
-                    aria-label="Search database"
-                    icon={<SearchIcon />}
-                    pl={6}
-                    pr={6}
-                    onClick={handleButtonClick}
-                />
+                {setAnimationRunning && (
+                    <IconButton
+                        colorScheme="blue"
+                        aria-label="Search database"
+                        icon={<SearchIcon />}
+                        pl={6}
+                        pr={6}
+                        onClick={handleButtonClick}
+                    />
+                )}
             </Flex>
         </Box>
     );

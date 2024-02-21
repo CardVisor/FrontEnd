@@ -136,7 +136,16 @@ function BenefitRecommend(props) {
                             // <Stack pl={5} mt={1} spacing={1} mb="5">
                             <Stack mt={1} mb={1}>
                                 <BenefitRecommendResult data={benefitCustomData}></BenefitRecommendResult>
-                                <Text>버튼</Text>
+                                <Button
+                                    // size="sm"
+                                    maxWidth={180}
+                                    variant="solid"
+                                    colorScheme="facebook"
+                                    mr={3}
+                                    onClick={onClose}
+                                >
+                                    2차 조회 버튼
+                                </Button>
                             </Stack>
                         )}
                     </ModalBody>

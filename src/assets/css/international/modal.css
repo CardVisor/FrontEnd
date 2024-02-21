@@ -1,0 +1,50 @@
+.filterWrap {
+    padding-bottom: 30px;
+    border-bottom: 1px solid #dcdcdc;
+}
+.filterWrap .filterLine {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    height: 40px;
+    margin-top: 10px;
+}
+.filterWrap .heading_option {
+    display: inline-block;
+    min-width: 150px;
+    font-weight: bold;
+    font-size: 16px;
+}
+.filterWrap .selectTip {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.filterWrap .chk_item:not(:first-of-type) {
+    margin-left: 20px;
+}
+
+.filterWrap .filterLine.hasBranch {
+    display: block;
+    height: auto;
+}
+.filterWrap .filterLine .filterTop {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.filterWrap .filterLine .filterBottom {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: gray;
+    padding-left: 150px;
+    padding-top: 5px;
+}
+
+.filterWrap .filterLine .filterBottom .tag {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
