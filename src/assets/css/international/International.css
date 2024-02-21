@@ -1,21 +1,8 @@
+/* top - international */
 .toplist {
     font-size: var(--chakra-fontSizes-xl);
     margin-right: 5px;
 }
-/* 
-    --chakra-fontSizes-xs: 0.75rem;
-    --chakra-fontSizes-sm: 0.875rem;
-    --chakra-fontSizes-md: 1rem;
-    --chakra-fontSizes-lg: 1.125rem;
-    --chakra-fontSizes-xl: 1.25rem;
-    --chakra-fontSizes-2xl: 1.5rem;
-    --chakra-fontSizes-3xl: 1.875rem;
-    --chakra-fontSizes-4xl: 2.25rem;
-    --chakra-fontSizes-5xl: 3rem;
-    --chakra-fontSizes-6xl: 3.75rem;
-    --chakra-fontSizes-7xl: 4.5rem;
-*/
-
 .fade-in {
     animation: fadeIn ease 1s;
     -webkit-animation: fadeIn ease 1s;
@@ -63,9 +50,7 @@ body {
     min-width: 150px;
 }
 .state-info {
-    padding-bottom: 10px;
-    padding: 10px;
-    margin-bottom: 5px;
+    padding: 10px 10px 4px;
 }
 .state-info__label {
     position: relative;
@@ -73,7 +58,7 @@ body {
     border-bottom: 1px solid rgb(223, 223, 223.6);
     padding-left: 6px;
     padding-bottom: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 .state-info__label::before {    
     content: "";

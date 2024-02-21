@@ -6,14 +6,8 @@ import {
   Input,
   Flex,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
@@ -22,6 +16,7 @@ import NFT2 from "components/card/NFT_boh2";
 import axios from "axios";
 import Card from "components/card/Card";
 import { SearchBar } from "components/navbar/searchBar/SearchBar_boh";
+import Modal2 from "views/admin/dataTables/components/Modal";
 
 const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
   const currentDate = new Date();
@@ -84,7 +79,6 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
                 </option>
               ))}
             </Select>
-
             <Select defaultValue="high" onChange={handleSortChange} mr={2}>
               <option value="high">이용률 높은순</option>
               <option value="low">이용률 낮은순</option>
@@ -97,11 +91,11 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
           </Flex>
         </Box>
       </Card>
-      <Card>
+      {/* <Card>
         <Box bg="white.200" p={4}>
-          <Flex>{/* <SearchBar></SearchBar> */}</Flex>
+          <Flex></Flex>
         </Box>
-      </Card>
+      </Card> */}
     </Grid>
   );
 };
@@ -115,20 +109,27 @@ export default function Settings() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  //const [clickedCardInfo, setClickedCardInfo] = useState([]);
+
+  // 찐막 ㅋㅋ
   const handleCardClick = (index) => {
     setClickedCards((prevState) => {
+      const clickedIndex = prevState.findIndex((card) => card.index === index);
+
       // 이미 클릭되어 있으면 클릭 상태를 해제
-      if (prevState.includes(index)) {
-        //console.log(clickedCards.length + 1);
-        return prevState.filter((i) => i !== index);
+      if (clickedIndex >= 0) {
+        return prevState.filter((card) => card.index !== index);
       }
       // 아니면 클릭 상태를 저장
       else {
-        //console.log(clickedCards.length + 1);
-        return [...prevState, index];
+        return [...prevState, { ...cards[index], index }];
       }
     });
   };
+
+  useEffect(() => {
+    console.log(clickedCards);
+  }, [clickedCards]);
 
   useEffect(() => {
     if (selectedMonth && selectedSort) {
@@ -157,7 +158,8 @@ export default function Settings() {
   useEffect(() => {
     // 컴포넌트가 렌더링될 때마다 클릭 정보를 초기화
     setClickedCards([]);
-  }, []);
+    //setClickedCardInfo([]);
+  }, [selectedMonth, selectedSort]);
 
   // Chakra Color Mode
   return (
@@ -191,7 +193,8 @@ export default function Settings() {
             <NFT2
               key={index}
               onClick={() => handleCardClick(index)}
-              isClicked={clickedCards.includes(index)}
+              //isClicked={clickedCards.includes(index)}
+              isClicked={clickedCards.some((card) => card.index === index)}
               card_annual_fee={card.card_annual_fee}
               val={card.card_name}
               image={card.card_img_url}
@@ -202,7 +205,9 @@ export default function Settings() {
         ))}
       <Button
         onClick={onOpen}
-        colorScheme="blue"
+        colorScheme="purple"
+        backgroundColor={"#5E3AFF"}
+        color={"white"}
         style={{
           borderRadius: "100",
           height: "80px",
@@ -213,28 +218,16 @@ export default function Settings() {
         }}
         disabled={clickedCards.length !== 2}
       >
-        Comp + {clickedCards.length}
+        <Text>비교하기</Text>
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Card Comparison</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {/* <Lorem count={2} /> */}
-            <p>
-              ddddkdnfkdjfkdjfkdjfkdjkfjdkfjkdjfkdjfkdjkfjdkfjkdjfkdjfkdjfkdjfkdjfkdfjdkfjdkfjkdjfkdfjkdjfkdj
-            </p>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {clickedCards && (
+        <Modal2
+          isOpen={isOpen}
+          onClose={onClose}
+          clickedCardInfo={clickedCards}
+          month={selectedMonth}
+        ></Modal2>
+      )}
     </Box>
   );
 }

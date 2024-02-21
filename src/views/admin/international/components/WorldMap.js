@@ -16,36 +16,81 @@ import {
     IconButton,
     Text,
     useColorModeValue,
+    useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
 import TopMonthFilter from "./TopMonthFilter";
 import {
+    FaFileDownload,
     FaFilePdf,
     FaPlayCircle,
     FaRegFilePdf,
     FaRegStopCircle,
 } from "react-icons/fa";
 import { chartNationInfo } from "../variables/chartNationInfo";
+import { numberWithDots } from "../variables/util";
+import DownloaderExcel from "./DownloaderExcel";
+import ModalDownloadReport from "./ModalDownloadReport";
 
 // 국가 데이터를 가져오기 위한 API URL
 const COUNTRIES_URL = "https://unpkg.com/world-atlas/countries-50m.json";
-const ANIMATION_INTERVAL = 2000;
 
-// 필요한 Chart.js 모듈 등록
-ChartJS.register(
-    Title,
-    Tooltip,
-    Legend,
-    CategoryScale,
-    ChartGeo.ChoroplethController,
-    ChartGeo.ProjectionScale,
-    ChartGeo.ColorScale,
-    ChartGeo.GeoFeature
-);
+// Chart.js 모듈 등록
+Chart.register(Title, Tooltip, Legend, CategoryScale, ChartGeo.ChoroplethController, ChartGeo.ProjectionScale, ChartGeo.ColorScale, ChartGeo.GeoFeature);
+
+// tooltip
+const getOrCreateTooltip = (chart) => {
+    let tooltipEl = chart.canvas.parentNode.querySelector("div");
+
+    if (!tooltipEl) {
+        tooltipEl = document.createElement("div");
+        tooltipEl.classList.add("geo-info-popup");
+        tooltipEl.style.opacity = 1;
+        tooltipEl.style.pointerEvents = "none";
+        tooltipEl.style.position = "absolute";
+        tooltipEl.style.transform = "translate(-50%, 0)";
+        tooltipEl.style.transition = "all .1s ease";
+        chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+
+    return tooltipEl;
+};
+
+const nationInfoByCode = chartNationInfo.reduce((acc, curr) => {
+    acc[curr.nationCode] = curr;
+    return acc;
+}, {});
+
+
+const createChartData = (data) => {
+    return data.reduce((acc, curr) => {
+        const nationInfo = nationInfoByCode[curr.nation];
+        if (nationInfo) {
+            if (!acc[nationInfo.nationCode]) {
+                acc[nationInfo.nationCode] = {
+                    nation: nationInfo.nationCode,
+                    eName: nationInfo.eName,
+                    kName: nationInfo.kName,
+                    currencyCode: nationInfo.currencyCode,
+                    payment_month: {},
+                };
+            }
+            acc[nationInfo.nationCode].payment_month[curr.payment_month] = {
+                month: curr.payment_month,
+                age_range: curr.age_range,
+                gender_range: curr.gender_range,
+                total_amount: curr.total_amount,
+                total_payment_count: curr.total_payment_count,
+            };
+        }
+        return acc;
+    }, {});
+};
 
 function WorldMap(props) {
     const [animationRunning, setAnimationRunning] = useState(true);
     const animationRunningRef = useRef(animationRunning);
+    const [currentMonth, setCurrentMonth] = useState(null);
     const mapChartRef = useRef(null);
     const countriesRef = useRef(null);
     let animationFrameId = null;
@@ -53,48 +98,10 @@ function WorldMap(props) {
     const [selectStartMonth, setSelectStartMonth] = useState(null);
     const [selectEndMonth, setSelectEndMonth] = useState(null);
     const [chartData, setChartData] = useState(null);
+    const firstRenderRef = useRef(true);
+    const { isOpen, onOpen, onClose } = useDisclosure() //modal
+    const btnRef = React.useRef(null)   //modal
 
-    // 차트 데이터 업데이트를 위한 애니메이션 함수
-    /*
-    const animate = () => {
-        if (!animationRunningRef.current || !mapChartRef.current) {
-            return;
-        }
-
-        mapChartRef.current.data.datasets[0].data = countriesRef.current.map(
-            (country) => ({
-                feature: country,
-                value: Math.random() * 100,
-            })
-        );
-
-        mapChartRef.current.update();
-
-        animationFrameId = setTimeout(animate, ANIMATION_INTERVAL);
-    };
- */
-
-    const numberWithCommas = (x) => {
-        return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    };
-
-    //tooltip
-    const getOrCreateTooltip = (chart) => {
-        let tooltipEl = chart.canvas.parentNode.querySelector("div");
-
-        if (!tooltipEl) {
-            tooltipEl = document.createElement("div");
-            tooltipEl.classList.add("geo-info-popup");
-            tooltipEl.style.opacity = 1;
-            tooltipEl.style.pointerEvents = "none";
-            tooltipEl.style.position = "absolute";
-            tooltipEl.style.transform = "translate(-50%, 0)";
-            tooltipEl.style.transition = "all .1s ease";
-            chart.canvas.parentNode.appendChild(tooltipEl);
-        }
-
-        return tooltipEl;
-    };
 
     const externalTooltipHandler = (context) => {
         // Tooltip Element
@@ -116,7 +123,7 @@ function WorldMap(props) {
             tooltipEl.innerHTML = `
                 <div class="state-info">
                     <div class="state-info__label">월별 신용카드 사용정보</div>
-                    <div class="state-info__value">${bodyLines}</div>
+                    <div class="state-info__value">${bodyLines} 건</div>
                 </div>`;
         }
 
@@ -131,30 +138,27 @@ function WorldMap(props) {
             tooltip.options.padding + "px " + tooltip.options.padding + "px";
     };
 
-    const nationInfoByCode = chartNationInfo.reduce((acc, curr) => {
-        acc[curr.nationCode] = curr;
-        return acc;
-    }, {});
-
     const updateChart = (month) => {
         const chartDataStructure = {
             labels: countriesRef.current.map((country) => {
-                let kName, ageGroup, totalAmount, totalCount;
+                let kName, ageGroup, totalAmount, genderGroup;
                 const target = Object.values(chartData).find(
                     (target) => target.eName === country.properties.name
                 );
                 if (target && target.payment_month[month]) {
                     kName = target.kName;
                     ageGroup = target.payment_month[month].age_range;
+                    genderGroup = target.payment_month[month].gender_range;
                     totalAmount = target.payment_month[month].total_amount;
-                    //totalCount = target.payment_month[month].total_payment_count;
                 }
                 return `<div>
-                            ${month? `<div>${month}</div>`: ""}
+                            <div>${month? `${month.split("-")[0]}년 ${month.split("-")[1]}월` : ""}</div>
                             ${kName? `<span>${kName}</span> / `: ""}
-                            <span>${country.properties.name}</span>
-                            ${ageGroup? `<div>가장 많이 방문하는 연령대: ${ageGroup}</div>`: ""}
-                            ${totalAmount? `<div>총 매출액: ${numberWithCommas(totalAmount)} 원</div>`: ""}
+                            <span>${country.properties.name}</span><br />
+                            ${ageGroup?`<div>주 결제 고객층: ${ageGroup} ${genderGroup}성</div>`:""}
+                            <br />
+                            ${totalAmount? `<div>총 매출액: ${numberWithDots(totalAmount)} 원</div>`: ""}
+                            
                         </div>
                         <span>총 결제 건수</span>
                         `;
@@ -184,6 +188,7 @@ function WorldMap(props) {
         mapChartRef.current.update();
     };
 
+
     useEffect(() => {
         if (selectStartMonth !== null && selectEndMonth !== null) {
             axios({
@@ -191,33 +196,8 @@ function WorldMap(props) {
                 url: `/international/chartDataList?startMonth=${selectStartMonth}&endMonth=${selectEndMonth}`,
             })
                 .then((res) => {
-                    const dataByCountryAndMonth = res.data.reduce(
-                        (acc, curr) => {
-                            const nationInfo = nationInfoByCode[curr.nation];
-                            if (nationInfo) {
-                                if (!acc[nationInfo.nationCode]) {
-                                    acc[nationInfo.nationCode] = {
-                                        nation: nationInfo.nationCode,
-                                        eName: nationInfo.eName,
-                                        kName: nationInfo.kName,
-                                        currencyCode: nationInfo.currencyCode,
-                                        payment_month: {},
-                                    };
-                                }
-                                acc[nationInfo.nationCode].payment_month[
-                                    curr.payment_month
-                                ] = {
-                                    month: curr.payment_month,
-                                    age_range: curr.age_range,
-                                    total_amount: curr.total_amount,
-                                    total_payment_count:
-                                        curr.total_payment_count,
-                                };
-                            }
-                            return acc;
-                        },
-                        {}
-                    );
+                    //console.log("?res.data???", res.data);
+                    const dataByCountryAndMonth = createChartData(res.data);
                     setChartData(dataByCountryAndMonth);
                 })
                 .catch((err) => {
@@ -226,8 +206,12 @@ function WorldMap(props) {
         }
     }, [selectStartMonth, selectEndMonth]);
 
-    const firstRenderRef = useRef(true);
-
+    useEffect(() => {
+        if (selectStartMonth) {
+            setCurrentMonth(selectStartMonth);
+        }
+    }, [selectStartMonth]);
+    
     useEffect(() => {
         let intervalId = null;
 
@@ -249,13 +233,16 @@ function WorldMap(props) {
                 months.push(dt.toISOString().slice(0, 7));
             }
 
-            updateChart(months[0]);
+            let index = firstRenderRef.current
+                ? 0
+                : months.indexOf(currentMonth);
+            updateChart(months[index]);
 
-            let index = firstRenderRef.current ? 1 : 0;
             intervalId = setInterval(() => {
-                updateChart(months[index]);
                 index = (index + 1) % months.length;
-            }, 2000);
+                setCurrentMonth(months[index]);
+                updateChart(months[index]);
+            }, 3000);
 
             firstRenderRef.current = false;
         }
@@ -265,7 +252,13 @@ function WorldMap(props) {
                 clearInterval(intervalId);
             }
         };
-    }, [animationRunning, chartData, selectStartMonth, selectEndMonth]);
+    }, [
+        animationRunning,
+        chartData,
+        selectStartMonth,
+        selectEndMonth,
+        currentMonth,
+    ]);
 
     useEffect(() => {
         console.log("chartData updated:", chartData);
@@ -331,15 +324,6 @@ function WorldMap(props) {
         };
     }, []);
 
-    /*
-    useEffect(() => {
-        // 애니메이션이 실행 중이고 차트가 존재하며 국가 데이터가 있는 경우 애니메이션을 계속 진행
-        if (animationRunning && mapChartRef.current && countriesRef.current) {
-            animate();
-        }
-    }, [animationRunning]);
-
- */
     // 애니메이션 재생/일시정지 토글
     const toggleAnimation = () => {
         setAnimationRunning(!animationRunning);
@@ -351,10 +335,10 @@ function WorldMap(props) {
         <>
             <Card>
                 {/* 리포트 제목 */}
-                <Text color={textColor} fontSize="20px" fontWeight="700">
-                    월간 해외 결제 리포트
+                <Text color={textColor} fontSize="20px" fontWeight="700" display="flex" alignItems="center" >
+                    해외 월간 결제 리포트
                     <Button
-                        colorScheme="blue"
+                        colorScheme={animationRunning? "blackAlpha" : "blue"}
                         aria-label="애니메이션 제어"
                         onClick={toggleAnimation}
                         borderRadius="10px"
@@ -385,15 +369,19 @@ function WorldMap(props) {
                     <TopMonthFilter
                         setSelectStartMonth={setSelectStartMonth}
                         setSelectEndMonth={setSelectEndMonth}
+                        setAnimationRunning={setAnimationRunning}
                     />
                     <IconButton
-                        colorScheme="green"
-                        aria-label="엑셀로 내보내기"
-                        icon={<FaRegFilePdf />}
+                        colorScheme="telegram"
+                        aria-label="downloadIcon"
+                        icon={<FaFileDownload />}
                         borderRadius="10px"
                         w="auto"
-                        ml="10px"
+                        onClick={onOpen}
+                        ref={btnRef}
                     />
+                    <ModalDownloadReport isOpen={isOpen} onClose={onClose} />
+                    {/* 
                     <IconButton
                         colorScheme="red"
                         aria-label="PDF로 내보내기"
@@ -401,6 +389,7 @@ function WorldMap(props) {
                         borderRadius="10px"
                         w="auto"
                     />
+                     */}
                 </Flex>
                 {/* 차트 캔버스 */}
                 <Box minH="calc(100vh - 399px)">

@@ -14,7 +14,6 @@ import React, { useState } from "react";
 import ShowData from "views/admin/dataTables/components/ShowData";
 
 export default function NFT(props) {
-  // const theme = useTheme();
   const {
     image,
     val,
@@ -24,22 +23,19 @@ export default function NFT(props) {
     isClicked,
     onClick,
   } = props;
+  //console.log(isClicked);
+
+  const transitionStyle = {
+    transition: "border-color 0.5s ease-in-out", // 원하는 애니메이션 시간과 타이밍 함수를 설정합니다.
+  };
 
   return (
     <Card
       p="20px"
       onClick={onClick}
-      borderColor={isClicked ? "blue" : "transparent"}
+      borderColor={isClicked ? "#5E3AFF" : "transparent"}
       borderWidth="3px"
-      style={{ cursor: "pointer" }}
-      // style={{
-      //   cursor: "pointer",
-      //   animation: isClicked ? "gradient 3s ease-in-out infinite" : "none",
-      //   borderImageSlice: 1,
-      //   borderImageSource: isClicked
-      //     ? `linear-gradient(90deg, ${theme.colors.red[500]}, ${theme.colors.yellow[500]}, ${theme.colors.green[500]}, ${theme.colors.blue[500]}, ${theme.colors.purple[500]})`
-      //     : "transparent",
-      // }}
+      style={{ cursor: "pointer", ...transitionStyle }}
     >
       <Flex direction={{ base: "column" }} justify="center">
         <Box mb={{ base: "1px", "2xl": "1px" }} position="relative">

@@ -1,100 +1,110 @@
 import { IconButton, Box, Select, Flex } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
+import ReactDatePicker from "react-datepicker";
+import { ko } from "date-fns/locale";
+import "react-datepicker/dist/react-datepicker.css";
+import "assets/css/international/datepickerCustom.css";
 
-const allOptions = [];
-const currentDate = new Date();
-const currentYear = currentDate.getFullYear();
-const currentMonth = currentDate.getMonth() + 1;
-for (let year = currentYear; year >= currentYear - 3; year--) {
-    const endMonth = year === currentYear ? currentMonth : 12;
-    for (let month = endMonth; month >= 1; month--) {
-        const monthString = month < 10 ? `0${month}` : `${month}`;
-        const yearString = String(year);
-        const optionText = `${yearString}년 ${monthString}월`;
-        const optionValue = `${yearString}-${monthString}`;
-        allOptions.push({ text: optionText, value: optionValue });
-    }
+function formatDate(date) {
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    month = month < 10 ? "0" + month : month;
+    return `${year}-${month}`;
 }
+function TopMonthFilter({
+    setSelectStartMonth,
+    setSelectEndMonth,
+    setAnimationRunning,
+}) {
+    const currentDate = new Date();
+    const currentMonth = new Date();
+    const lastYear = new Date(
+        currentDate.setMonth(currentDate.getMonth() - 11)
+    );
+    const lastThreeYear = new Date(
+        currentDate.setFullYear(currentDate.getFullYear() - 3)
+    );
 
-function TopMonthFilter({setSelectStartMonth, setSelectEndMonth}) {
-    const [startMonth, setStartMonth] = useState(allOptions[11]?.value);
-    const [endMonth, setEndMonth] = useState(allOptions[0]?.value);
+    const [startMonth, setStartMonth] = useState(lastYear);
+    const [endMonth, setEndMonth] = useState(currentMonth);
 
-    const startMonthOptions = allOptions;
-    const endMonthOptions = useMemo(() => {
-        const endMonthIndex = allOptions.findIndex(
-            (option) => option.value === startMonth
-        );
-        return allOptions.slice(0, endMonthIndex + 1);
-    }, [startMonth]);
-
-    const handlerEndMonth = (event) => {
-        setStartMonth(event.target.value);
+    const handleStartMonthChange = (month) => {
+        setStartMonth(month);
     };
 
-    const handlerStartMonth = (event) => {
-        setEndMonth(event.target.value);
+    const handleEndMonthChange = (month) => {
+        console.log("month", month);
+        setEndMonth(month);
     };
 
-    // useEffect(() => {
-    //     setSelectStartMonth(startMonth);
-    //     setSelectEndMonth(endMonth);
-    // }, [endMonth, startMonth]);
+    const handleButtonClick = () => {
+        console.log("/startMonth??", startMonth);
+        console.log("/endMonth??", endMonth);
+        setSelectStartMonth(formatDate(startMonth));
+        setSelectEndMonth(formatDate(endMonth));
+        setAnimationRunning && setAnimationRunning(true);
+    };
 
     useEffect(() => {
-        // 최초 렌더링 시에만 값을 설정
         if (startMonth !== null && endMonth !== null) {
-            setSelectStartMonth(startMonth);
-            setSelectEndMonth(endMonth);
+            setSelectStartMonth(formatDate(startMonth));
+            setSelectEndMonth(formatDate(endMonth));
         }
     }, []);
+
+    //datepickerCustom
+    const CustomInput = forwardRef(({ value, onClick }, ref) => (
+        <button className="custom-input" onClick={onClick} ref={ref}>
+            {value}
+        </button>
+    ));
+
     return (
         <Box>
-            <Flex
-                alignItems="center"
-                gap="2"
-                fontSize="sm"
-            >
-                조회 기간
+            <Flex alignItems="center" gap="2" fontSize="sm">
+                {setAnimationRunning && "조회 기간"}
                 <Box>
-                    <Select
-                        value={startMonth}
-                        onChange={handlerEndMonth}
-                        size="sm"
-                        borderColor="gray.300"
-                        w={140}
-                    >
-                        {startMonthOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.text}
-                            </option>
-                        ))}
-                    </Select>
+                    <ReactDatePicker
+                        selected={startMonth}
+                        onChange={handleStartMonthChange}
+                        selectsStart
+                        dateFormat="yyyy년 MM월"
+                        showMonthYearPicker
+                        startDate={startMonth}
+                        endDate={endMonth}
+                        minDate={lastThreeYear}
+                        maxDate={currentMonth}
+                        locale={ko}
+                        customInput={<CustomInput />}
+                    />
                 </Box>
                 ~
                 <Box>
-                    <Select
-                        value={endMonth}
-                        onChange={handlerStartMonth}
-                        size="sm"
-                        borderColor="gray.300"
-                        w={140}
-                    >
-                        {endMonthOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.text}
-                            </option>
-                        ))}
-                    </Select>
+                    <ReactDatePicker
+                        selected={endMonth}
+                        onChange={handleEndMonthChange}
+                        selectsEnd
+                        dateFormat="yyyy년 MM월"
+                        showMonthYearPicker
+                        startDate={startMonth}
+                        endDate={endMonth}
+                        minDate={startMonth}
+                        maxDate={currentMonth}
+                        locale={ko}
+                        customInput={<CustomInput />}
+                    />
                 </Box>
-                <IconButton
-                    colorScheme="blue"
-                    aria-label="Search database"
-                    icon={<SearchIcon />}
-                    pl={6}
-                    pr={6}
-                />
+                {setAnimationRunning && (
+                    <IconButton
+                        colorScheme="blue"
+                        aria-label="Search database"
+                        icon={<SearchIcon />}
+                        pl={6}
+                        pr={6}
+                        onClick={handleButtonClick}
+                    />
+                )}
             </Flex>
         </Box>
     );
