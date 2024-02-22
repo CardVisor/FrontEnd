@@ -61,9 +61,13 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
     const isAlreadySelected = (code) =>
         selectedNations.some((nation) => nation.code === code);
 
-    const isIndeterminate = (item, all) => {
-        return item.some(Boolean) && !all;
-    };
+    // const isIndeterminate = (item, all) => {
+    //     return item.some(Boolean) && !all;
+    // };
+    // const isIndeterminate = (item, all) => {
+    //     return item.includes(true) && !all;
+    // };
+    
 
     // 숫자만 반환하는 함수
     const onlyNumbers = (value) => value.replace(/[^0-9]/g, "");
@@ -138,7 +142,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
         setSelectStartMonth(null);
         setSelectEndMonth(null);
         setSearchStPrice(0);
-        setSearchEdPrice(100000000);
+        setSearchEdPrice(1000000000);
         setSelectedNations([]);
         setIsMaxSelected(false);
         setCheckedGender([false, false]);
@@ -171,7 +175,6 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                     //console.log("?res.data 모달 모딩???", res.data);
                     setTableData(res.data);
                     setPage(1);
-                    //console.log("Updated tableData: ", tableData);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -181,6 +184,11 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         console.log("Updated tableData useEffect: ", tableData);
+        if (Object.keys(tableData).length === 0) {
+            setPagingDataSet([]);
+        } else {
+            dataFetching();
+        }
     }, [tableData]);
 
     // 검색 버튼 클릭 핸들러 함수
@@ -284,16 +292,8 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                                 주결제 고객 성별</span>
                             <Checkbox
                                 isChecked={allGenderChecked}
-                                isIndeterminate={isIndeterminate(
-                                    checkedGender,
-                                    allGenderChecked
-                                )}
                                 onChange={(e) =>
-                                    setCheckedGender(
-                                        checkedGender.map(
-                                            () => e.target.checked
-                                        )
-                                    )
+                                    setCheckedGender(checkedGender.map(() => e.target.checked))
                                 }
                                 className="chk_item"
                             >
@@ -323,10 +323,6 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                             </span>
                             <Checkbox
                                 isChecked={allAgeGroup}
-                                isIndeterminate={isIndeterminate(
-                                    checkedAgeGroup,
-                                    allAgeGroup
-                                )}
                                 onChange={(e) =>
                                     setCheckedAgeGroup(
                                         checkedAgeGroup.map(
@@ -484,29 +480,40 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                         </Box>
                     </Box>
                     <Box m="30px 10px">
-                        <Text pb="5px" pl="5px" style={{ fontSize: "14px" }}>
-                            총{" "}
-                            <span style={{ color: "blue", fontWeight: "bold" }}>
-                                {tableData && Object.keys(tableData).length}
-                            </span>
-                            건
-                        </Text>
+                        {Object.keys(tableData).length>0 && 
+                            <Text pb="5px" pl="5px" style={{ fontSize: "14px" }}>
+                                총{" "}
+                                <span style={{ color: "blue", fontWeight: "bold" }}>
+                                    {tableData && Object.keys(tableData).length}
+                                </span>
+                                건
+                            </Text>
+                        }
                         <Box
                             border="1px"
                             borderColor="gray.200"
                             borderRadius="md"
                         >
                             <TableContainer>
-                                <Table variant="simple">
+                                <Table className="interTbl" variant="simple">
+                                <colgroup>
+                                    <col width="2%" />
+                                    <col width="14%" />
+                                    <col width="5%" />
+                                    <col width="13%" />
+                                    <col width="13%" />
+                                    <col width="17%" />
+                                    <col width="6%" />
+                                </colgroup>
                                     <Thead>
                                         <Tr>
-                                            <Th>No</Th>
-                                            <Th>국가</Th>
-                                            <Th>국가 코드</Th>
-                                            <Th>날짜</Th>
-                                            <Th>주고객층</Th>
-                                            <Th>총 매출액</Th>
-                                            <Th>총 결제 건수</Th>
+                                            <Th className="interTblTh">No</Th>
+                                            <Th className="interTblTh">국가</Th>
+                                            <Th className="interTblTh">국가 코드</Th>
+                                            <Th className="interTblTh">날짜</Th>
+                                            <Th className="interTblTh">주고객층</Th>
+                                            <Th className="interTblTh">총 매출액</Th>
+                                            <Th className="interTblTh">총 결제 건수</Th>
                                         </Tr>
                                     </Thead>
                                     <Tbody>
@@ -578,8 +585,8 @@ const TableRow = ({ index, country, data }) => {
     return (
         <>
             <Tr>
-                <Td rowSpan={keys.length}>{index}</Td>
-                <Td rowSpan={keys.length}>
+                <Td className="interTblTd" rowSpan={keys.length}>{index}</Td>
+                <Td className="interTblTd" rowSpan={keys.length}>
                     {nationInfo ? (
                         <>
                             {nationInfo.kName}
@@ -589,26 +596,26 @@ const TableRow = ({ index, country, data }) => {
                         country
                     )}
                 </Td>
-                <Td rowSpan={keys.length}>{country}</Td>
-                <Td>{`${firstKey.split("-")[0]}년 ${
+                <Td className="interTblTd" rowSpan={keys.length}>{country}</Td>
+                <Td className="interTblTd">{`${firstKey.split("-")[0]}년 ${
                     firstKey.split("-")[1]
                 }월`}</Td>
-                <Td>
+                <Td className="interTblTd">
                     {data[firstKey].age_range}대{" "}
                     {data[firstKey].gender_range === "여" ? "여성" : "남성"}
                 </Td>
-                <Td>{numberWithDots(data[firstKey].total_amount)} 원</Td>
-                <Td>{data[firstKey].total_payment_count} 건</Td>
+                <Td isNumeric className="interTblTd">{numberWithDots(data[firstKey].total_amount)} 원</Td>
+                <Td isNumeric className="interTblTd">{data[firstKey].total_payment_count} 건</Td>
             </Tr>
             {restKeys.map((key, idx) => (
                 <Tr key={idx}>
-                    <Td>{`${key.split("-")[0]}년 ${key.split("-")[1]}월`}</Td>
-                    <Td>
+                    <Td className="interTblTd">{`${key.split("-")[0]}년 ${key.split("-")[1]}월`}</Td>
+                    <Td className="interTblTd">
                         {data[key].age_range}대{" "}
                         {data[key].gender_range === "여" ? "여성" : "남성"}
                     </Td>
-                    <Td>{numberWithDots(data[key].total_amount)} 원</Td>
-                    <Td>{data[key].total_payment_count} 건</Td>
+                    <Td isNumeric className="interTblTd">{numberWithDots(data[key].total_amount)} 원</Td>
+                    <Td isNumeric className="interTblTd">{data[key].total_payment_count} 건</Td>
                 </Tr>
             ))}
         </>
