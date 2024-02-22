@@ -387,7 +387,6 @@ function WorldMap(props) {
                         {animationRunning ? "Stop" : "Play"}
                     </Button>
                 </Text>
-                {/* 필터 및 내보내기 버튼 */}
                 <Flex
                     justifyContent="flex-end"
                     gap={1}
@@ -417,7 +416,6 @@ function WorldMap(props) {
                         onClose={onClose}
                     />
                 </Flex>
-                {/* 차트 캔버스 */}
                 <Box minH="calc(100vh - 399px)">
                     <canvas ref={mapChartRef} />
                 </Box>
