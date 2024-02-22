@@ -1,4 +1,4 @@
-import { Text, useColorModeValue, Select, Spinner } from "@chakra-ui/react";
+import { Text, useColorModeValue, Select, Spinner, Box, Heading, Stack, StackDivider } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -64,17 +64,24 @@ export default function Projects(props) {
           <div>
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
               <div>
-                <Text
-                  color={textColorPrimary}
-                  fontWeight='bold'
-                  fontSize='2xl'
-                  mt='10px'
-                  mb='4px'>
-                  All DATA
-                </Text>
-                <Text color={textColorSecondary} fontSize='md' me='26px' mb='40px'>
-                  종합데이터
-                </Text>
+              <Text
+                    color={textColorPrimary}
+                    fontWeight="bold"
+                    fontSize="2xl"
+                    mt="10px"
+                    mb="4px"
+                    mr="10px"  
+                  >
+                    All DATA{" "}
+                    <Text
+                      as="span"  
+                      color={textColorSecondary}  
+                      fontSize="md"  
+                      ml="10px"  
+                    >
+                      종합데이터
+                    </Text> 
+                  </Text>
               </div>
               <div>
                 <Select value={filter} onChange={handleFilterChange} borderColor="blue.500">
@@ -84,14 +91,39 @@ export default function Projects(props) {
                 </Select>
               </div>
             </div>
-            <Text color={textColorPrimary} fontSize='xl'>
-              포함된 고객 수 : {data}명 <br></br>
-              평균 연령 : {averageAge}세 <br></br>
-              평균 연봉 : {averageSalary} <br></br>
-              평균 소비금액 : {averagePayment} <br></br>
-              가장 많이 사용한 카드 : {topCards && topCards.join(', ')} <br></br>
-              주 사용처 : {topMccCodes && topMccCodes.join(', ')}
-            </Text>
+            <Stack divider={<StackDivider />} spacing="3" mt="20px">
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+                포함된 고객 수 : {data}명
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+                평균 연령 : {averageAge}세
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+                평균 연봉 : {averageSalary}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+                평균 소비금액 : {averagePayment}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+                가장 많이 사용한 카드 : {topCards && topCards.join(', ')}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+                주 사용처 : {topMccCodes && topMccCodes.join(', ')}
+              </Heading>
+            </Box>
+            </Stack>
+
           </div>
         )}
       </Card>

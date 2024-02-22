@@ -8,11 +8,14 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import PieChartComponent from "views/admin/dataTables/components/CardMccChart";
 import PieChartComponent2 from "views/admin/dataTables/components/CardMccTest";
+import { cardState } from "../../views/admin/Recoil/CardCluster";
+import { useSetRecoilState } from "recoil";
 export default function NFT(props) {
   const { cardId, cardType, month } = props;
   const [mccChartDataList, setMccChartDataList] = useState([]);
-
+  const Setstate = useSetRecoilState(cardState);
   useEffect(() => {
+    // Setstate(true);
     axios
       .get(`CardCluster/MccCharts?month=${month}&type=${cardType}`)
       .then((response) => {
@@ -22,6 +25,7 @@ export default function NFT(props) {
         }));
         setMccChartDataList(data);
         //console.log(data);
+        // Setstate(false);
       })
       .catch((error) => {
         console.error("Error fetching data", error);

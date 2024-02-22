@@ -17,7 +17,11 @@ import axios from "axios";
 import Card from "components/card/Card";
 import { SearchBar } from "components/navbar/searchBar/SearchBar_boh";
 import Modal2 from "views/admin/dataTables/components/Modal";
+import { cardState } from "../../admin/Recoil/CardCluster";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import Loading from "../default/components/Loading";
 import DatePickerMonthly from "./components/DatePicker";
+import { dataDetailState } from "../Recoil/DataDetailState";
 
 const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
   const currentDate = new Date();
@@ -44,7 +48,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
 
   useEffect(() => {
     setMinDate(new Date(monthOptions[monthOptions.length - 1].value));
-  }, [monthOptions]);
+  }, []);
 
   const handleMonthChange = (date) => {
     const year = date.getFullYear();
@@ -137,14 +141,17 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
 };
 
 export default function Settings() {
+  const card1state = useRecoilValue(cardState);
+  const [maincardstate, setMainCardState] = useState(true);
   const [cards, setCards] = useState([]);
+  const divToRemove = document.querySelector(".hi");
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedSort, setSelectedSort] = useState(null);
-
+  const dataState = useRecoilValue(dataDetailState);
   const [clickedCards, setClickedCards] = useState([]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const setDataDetailState = useSetRecoilState(dataDetailState);
   //const [clickedCardInfo, setClickedCardInfo] = useState([]);
 
   // 찐막 ㅋㅋ
@@ -165,10 +172,26 @@ export default function Settings() {
 
   useEffect(() => {
     console.log(clickedCards);
+    console.log(cards.length);
   }, [clickedCards]);
 
   useEffect(() => {
+    if (dataState === false) {
+      const timeoutId = setTimeout(() => {
+        if (divToRemove != null) divToRemove.style.display = "none";
+      }, 7000);
+
+      // Cleanup function to clear the timeout if component unmounts or if dataState changes
+      return () => clearTimeout(timeoutId);
+      //if (divToRemove != null) divToRemove.style.display = "none";
+    } else if (dataState === true) {
+      if (divToRemove != null) divToRemove.style.display = "flex";
+    }
+  }, [dataState]);
+  // Empty dependency array ensures the effect runs only once on mount
+  useEffect(() => {
     if (selectedMonth && selectedSort) {
+      setDataDetailState(true);
       axios({
         method: "get",
         url: `/CardCluster/Cards?month=${selectedMonth}&sort=${selectedSort}`,
@@ -184,6 +207,10 @@ export default function Settings() {
           });
           // 추출된 카드 정보 배열을 상태로 설정
           setCards(filteredCards);
+          console.log(cards.length);
+          if (filteredCards.length === 62) {
+            setDataDetailState(false);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -200,10 +227,15 @@ export default function Settings() {
   // Chakra Color Mode
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      {/* {maincardstate ? (
+        <Loading />
+      ) : (
+        <div> */}
       <TopBar
         setSelectedMonth={setSelectedMonth}
         setSelectedSort={setSelectedSort}
       ></TopBar>
+
       {cards &&
         cards.map((card, index) => (
           <Grid
@@ -239,6 +271,7 @@ export default function Settings() {
             />
           </Grid>
         ))}
+
       <Button
         onClick={onOpen}
         colorScheme="purple"
@@ -264,6 +297,23 @@ export default function Settings() {
           month={selectedMonth}
         ></Modal2>
       )}
+      {/* </div>
+      )} */}
+      <Flex
+        className="hi"
+        position="absolute"
+        background="#F4F7FE"
+        top="-100px"
+        width="100%"
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="flex-start"
+        paddingTop={350}
+        filter="opacity(0.95)"
+      >
+        <Loading />
+      </Flex>
     </Box>
   );
 }

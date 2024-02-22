@@ -20,7 +20,7 @@ function TopMonthFilter({
     const currentDate = new Date();
     const currentMonth = new Date();
     const lastYear = new Date(
-        currentDate.setMonth(currentDate.getMonth() - 11)
+        currentDate.setMonth(currentDate.getMonth() - 5)
     );
     const lastThreeYear = new Date(
         currentDate.setFullYear(currentDate.getFullYear() - 3)
@@ -103,6 +103,8 @@ function TopMonthFilter({
                         pl={6}
                         pr={6}
                         onClick={handleButtonClick}
+                        height="35px"
+                        borderRadius="10px"
                     />
                 )}
             </Flex>

@@ -5,12 +5,12 @@ import Chart from "chart.js/auto";
 // Custom components
 import Card from "components/card/Card.js";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { loadState } from "../../Recoil/Atom";
 export default function SalaryInformation(props) {
   const { ...rest } = props;
   const chartRef = useRef(null); // 차트에 대한 참조를 생성
-  const [chartstate, SetChartState] = useRecoilState(loadState);
+  const SetChartState = useSetRecoilState(loadState);
   useEffect(() => {
     SetChartState(true);
     Promise.all([
@@ -69,8 +69,8 @@ export default function SalaryInformation(props) {
           {
             label: "Dataset 2",
             data: sortedData2,
-            borderColor: "blue",
-            backgroundColor: "blue",
+            borderColor: "#DC67AB",
+            backgroundColor: "#DC67AB",
             stack: "combined",
             type: "line",
             yAxisID: "y1",
@@ -103,19 +103,34 @@ export default function SalaryInformation(props) {
         },
       };
 
+      // 각 데이터셋에 대한 색상 설정
+      config.data.datasets[0].backgroundColor = [
+        '#6794DC', // "3000만원 미만"에 해당하는 바의 색상
+        '#6771DC', // "3000만원 이상 5000만원 미만"에 해당하는 바의 색상
+        '#8067DC', // "5000만원 이상 7000만원 미만"에 해당하는 바의 색상
+        '#A367DC', // "7000만원 이상 1억 미만"에 해당하는 바의 색상
+        '#C767DC' // "1억 이상"에 해당하는 바의 색상 
+      ];
+
+
       if (chartRef.current) {
         // 차트가 이미 그려져 있다면 그 차트를 파괴
         chartRef.current.destroy();
       }
 
-      const ctx = document.getElementById("salaryChart");
-      chartRef.current = new Chart(ctx, config);
+      const ctx = document.getElementById('salaryChart');
+      if (ctx !== null) {
+        chartRef.current = new Chart(ctx, config);
+      } else {
+        console.error("차트를 찾지 못했습니다.");
+      }
+
       SetChartState(false);
     });
   }, []); // 의존성 배열은 비어있음
 
   return (
-    <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
+    <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
       <canvas id="salaryChart" width="300" height="300"></canvas>
     </Card>
   );

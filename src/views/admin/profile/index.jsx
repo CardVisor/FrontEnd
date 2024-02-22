@@ -49,7 +49,6 @@ import CustomFilter from "./components/CustomFilter";
 import Loading from "../default/components/Loading";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { loadState } from "../../admin/Recoil/Atom";
-import { MdOpacity } from "react-icons/md";
 
 export default function Overview() {
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -61,11 +60,6 @@ export default function Overview() {
   const ageRef = useRef();
   const jobRef = useRef();
   const salaryRef = useRef();
-  const [profileloading, setProfileLoading] = useState(true);
-
-  useEffect(() => {
-    // if (divToRemove != null) divToRemove.appendChild();
-  }, []);
 
   useEffect(() => {
     if (holy === false) {
@@ -99,7 +93,7 @@ export default function Overview() {
           성별 조회
         </Text>
         {/* GeneralInformation component */}
-        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="1fr 2fr">
+        <Grid gap="20px" gridTemplateColumns="35% 65%">
           <GenderInformation
             gridArea={{ base: "1", lg: "1" }} // Adjust the grid area
             maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
@@ -123,7 +117,7 @@ export default function Overview() {
         >
           나이 별 조회
         </Text>
-        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="2fr 4fr">
+        <Grid gap="20px" gridTemplateColumns="35% 65%">
           <AgeInformation
             gridArea={{ base: "1", lg: "1" }}
             maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
@@ -147,7 +141,7 @@ export default function Overview() {
         >
           직업 별 조회
         </Text>
-        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="2fr 4fr">
+        <Grid gap="20px" gridTemplateColumns="35% 65%">
           <JobInformation
             gridArea={{ base: "1", lg: "1" }}
             maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}
@@ -171,7 +165,7 @@ export default function Overview() {
         >
           연봉 별 조회
         </Text>
-        <Grid gap={{ base: "10px", xl: "20px" }} gridTemplateColumns="2fr 4fr">
+        <Grid gap="20px" gridTemplateColumns="35% 65%">
           <SalaryInformation
             gridArea={{ base: "1", lg: "1" }}
             maxH={{ base: "auto", lg: "420px", "2xl": "365px" }}

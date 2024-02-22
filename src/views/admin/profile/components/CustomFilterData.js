@@ -1,4 +1,4 @@
-import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Heading, Stack, StackDivider, Text, useColorModeValue } from "@chakra-ui/react";
 import Card from "components/card/Card";
 import React from "react";
 import AmChart from "./CustomFilterChart";
@@ -29,34 +29,55 @@ export default function Overview({ data }) {
 
   return (
     <>
-      <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px">
-        필터 조회
-      </Text>
-
-      <Card mb={{ base: "0px", "2xl": "20px" }} >
-
-      {data && <AmChart data={data}/>}
-
+    
+      {data &&  <Card mb={{ base: "0px", "2xl": "30px" }} >
+        
+        <AmChart data={data}/>
+        </Card>}
+     
       <Flex display="flex" flex-direction="row" >
           {data && (
-            <>      
-              <Box bg="#F4F7FE" height="250px" borderRadius="md" padding="4" color="black" width="100%">
-
-                <Text fontSize="xl" fontWeight="bold" borderColor="black" pb="2" mb="2" color="black" marginLeft="15%" marginTop="1.5%">
-                  포함된 고객 수 : {data.count}명<br />
-                  평균 연령 : {data.averageAge}세<br />
-                  평균 연봉 : {data.distinctSalaries && Array.isArray(data.distinctSalaries) ? data.distinctSalaries.join(", ") : ''}<br />
-                  평균 사용금액: {formatCurrency(data.averagePayment)}<br />
-                  가장 많이 사용한 카드 : {cardNamesString}<br />
-                  주 사용처 : {cardMccString}
-                </Text>
-
-              </Box>
-            </>
-          )}
-        </Flex>
-        
-      </Card>
+          <Card mb={{ base: "0px", "2xl": "30px" }} >
+          <Box bg="#FFFFFF" height="330px" borderRadius="15px" padding="4" color="black" width="100%">
+              <Stack divider={<StackDivider  />} spacing="3" mt="20px">
+            <Box>
+              <Heading size="s" textTransform="uppercase" style={{paddingLeft : "10px"}}>
+              포함된 고객 수 : {data.count}명
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase" style={{paddingLeft : "10px"}}>
+              평균 연령 : {data.averageAge}세
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase" style={{paddingLeft : "10px"}}>
+              평균 연봉 : {data.distinctSalaries && Array.isArray(data.distinctSalaries) ? data.distinctSalaries.join(", ") : ''}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase" style={{paddingLeft : "10px"}}> 
+              평균 사용금액: {formatCurrency(data.averagePayment)}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase" style={{paddingLeft : "10px"}}>
+              가장 많이 사용한 카드 : {cardNamesString}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase" style={{paddingLeft : "10px"}}>
+              주 사용처 : {cardMccString}
+              </Heading>
+            </Box>
+            </Stack>
+            </Box>
+            </Card>
+          )}  
+          
+        </Flex> 
+         
+      
     </>
   );
 }

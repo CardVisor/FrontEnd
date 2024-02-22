@@ -1,5 +1,5 @@
 .filterWrap {
-    padding-bottom: 30px;
+    padding-bottom: 17px;
     border-bottom: 1px solid #dcdcdc;
 }
 .filterWrap .filterLine {
@@ -41,6 +41,10 @@
     color: gray;
     padding-left: 150px;
     padding-top: 5px;
+    margin-top: 10px;
+/*
+    padding-bottom: 10px;
+*/
 }
 
 .filterWrap .filterLine .filterBottom .tag {
