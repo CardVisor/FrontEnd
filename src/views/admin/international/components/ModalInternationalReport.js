@@ -275,7 +275,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                 maxW="1260px"
                 padding="10px"
             >
-                <ModalHeader>월간 해외 결제 리포트</ModalHeader>
+                <ModalHeader>월간 해외 결제 검색</ModalHeader>
                 <ModalCloseButton size="lg" />
                 <ModalBody padding="10px 39px">
                     <Box className="filterWrap">
