@@ -27,9 +27,9 @@ export default function AmChart({data}) {
             "year": "주 사용처",
             [data.cardMcc[0][0]]: data.cardMcc[0][1],
             [data.cardMcc[1][0]]: data.cardMcc[1][1],
-            [data.cardMcc[2][0]]: data.cardMcc[2][1],
-            [data.cardMcc[3][0]]: data.cardMcc[3][1],
-            [data.cardMcc[4][0]]: data.cardMcc[4][1],
+            [data.cardMcc[2][0]]: data.cardMcc[2][1], 
+            [data.cardMcc[3][0]]: data.cardMcc[3][1], 
+            [data.cardMcc[4][0]]: data.cardMcc[4][1], 
         }];
 
         am5.ready(function() {
