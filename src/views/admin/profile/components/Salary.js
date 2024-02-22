@@ -5,12 +5,12 @@ import Chart from "chart.js/auto";
 // Custom components
 import Card from "components/card/Card.js";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { loadState } from "../../Recoil/Atom";
 export default function SalaryInformation(props) {
   const { ...rest } = props;
   const chartRef = useRef(null); // 차트에 대한 참조를 생성
-  const [chartstate, SetChartState] = useRecoilState(loadState);
+  const SetChartState = useSetRecoilState(loadState);
   useEffect(() => {
     SetChartState(true);
     Promise.all([

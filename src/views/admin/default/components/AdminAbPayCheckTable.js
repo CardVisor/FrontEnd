@@ -15,13 +15,15 @@ import React, { useEffect, useState } from "react";
 import Card from "components/card/Card";
 import Menu from "./AdminMainMenu";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { mainState } from "views/admin/Recoil/MainState";
 export default function AdminAbPayCheckTable(props) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const [clist, setCList] = useState([]);
   const [totalAmount, setTotalAmount] = useState();
   const [memo, setMemo] = useState();
-
+  const SetMainState = useSetRecoilState(mainState);
   const formatNumber = (number) => {
     if (number > 0) {
       return new Intl.NumberFormat("ko-KR").format(number);
@@ -30,6 +32,7 @@ export default function AdminAbPayCheckTable(props) {
     }
   };
   useEffect(() => {
+    SetMainState(true);
     axios({
       method: "get",
       url: "/main/benefitTop5Card",
@@ -39,6 +42,7 @@ export default function AdminAbPayCheckTable(props) {
         let Message =
           "청구할인을 많이 받은 혜택중에 혜택을 가장많이 사용한 카드와 그 카드가 할인받은 총 금액입니다.";
         setMemo(Message);
+        SetMainState(false);
       })
       .catch((err) => {
         console.log(err);

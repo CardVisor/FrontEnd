@@ -8,6 +8,7 @@ const Loading = () => {
       <img
         src="https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/output-onlinegiftools.gif"
         width={480}
+        height="100%"
         alt="Spinner"
       />
     </Flex>
