@@ -72,7 +72,7 @@ export default function AgeInformation(props) {
   }, []);
 
   return (
-      <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
+      <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
         <canvas id="ageChart" width="300" height="300"></canvas>
       </Card>
   );

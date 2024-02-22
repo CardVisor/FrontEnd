@@ -103,6 +103,8 @@ function TopMonthFilter({
                         pl={6}
                         pr={6}
                         onClick={handleButtonClick}
+                        height="35px"
+                        borderRadius="10px"
                     />
                 )}
             </Flex>

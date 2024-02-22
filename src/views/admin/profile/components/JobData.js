@@ -1,4 +1,4 @@
-import { Text, useColorModeValue, Select, Spinner } from "@chakra-ui/react";
+import { Text, useColorModeValue, Select, Spinner, Box, Heading, Stack, StackDivider } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -119,23 +119,24 @@ export default function JobData(props) {
               }}
             >
               <div>
-                <Text
-                  color={textColorPrimary}
-                  fontWeight="bold"
-                  fontSize="2xl"
-                  mt="10px"
-                  mb="4px"
-                >
-                  All DATA
-                </Text>
-                <Text
-                  color={textColorSecondary}
-                  fontSize="md"
-                  me="26px"
-                  mb="40px"
-                >
-                  종합데이터
-                </Text>
+              <Text
+                    color={textColorPrimary}
+                    fontWeight="bold"
+                    fontSize="2xl"
+                    mt="10px"
+                    mb="4px"
+                    mr="10px"  
+                  >
+                    All DATA{" "}
+                    <Text
+                      as="span"  
+                      color={textColorSecondary}  
+                      fontSize="md"  
+                      ml="10px"  
+                    >
+                      종합데이터
+                    </Text>
+                  </Text>
               </div>
               <div>
                 <Select
@@ -156,22 +157,39 @@ export default function JobData(props) {
                 </Select>
               </div>
             </div>
-            <Text color={textColorPrimary} fontSize="xl">
-              포함된 고객 수 : {countByJobTypeAndAll}명<br></br>
-              평균 연령 : {averageAgeByJobTypeAndAll}세<br></br>
+            <Stack divider={<StackDivider />} spacing="3" mt="20px">
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+              포함된 고객 수 : {countByJobTypeAndAll}명
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+              평균 연령 : {averageAgeByJobTypeAndAll}세
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
               평균 연봉 : {mostsalaryData}
-              <br></br>
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
               평균 소비금액 : {paymentByJobTypeAndAll}
-              <br></br>
-              가장 많이 사용한 카드 :{" "}
-              {topCardsByJobType
-                ? topCardsByJobType.join(", ")
-                : "데이터를 불러오는 중..."}
-              <br></br>주 사용처 :{" "}
-              {findTop3CardTypesByJobType
-                ? findTop3CardTypesByJobType.join(", ")
-                : "데이터를 불러오는 중..."}
-            </Text>
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+              가장 많이 사용한 카드 : {topCardsByJobType ? topCardsByJobType.join(', ') : '데이터를 불러오는 중...'}
+              </Heading>
+            </Box>
+            <Box>
+              <Heading size="s" textTransform="uppercase">
+              주 사용처 : {findTop3CardTypesByJobType ? findTop3CardTypesByJobType.join(', ') : '데이터를 불러오는 중...'}
+              </Heading>
+            </Box>
+            </Stack>
+
           </div>
         )}
       </Card>
