@@ -43,7 +43,7 @@ function TopTotalPayment(props) {
                         }
                     />
                 }
-                name={totalPayment && '연간 해외 총 결제 금액'}
+                name={totalPayment && '연 해외 총 결제 금액 (2024)'}
                 value={totalPayment && `\u{20A9} ${moneyFormat(totalPayment)} 원`}
             />
         </>

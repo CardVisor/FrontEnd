@@ -29,8 +29,8 @@ import {
 } from "react-icons/fa";
 import { chartNationInfo } from "../variables/chartNationInfo";
 import { numberWithDots } from "../variables/util";
-import DownloaderExcel from "./DownloaderExcel";
-import ModalDownloadReport from "./ModalDownloadReport";
+import DownloaderExcel from "./DownloadExcel";
+import ModalInternationalReport from "./ModalInternationalReport";
 
 // 국가 데이터를 가져오기 위한 API URL
 const COUNTRIES_URL = "https://unpkg.com/world-atlas/countries-50m.json";
@@ -63,8 +63,8 @@ const nationInfoByCode = chartNationInfo.reduce((acc, curr) => {
 
 
 const createChartData = (data) => {
-    return data.reduce((acc, curr) => {
-        const nationInfo = nationInfoByCode[curr.nation];
+    return Object.entries(data).reduce((acc, [nationCode, paymentInfo]) => {
+        const nationInfo = nationInfoByCode[nationCode];
         if (nationInfo) {
             if (!acc[nationInfo.nationCode]) {
                 acc[nationInfo.nationCode] = {
@@ -75,13 +75,12 @@ const createChartData = (data) => {
                     payment_month: {},
                 };
             }
-            acc[nationInfo.nationCode].payment_month[curr.payment_month] = {
-                month: curr.payment_month,
-                age_range: curr.age_range,
-                gender_range: curr.gender_range,
-                total_amount: curr.total_amount,
-                total_payment_count: curr.total_payment_count,
-            };
+            Object.entries(paymentInfo).forEach(([payment_month, paymentDetail]) => {
+                acc[nationInfo.nationCode].payment_month[payment_month] = {
+                    ...paymentDetail,
+                    month: payment_month,
+                };
+            });
         }
         return acc;
     }, {});
@@ -100,7 +99,7 @@ function WorldMap(props) {
     const [chartData, setChartData] = useState(null);
     const firstRenderRef = useRef(true);
     const { isOpen, onOpen, onClose } = useDisclosure() //modal
-    const btnRef = React.useRef(null)   //modal
+    //const btnRef = React.useRef(null)   //modal
 
 
     const externalTooltipHandler = (context) => {
@@ -155,7 +154,7 @@ function WorldMap(props) {
                             <div>${month? `${month.split("-")[0]}년 ${month.split("-")[1]}월` : ""}</div>
                             ${kName? `<span>${kName}</span> / `: ""}
                             <span>${country.properties.name}</span><br />
-                            ${ageGroup?`<div>주 결제 고객층: ${ageGroup} ${genderGroup}성</div>`:""}
+                            ${ageGroup?`<div>주 결제 고객층: ${ageGroup>=70?ageGroup+"대 이상":ageGroup+"대"} ${genderGroup}성</div>`:""}
                             <br />
                             ${totalAmount? `<div>총 매출액: ${numberWithDots(totalAmount)} 원</div>`: ""}
                             
@@ -167,13 +166,12 @@ function WorldMap(props) {
                 {
                     label: "Nation",
                     data: countriesRef.current.map((country) => {
-                        let value = 0; // default value
+                        let value = 0; 
                         const target = Object.values(chartData).find(
                             (target) => target.eName === country.properties.name
                         );
                         if (target && target.payment_month[month]) {
-                            value =
-                                target.payment_month[month].total_payment_count;
+                            value = target.payment_month[month].total_payment_count;
                         }
                         return {
                             feature: country,
@@ -192,11 +190,12 @@ function WorldMap(props) {
     useEffect(() => {
         if (selectStartMonth !== null && selectEndMonth !== null) {
             axios({
-                method: "get",
-                url: `/international/chartDataList?startMonth=${selectStartMonth}&endMonth=${selectEndMonth}`,
+                method: "post",
+                url: `/international/chartDataList`,
+                data: { period: { startMonth: selectStartMonth, endMonth: selectEndMonth } }
             })
                 .then((res) => {
-                    //console.log("?res.data???", res.data);
+                    console.log("?resres.data???", res.data);
                     const dataByCountryAndMonth = createChartData(res.data);
                     setChartData(dataByCountryAndMonth);
                 })
@@ -261,7 +260,7 @@ function WorldMap(props) {
     ]);
 
     useEffect(() => {
-        console.log("chartData updated:", chartData);
+        //console.log("chartData updated:", chartData);
     }, [chartData]);
 
     useEffect(() => {
@@ -378,18 +377,8 @@ function WorldMap(props) {
                         borderRadius="10px"
                         w="auto"
                         onClick={onOpen}
-                        ref={btnRef}
                     />
-                    <ModalDownloadReport isOpen={isOpen} onClose={onClose} />
-                    {/* 
-                    <IconButton
-                        colorScheme="red"
-                        aria-label="PDF로 내보내기"
-                        icon={<FaFilePdf />}
-                        borderRadius="10px"
-                        w="auto"
-                    />
-                     */}
+                    <ModalInternationalReport isOpen={isOpen} onClose={onClose} />
                 </Flex>
                 {/* 차트 캔버스 */}
                 <Box minH="calc(100vh - 399px)">
