@@ -22,7 +22,7 @@ const StyledList = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     // flexGrow: 1,
-    marginTop: 8,
+    marginTop: 3,
     height: 150,
     width: 250,
 });

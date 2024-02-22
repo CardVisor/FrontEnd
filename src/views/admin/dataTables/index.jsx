@@ -17,16 +17,21 @@ import axios from "axios";
 import Card from "components/card/Card";
 import { SearchBar } from "components/navbar/searchBar/SearchBar_boh";
 import Modal2 from "views/admin/dataTables/components/Modal";
+import DatePickerMonthly from "./components/DatePicker";
 
 const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
+  const [localMonth, setLocalMonth] = useState(null);
+  const [localSort, setLocalSort] = useState(null);
+  const [minDate, setMinDate] = useState(null);
+
   const monthOptions = [];
   for (let year = currentYear; year >= currentYear - 2; year--) {
     const startMonth = year === currentYear ? currentMonth : 12;
-    const endMonth = year === currentYear - 2 ? currentMonth + 1 : 1;
+    const endMonth = year === currentYear - 2 ? 1 : 1;
 
     for (let month = startMonth; month >= endMonth; month--) {
       const monthString = month < 10 ? `0${month}` : `${month}`;
@@ -38,16 +43,37 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
   }
 
   useEffect(() => {
+    setMinDate(new Date(monthOptions[monthOptions.length - 1].value));
+  }, []);
+
+  const handleMonthChange = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth 메소드는 0부터 시작하기 때문에 +1이 필요합니다.
+    const monthString = month < 10 ? `0${month}` : `${month}`;
+    const yearString = String(year);
+    const dateValue = `${yearString}-${monthString}`;
+    setLocalMonth(dateValue);
+  };
+  const defaultDate =
+    currentMonth === 0
+      ? new Date(currentYear - 1, 11, 1)
+      : new Date(currentYear, currentMonth - 1, 1);
+
+  useEffect(() => {
+    setLocalMonth(monthOptions[0]?.value);
     setSelectedMonth(monthOptions[0]?.value);
+    setLocalSort("high");
     setSelectedSort("high");
   }, []);
 
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
-  };
+  // const handleMonthChange = (event) => {
+  //   //setSelectedMonth(event.target.value);
+  //   setLocalMonth(event.target.value);
+  // };
 
   const handleSortChange = (event) => {
-    setSelectedSort(event.target.value);
+    //setSelectedSort(event.target.value);
+    setLocalSort(event.target.value);
   };
 
   return (
@@ -68,17 +94,23 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
       <Card>
         <Box bg="white.200" p={4}>
           <Flex>
-            <Select
+            <DatePickerMonthly
+              onChange={handleMonthChange}
+              defaultValue={defaultDate}
+              minDate={minDate}
+              maxDate={defaultDate}
+            ></DatePickerMonthly>
+            {/* <Select
               defaultValue={monthOptions[0]?.value}
               onChange={handleMonthChange}
               mr={2}
-            >
+            > 
               {monthOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.text}
                 </option>
               ))}
-            </Select>
+            </Select>*/}
             <Select defaultValue="high" onChange={handleSortChange} mr={2}>
               <option value="high">이용률 높은순</option>
               <option value="low">이용률 낮은순</option>
@@ -87,6 +119,10 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
               colorScheme="blue"
               aria-label="Search database"
               icon={<SearchIcon />}
+              onClick={() => {
+                setSelectedMonth(localMonth);
+                setSelectedSort(localSort);
+              }}
             />
           </Flex>
         </Box>
