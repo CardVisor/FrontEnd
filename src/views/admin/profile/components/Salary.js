@@ -69,8 +69,8 @@ export default function SalaryInformation(props) {
           {
             label: "Dataset 2",
             data: sortedData2,
-            borderColor: "blue",
-            backgroundColor: "blue",
+            borderColor: "#DC67AB",
+            backgroundColor: "#DC67AB",
             stack: "combined",
             type: "line",
             yAxisID: "y1",
@@ -102,6 +102,16 @@ export default function SalaryInformation(props) {
           },
         },
       };
+
+      // 각 데이터셋에 대한 색상 설정
+      config.data.datasets[0].backgroundColor = [
+        '#6794DC', // "3000만원 미만"에 해당하는 바의 색상
+        '#6771DC', // "3000만원 이상 5000만원 미만"에 해당하는 바의 색상
+        '#8067DC', // "5000만원 이상 7000만원 미만"에 해당하는 바의 색상
+        '#A367DC', // "7000만원 이상 1억 미만"에 해당하는 바의 색상
+        '#C767DC' // "1억 이상"에 해당하는 바의 색상 
+      ];
+
 
       if (chartRef.current) {
         // 차트가 이미 그려져 있다면 그 차트를 파괴

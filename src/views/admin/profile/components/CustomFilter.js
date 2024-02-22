@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, CheckboxGroup, Collapse, Flex, Select, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Checkbox, CheckboxGroup, Collapse, Flex, Select, Text, useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Overview from "./CustomFilterData";
 import axios from "axios";
@@ -72,6 +72,9 @@ export default function CustomFilter() {
  
   return (
     <>
+      <Text fontSize="2xl" ms="10px" fontWeight="700" mt="20px" marginBottom="10px">
+        필터 조회
+      </Text>
       <Button onClick={onToggle}>Customer CustomFilter</Button>
 
       <Collapse in={isOpen} transition={{ property: "opacity", duration: { enter: 500, exit: 1000 } }}>
@@ -79,7 +82,7 @@ export default function CustomFilter() {
           p='40px'
           color='white'
           mt='4'
-          bg='rgba(87, 195, 255, 0.1)'
+          bg='#F4F7FE'
           rounded='md'
           shadow='md'
         >
@@ -98,7 +101,7 @@ export default function CustomFilter() {
               <Checkbox value="7" style={{ color: 'black', marginRight: '50px', borderColor: '#5E3AFF', fontWeight: '800' }}>70대 이상</Checkbox>
             </CheckboxGroup>
 
-            <Select value={jobType} onChange={handleFilterChange1} borderRadius="5px" borderWidth="2px" borderColor="blue.500" width="150px" color="blue" marginRight="30px" size="sm" fontWeight="800">
+            <Select value={jobType} onChange={handleFilterChange1} borderRadius="5px" borderWidth="2px" borderColor="#5E3AFF.500" width="150px" color="#5E3AFF"  marginRight="30px" size="sm" fontWeight="800">
               <option value="NONE">직업 선택</option>
               <option value="직장인">직장인</option>
               <option value="공무원">공무원</option>
@@ -110,7 +113,7 @@ export default function CustomFilter() {
               <option value="전업주부">전업주부</option>
               <option value="무직">무직</option>
             </Select>
-            <Select value={salaryRange} onChange={handleFilterChange2} borderRadius="5px" borderWidth="2px" borderColor="blue.500" textAlign="center" width="251px" color="blue" size="sm" fontWeight="800" marginRight="50px">
+            <Select value={salaryRange} onChange={handleFilterChange2} borderRadius="5px" borderWidth="2px" borderColor="#5E3AFF.500" textAlign="center" width="251px" color="#5E3AFF" size="sm" fontWeight="800" marginRight="50px">
               <option value="NONE">연봉 선택</option>
               <option value="3000만원 미만">3000만원 미만</option>
               <option value="3000만원 이상 5000만원 미만">3000만원 이상 5000만원 미만</option>
@@ -124,18 +127,11 @@ export default function CustomFilter() {
           </Flex>
 
           <Collapse in={isOpen} transition={{ property: "opacity", duration: { enter: 500, exit: 1000 } }}>
-            <Box
-              p='40px'
-              color='white'
-              mt='4'
-              bg='rgba(87, 195, 255, 0.1)'
-              rounded='md'
-              shadow='md'
-            >
+       
 
               <Overview data={data} />
 
-            </Box>
+            
           </Collapse>
         </Box>
       </Collapse>
