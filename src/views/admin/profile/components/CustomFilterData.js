@@ -32,7 +32,6 @@ export default function Overview({ data }) {
       <Text color={textColor} fontSize="2xl" ms="24px" fontWeight="700" mt="20px">
         필터 조회
       </Text>
-
       <Card mb={{ base: "0px", "2xl": "20px" }} >
 
       {data && <AmChart data={data}/>}
@@ -40,7 +39,7 @@ export default function Overview({ data }) {
       <Flex display="flex" flex-direction="row" >
           {data && (
             <>      
-              <Box bg="#F4F7FE" height="250px" borderRadius="md" padding="4" color="black" width="100%">
+              <Box bg="#F4F7FE" height="250px" borderRadius="15px" padding="4" color="black" width="100%">
 
                 <Text fontSize="xl" fontWeight="bold" borderColor="black" pb="2" mb="2" color="black" marginLeft="15%" marginTop="1.5%">
                   포함된 고객 수 : {data.count}명<br />

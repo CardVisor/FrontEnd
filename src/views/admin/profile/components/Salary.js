@@ -108,14 +108,19 @@ export default function SalaryInformation(props) {
         chartRef.current.destroy();
       }
 
-      const ctx = document.getElementById("salaryChart");
-      chartRef.current = new Chart(ctx, config);
+      const ctx = document.getElementById('salaryChart');
+      if (ctx !== null) {
+        chartRef.current = new Chart(ctx, config);
+      } else {
+        console.error("차트를 찾지 못했습니다.");
+      }
+
       SetChartState(false);
     });
   }, []); // 의존성 배열은 비어있음
 
   return (
-    <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
+    <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
       <canvas id="salaryChart" width="300" height="300"></canvas>
     </Card>
   );
