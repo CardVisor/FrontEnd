@@ -222,7 +222,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
     let indexArray = Array.from({ length: 10 }, (item, index) => {
         return index;
     });
-    
+
     let pageIndex = [];
     pageIndex =
         page === 1
@@ -248,12 +248,12 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
         setPagingDataSet(pagingData);
         console.log("setPagingDataSetsetPagingDataSet??", pagingData);
     };
-    
+
     useEffect(() => {
         if (Object.values(tableData).length !== 0) {
             dataFetching();
         }
-    }, [tableData, page]); 
+    }, [tableData, page]);
 
     useEffect(() => {
         //console.log("setPagingDataSetsetPagingDataSet??", pagingDataSet);
@@ -275,12 +275,13 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                 maxW="1260px"
                 padding="10px"
             >
-                <ModalHeader>해외 결제 리포트</ModalHeader>
+                <ModalHeader>월간 해외 결제 검색</ModalHeader>
                 <ModalCloseButton size="lg" />
                 <ModalBody padding="10px 39px">
                     <Box className="filterWrap">
                         <Box className="filterLine chk_wrap">
-                            <span className="heading_option">성별</span>
+                            <span className="heading_option">
+                                주결제 고객 성별</span>
                             <Checkbox
                                 isChecked={allGenderChecked}
                                 isIndeterminate={isIndeterminate(
@@ -318,7 +319,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                         </Box>
                         <Box className="filterLine chk_wrap">
                             <span className="heading_option">
-                                주 결제 고객층
+                                주결제 고객 연령
                             </span>
                             <Checkbox
                                 isChecked={allAgeGroup}
@@ -518,7 +519,11 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                                                 return (
                                                     <TableRow
                                                         key={index}
-                                                        index={(page - 1) * 10 + index + 1} 
+                                                        index={
+                                                            (page - 1) * 10 +
+                                                            index +
+                                                            1
+                                                        }
                                                         country={country}
                                                         data={data}
                                                     />
@@ -541,17 +546,19 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                             </TableContainer>
                         </Box>
                     </Box>
-                    <Pagination
-                        activePage={page}
-                        itemsCountPerPage={10}
-                        totalItemsCount={Object.keys(tableData).length}
-                        firstPageText={"<<"}
-                        prevPageText={"<"}
-                        lastPageText={">>"}
-                        nextPageText={">"}
-                        handlePageChange={handlePageChange}
-                        maxItems={5}
-                    />
+                    {pagingDataSet && pagingDataSet.length !== 0 && (
+                        <Pagination
+                            activePage={page}
+                            itemsCountPerPage={10}
+                            totalItemsCount={Object.keys(tableData).length}
+                            firstPageText={"<<"}
+                            prevPageText={"<"}
+                            lastPageText={">>"}
+                            nextPageText={">"}
+                            handlePageChange={handlePageChange}
+                            maxItems={5}
+                        />
+                    )}
                 </ModalBody>
             </ModalContent>
         </Modal>

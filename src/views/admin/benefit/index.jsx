@@ -23,8 +23,13 @@ import ParentBenefitComponent from "./components/ParentBenefitComponent";
 import Card from "components/card/Card";
 import { SearchIcon } from "@chakra-ui/icons";
 import BenefitRecommendModal from "./components/BenefitRecommendModal";
+import Loading from "../default/components/Loading";
+import { useRecoilValue } from "recoil";
+import { benefitState } from "../Recoil/BenefitCluster";
 
 export default function BenefitSetting() {
+  const bState = useRecoilValue(benefitState);
+  const divToRemove = document.querySelector(".hi");
   const [benefitList, setBenefitist] = useState([]);
   const [benefitTreeList, setbBenefitTreeList] = useState([]);
   const [benefitTitle, setBenefitTitle] = useState();
@@ -78,6 +83,14 @@ export default function BenefitSetting() {
       setSeachState(false);
     }
   }, [date, selectOption, allPeriodChecked]);
+  useEffect(() => {
+    if (bState === false) {
+      if (divToRemove != null) divToRemove.remove();
+    } else {
+      // if (divToRemove != null) divToRemove.appendChild();
+    }
+  }, [bState]); // Empty dependency array ensures the effect runs only once on mount
+
   useEffect(() => {
     const fetchData = async () => {
       await handleIconClick();
@@ -231,6 +244,21 @@ export default function BenefitSetting() {
           </>
         )}
       </>
+      <Flex
+        className="hi"
+        position="absolute"
+        background="#F4F7FE"
+        top="-100px"
+        width="100%"
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="flex-start"
+        paddingTop={350}
+        filter="opacity(0.95)"
+      >
+        <Loading />
+      </Flex>
     </Box>
   );
 }
