@@ -1,10 +1,9 @@
 import {
     Box,
     Button,
+    Center,
     Checkbox,
     CloseButton,
-    Flex,
-    IconButton,
     Input,
     InputGroup,
     InputLeftElement,
@@ -12,65 +11,67 @@ import {
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalFooter,
     ModalHeader,
     ModalOverlay,
     Select,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Text,
+    Th,
+    Thead,
+    Tr,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopMonthFilter from "./TopMonthFilter";
 import "assets/css/international/modal.css";
-import DownloaderExcel from "./DownloaderExcel";
-import { numberWithDots, parseNumber } from "../variables/util";
-import { CheckIcon, SearchIcon } from "@chakra-ui/icons";
+import DownloaderExcel from "./DownloadExcel";
+import { numberWithDots } from "../variables/util";
 import { chartNationInfo } from "../variables/chartNationInfo";
+import axios from "axios";
 
-const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
+const ModalInternationalReport = ({ isOpen, onClose }) => {
+    // 상태 관리
     const [selectStartMonth, setSelectStartMonth] = useState(null);
     const [selectEndMonth, setSelectEndMonth] = useState(null);
+    const [searchStPrice, setSearchStPrice] = useState(0);
+    const [searchEdPrice, setSearchEdPrice] = useState(1000000000);
+    const [selectedNations, setSelectedNations] = useState([]);
+    const [isMaxSelected, setIsMaxSelected] = useState(false);
+    const [checkedGender, setCheckedGender] = useState([false, false]);
+    const [checkedAgeGroup, setCheckedAgeGroup] = useState(
+        new Array(6).fill(false)
+    );
+    const [isSearchDisabled, setIsSearchDisabled] = useState(false);
+    const [searchParams, setSearchParams] = useState(null);
 
-    //성별 옵션
-    const genders = ["남성", "여성"];
-    const [checkedGender, setCheckedGender] = React.useState([true, true]);
-    const allGenderChecked = checkedGender.every(Boolean);
+    const isChecked = (checkboxState) => checkboxState.some(Boolean);
 
-    //연령층 옵션
+    // 상수 정의
+    const genders = ["남", "여"];
     const ageGroups = ["20대", "30대", "40대", "50대", "60대", "70대 이상"];
-    const [checkedAgeGroup, setCheckedAgeGroup] = React.useState([
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-    ]);
+
+    // 전체 선택 확인
+    const allGenderChecked = checkedGender.every(Boolean);
     const allAgeGroup = checkedAgeGroup.every(Boolean);
 
-    //월 결제 금액
-    const [searchStPrice, setSearchStPrice] = useState(0);
-    const [searchEdPrice, setSearchEdPrice] = useState(100000000);
+    // 선택된 국가의 코드가 이미 선택되었는지 확인
+    const isAlreadySelected = (code) =>
+        selectedNations.some((nation) => nation.code === code);
 
-    //국가 선택
-    const [selectedNations, setSelectedNations] = React.useState([]);
-    const [isMaxSelected, setIsMaxSelected] = React.useState(false);
-
-    //const isIndeterminate = checkedGender.some(Boolean) && !allGenderChecked;
     const isIndeterminate = (item, all) => {
         return item.some(Boolean) && !all;
     };
 
-    // 값 변환 함수
+    // 숫자만 반환하는 함수
     const onlyNumbers = (value) => value.replace(/[^0-9]/g, "");
     const isNumberKey = (key) => /[0-9]/.test(key);
 
     // 입력 변화 처리 함수
-    const handleStartPriceChange = (e) => {
+    const handlePriceChange = (setter) => (e) => {
         const value = onlyNumbers(e.target.value);
-        setSearchStPrice(value === "" ? "0" : value);
-    };
-    const handleEndPriceChange = (e) => {
-        const value = onlyNumbers(e.target.value);
-        setSearchEdPrice(value === "" ? "0" : value);
+        setter(value === "" ? "0" : value);
     };
 
     // 키 입력 처리 함수
@@ -84,48 +85,121 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
         }
     };
 
+    // 국가 선택 처리 함수
     const handleSelectChange = (e) => {
-        if (selectedNations.length >= 10) {
-            setIsMaxSelected(true);
-            return;
+        if (isMaxSelected || isAlreadySelected(e.target.value)) return;
+
+        const selectedValue = e.target.value;
+        if (selectedValue === "ALL") {
+            const isConfirmed = window.confirm(
+                "선택된 나라들을 삭제하시고 전체를 선택하시겠습니까?"
+            );
+
+            if (isConfirmed) {
+                handleRemoveAll();
+            }
+        } else {
+            const selected = chartNationInfo.find(
+                (nation) => nation.nationCode === e.target.value
+            );
+
+            setSelectedNations((prev) => {
+                const updatedNations = [
+                    ...prev,
+                    {
+                        code: selected.nationCode,
+                        display: `${selected.kName}(${selected.eName})`,
+                    },
+                ];
+
+                if (updatedNations.length >= 10) {
+                    setIsMaxSelected(true);
+                }
+
+                return updatedNations;
+            });
         }
-        
-        const selectedNationCode = e.target.value;
-        const isAlreadySelected = selectedNations.some(nation => nation.code === selectedNationCode);
-        
-        if(isAlreadySelected) {
-          return;
-        }
-    
-        const selectedNation = chartNationInfo.find(nation => nation.nationCode === selectedNationCode);
-        
-        setSelectedNations(prevNations => [
-            ...prevNations, 
-            { code: selectedNation.nationCode, display: `${selectedNation.kName}(${selectedNation.eName})` }
-        ]);
     };
 
-    const handleRemoveItem = (index) => {
-        setSelectedNations((prevNations) => {
-            const newNations = prevNations.filter((_, i) => i !== index);
-            if (newNations.length < 10) {
-                setIsMaxSelected(false);
-            }
-            return newNations;
-        });
+    const handleRemoveAll = () => {
+        setSelectedNations([]);
+        setIsMaxSelected(false);
     };
+
+    // 선택된 국가 삭제 처리 함수
+    const handleRemoveItem = (index) => {
+        setSelectedNations((prev) => prev.filter((_, i) => i !== index));
+        if (selectedNations.length <= 10) setIsMaxSelected(false);
+    };
+
+    // 모든 필터 초기화
+    const resetFilters = () => {
+        setSelectStartMonth(null);
+        setSelectEndMonth(null);
+        setSearchStPrice(0);
+        setSearchEdPrice(100000000);
+        setSelectedNations([]);
+        setIsMaxSelected(false);
+        setCheckedGender([false, false]);
+        setCheckedAgeGroup(new Array(6).fill(false));
+    };
+
+    // 모달 닫기 처리 함수
+    const handleModalClose = () => {
+        onClose();
+        resetFilters();
+    };
+
+    useEffect(() => {
+        setIsSearchDisabled(
+            !(isChecked(checkedGender) && isChecked(checkedAgeGroup))
+        );
+    }, [checkedGender, checkedAgeGroup]);
+
+    useEffect(() => {
+        console.log("Modal?param이 있으면 axios해라", searchParams);
+        if (searchParams) {
+            axios({
+                method: "post",
+                url: `/international/chartDataList`,
+                data: searchParams,
+            })
+                .then((res) => {
+                    console.log("?res.data 모달 모딩???", res.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [searchParams]);
+
+// 검색 버튼 클릭 핸들러 함수
+const handleSearchClick = () => {
+    const selectedGenders = genders.filter((_, index) => checkedGender[index]);
+    const selectedAgeGroups = ageGroups.filter((_, index) => checkedAgeGroup[index]);
+    const selectedCountries = selectedNations.map(nation => nation.code);
+    const selectedPeriod = { startMonth: selectStartMonth, endMonth: selectEndMonth };
+    const selectedPriceRange = { startPrice: searchStPrice, endPrice: searchEdPrice };
+
+    setSearchParams({
+        genders: selectedGenders,
+        ageGroups: selectedAgeGroups,
+        priceRange: selectedPriceRange,
+        countries: selectedCountries,
+        period: selectedPeriod
+    });
+};
 
     return (
         <Modal
             isCentered
-            onClose={onClose}
-            finalFocusRef={btnRef}
+            onClose={handleModalClose}
             isOpen={isOpen}
             scrollBehavior="inside"
             motionPreset="slideInBottom"
         >
             <ModalOverlay />
-            <ModalContent h="90vh" w="90vw" maxW="1200px" padding="10px">
+            <ModalContent h="90vh" maxH="1000px" w="90vw" maxW="1260px" padding="10px">
                 <ModalHeader>해외 결제 리포트</ModalHeader>
                 <ModalCloseButton size="lg" />
                 <ModalBody padding="10px 39px">
@@ -163,7 +237,7 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                     }}
                                     className="chk_item"
                                 >
-                                    {gender}
+                                    {gender}성
                                 </Checkbox>
                             ))}
                         </Box>
@@ -220,7 +294,9 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                     placeholder="Enter amount"
                                     textAlign="right"
                                     value={numberWithDots(searchStPrice)}
-                                    onChange={handleStartPriceChange}
+                                    onChange={handlePriceChange(
+                                        setSearchStPrice
+                                    )}
                                     onKeyDown={handleKeyUp}
                                 />
                             </InputGroup>
@@ -237,7 +313,9 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                     placeholder="Enter amount"
                                     textAlign="right"
                                     value={numberWithDots(searchEdPrice)}
-                                    onChange={handleEndPriceChange}
+                                    onChange={handlePriceChange(
+                                        setSearchEdPrice
+                                    )}
                                     onKeyDown={handleKeyUp}
                                 />
                             </InputGroup>
@@ -247,10 +325,10 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                 <span className="heading_option">국가</span>
                                 <Select
                                     maxW="420px"
-                                    defaultValue="all"
+                                    defaultValue="ALL"
                                     onChange={handleSelectChange}
                                 >
-                                    <option value="all">전체</option>
+                                    <option value="ALL">전체</option>
                                     {chartNationInfo
                                         .filter(
                                             (nation) =>
@@ -272,6 +350,15 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                 </span>
                             </Box>
                             <Box className="filterBottom">
+                                {selectedNations.length > 0 && (
+                                    <Button
+                                        colorScheme="blackAlpha"
+                                        size="xs"
+                                        onClick={handleRemoveAll}
+                                    >
+                                        전체 삭제
+                                    </Button>
+                                )}
                                 {selectedNations.map((item, index) => (
                                     <Box className="tag" key={index}>
                                         &#35;{item.display}
@@ -285,50 +372,6 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                     </Box>
                                 ))}
                             </Box>
-                            {/*
-                            <Box className="filterBottom">
-                                <Box className="tag">
-                                    &#35;아랍에미리트(Afghanistan)
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;사우디아라비아
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;터크스 카이코스 제도
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                                <Box className="tag">
-                                    &#35;아랍에미리트
-                                    <CloseButton size="sm" ml="-4px" />
-                                </Box>
-                            </Box>
-                            */}
                         </Box>
                         <Box display="flex" className="filterLine">
                             <span className="heading_option">조회 기간</span>
@@ -336,33 +379,102 @@ const ModalDownloadReport = ({ isOpen, onClose, btnRef }) => {
                                 setSelectStartMonth={setSelectStartMonth}
                                 setSelectEndMonth={setSelectEndMonth}
                             />
-                            <Flex
-                                display="flex"
-                                justifyContent="flex-end"
-                                ml="auto"
-                                mr="40px"
-                                mt="50px"
+                        </Box>
+                        <Box
+                            display="flex"
+                            justifyContent="flex-end"
+                            mr="20px"
+                            mt="10px"
+                        >
+                            <Button
+                                colorScheme="blue"
+                                borderRadius="10px"
+                                isDisabled={isSearchDisabled}
+                                onClick={handleSearchClick}
                             >
-                                <Button
-                                    colorScheme="blue"
-                                    onClick={onClose}
-                                    borderRadius="10px"
-                                >
-                                    검색
-                                </Button>
-                                <DownloaderExcel />
-                            </Flex>
+                                검색
+                            </Button>
+                            <Button
+                                colorScheme="blackAlpha"
+                                borderRadius="10px"
+                                ml="10px"
+                                onClick={resetFilters}
+                            >
+                                옵션 초기화
+                            </Button>
+                            {/*
+                            <DownloadExcel />
+                             */}
+                        </Box>
+                    </Box>
+                    <Box m="30px 10px">
+                        <Text pb="5px"pl="5px"  style={{fontSize:"14px"}}>총{" "}<span style={{color:"blue", fontWeight:"bold"}}>100</span>건</Text>
+                        <Box
+                            border="1px"
+                            borderColor="gray.200"
+                            borderRadius="md"
+                        >
+                            <TableContainer>
+                                <Table variant="simple">
+                                    <Thead>
+                                        <Tr>
+                                            <Th>No</Th>
+                                            <Th>국가</Th>
+                                            <Th>날짜</Th>
+                                            <Th>주고객층</Th>
+                                            <Th>총 매출액</Th>
+                                            <Th>총 결제 건수</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {Array(45)
+                                            .fill()
+                                            .map((_, i) => (
+                                                <TableRow key={i} index={i} />
+                                            ))}
+                                        {/* <Tr>
+                                            <Td colSpan="6" textAlign="center" p="100px 0">검색된 결제 리포트가 없습니다.</Td>
+                                        </Tr> */}
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
                         </Box>
                     </Box>
                 </ModalBody>
-                <ModalFooter>
-                    <Button colorScheme="blue" onClick={onClose}>
-                        Close
-                    </Button>
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );
 };
 
-export default React.memo(ModalDownloadReport);
+export default React.memo(ModalInternationalReport);
+
+const TableRow = React.memo(({ index, data }) => (
+    <React.Fragment>
+        <Tr key={index + "a"}>
+            <Td rowSpan={3}>{index + 1}</Td>
+            <Td rowSpan={3}>KOR</Td>
+            <Td>2023-02</Td>
+            <Td>30대 남성</Td>
+            <Td isNumeric>
+                {Math.floor(200000 * Math.random())} 원
+            </Td>
+            <Td>{Math.floor(9 * Math.random()) + 1} 건</Td>
+        </Tr>
+        <Tr key={index + "b"}>
+            <Td>2023-03</Td>
+            <Td>30대 남성</Td>
+            <Td isNumeric>
+                {Math.floor(200000 * Math.random())} 원
+            </Td>
+            <Td>{Math.floor(9 * Math.random()) + 1} 건</Td>
+        </Tr>
+        <Tr key={index + "c"}>
+            <Td>2023-04</Td>
+            <Td>30대 남성</Td>
+            <Td isNumeric>
+                {Math.floor(200000 * Math.random())} 원
+            </Td>
+            <Td>{Math.floor(9 * Math.random()) + 1} 건</Td>
+        </Tr>
+    </React.Fragment>
+));
