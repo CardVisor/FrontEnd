@@ -44,7 +44,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
 
   useEffect(() => {
     setMinDate(new Date(monthOptions[monthOptions.length - 1].value));
-  }, [monthOptions]);
+  }, []);
 
   const handleMonthChange = (date) => {
     const year = date.getFullYear();
