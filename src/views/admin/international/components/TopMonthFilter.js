@@ -20,7 +20,7 @@ function TopMonthFilter({
     const currentDate = new Date();
     const currentMonth = new Date();
     const lastYear = new Date(
-        currentDate.setMonth(currentDate.getMonth() - 11)
+        currentDate.setMonth(currentDate.getMonth() - 5)
     );
     const lastThreeYear = new Date(
         currentDate.setFullYear(currentDate.getFullYear() - 3)
