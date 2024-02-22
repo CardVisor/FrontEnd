@@ -3,6 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
 import { styled } from './stitches.config';
 import { Flex } from '@chakra-ui/react';
+import { Fragment } from 'react';
 
 const StyledColumns = styled('div', {
     display: 'grid',
@@ -10,6 +11,14 @@ const StyledColumns = styled('div', {
     margin: '1vh auto',
     width: '80%',
     height: '80vh',
+    gap: '8px',
+});
+
+const DynamicStyledColumns = styled('div', {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr',
+    margin: '1vh auto',
+    width: '80%',
     gap: '8px',
 });
 
@@ -33,6 +42,7 @@ function BenefitRecommendResult({ data, setNewCombination }) {
             list: [],
         };
         setColumns(newData);
+        setNewCombination([]);
     }, [data]);
 
     const onDragEnd = (result) => {
@@ -104,13 +114,13 @@ function BenefitRecommendResult({ data, setNewCombination }) {
                             ))}
                     </StyledColumns>
                     <Flex>
+                        {/* 신규조합 상자는 크기 제한이 없었으면 좋겠다. 최소 150이상 부터 가능하도록 */}
                         {Object.values(columns)
                             .filter((col) => col.id === '신규 조합')
                             .map((col) => (
-                                <>
-                                    <h1>ㅎㅇㅎ</h1>
+                                <Fragment key={col.id}>
                                     <Column col={col} key={col.id} />
-                                </>
+                                </Fragment>
                             ))}
                     </Flex>
                 </Flex>
