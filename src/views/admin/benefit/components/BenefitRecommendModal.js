@@ -8,15 +8,14 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Radio,
-    RadioGroup,
     Stack,
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import BenefitRecommendResult from './BenefitRecommendResult';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import BenefitRecommendResult from './BenefitRecommendResult';
+import BenefitRecommendParent from './BenefitRecommendParent';
 
 function BenefitRecommend(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,15 +82,9 @@ function BenefitRecommend(props) {
             <Button onClick={onOpen} colorScheme="facebook" variant="solid" size="sm">
                 타겟 기반 혜택 추천
             </Button>
-            <Modal
-                onClose={onClose}
-                isOpen={isOpen}
-                motionPreset="slideInBottom"
-                scrollBehavior={scrollBehavior}
-                size="6xl"
-            >
+            <Modal onClose={onClose} isOpen={isOpen} motionPreset="slideInBottom" scrollBehavior={scrollBehavior}>
                 <ModalOverlay />
-                <ModalContent>
+                <ModalContent maxH="700px" maxW="1500px">
                     <ModalHeader>타겟 기반 혜택 추천</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
@@ -135,17 +128,7 @@ function BenefitRecommend(props) {
                         {loadingDndComp && (
                             // <Stack pl={5} mt={1} spacing={1} mb="5">
                             <Stack mt={1} mb={1}>
-                                <BenefitRecommendResult data={benefitCustomData}></BenefitRecommendResult>
-                                <Button
-                                    // size="sm"
-                                    maxWidth={180}
-                                    variant="solid"
-                                    colorScheme="facebook"
-                                    mr={3}
-                                    onClick={onClose}
-                                >
-                                    2차 조회 버튼
-                                </Button>
+                                <BenefitRecommendParent data={benefitCustomData}></BenefitRecommendParent>
                             </Stack>
                         )}
                     </ModalBody>

@@ -22,7 +22,7 @@ const data = [
     },
 ];
 
-function DownloaderExcel({ chartData }) {
+function DownloadExcel({ chartData }) {
     const handleDownload = () => {
         // 데이터를 엑셀 형식으로 변환합니다.
         const worksheet = XLSX.utils.json_to_sheet(data);
@@ -47,12 +47,13 @@ function DownloaderExcel({ chartData }) {
     return (
         <>
             <Button
+                disabled
                 colorScheme="green"
                 aria-label="엑셀로 내보내기"
                 leftIcon={<FaRegFileExcel />}
                 borderRadius="10px"
                 w="auto"
-                ml="5px"
+                ml="10px"
                 onClick={handleDownload}
             >
                 다운로드
@@ -61,4 +62,4 @@ function DownloaderExcel({ chartData }) {
     );
 }
 
-export default DownloaderExcel;
+export default DownloadExcel;
