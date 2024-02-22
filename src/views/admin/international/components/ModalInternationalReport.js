@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    Center,
     Checkbox,
     CloseButton,
     Input,
@@ -26,10 +25,11 @@ import {
 import React, { useEffect, useState } from "react";
 import TopMonthFilter from "./TopMonthFilter";
 import "assets/css/international/modal.css";
-import DownloaderExcel from "./DownloadExcel";
+// import DownloaderExcel from "./DownloadExcel";
 import { numberWithDots } from "../variables/util";
 import { chartNationInfo } from "../variables/chartNationInfo";
 import axios from "axios";
+import Pagination from "./Pagination";
 
 const ModalInternationalReport = ({ isOpen, onClose }) => {
     // 상태 관리
@@ -45,6 +45,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
     );
     const [isSearchDisabled, setIsSearchDisabled] = useState(false);
     const [searchParams, setSearchParams] = useState(null);
+    const [tableData, setTableData] = useState([]);
 
     const isChecked = (checkboxState) => checkboxState.some(Boolean);
 
@@ -148,6 +149,8 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
     const handleModalClose = () => {
         onClose();
         resetFilters();
+        setTableData({});
+        setPagingDataSet([]);
     };
 
     useEffect(() => {
@@ -157,7 +160,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
     }, [checkedGender, checkedAgeGroup]);
 
     useEffect(() => {
-        console.log("Modal?param이 있으면 axios해라", searchParams);
+        //console.log("Modal?param이 있으면 axios해라", searchParams);
         if (searchParams) {
             axios({
                 method: "post",
@@ -165,7 +168,10 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
                 data: searchParams,
             })
                 .then((res) => {
-                    console.log("?res.data 모달 모딩???", res.data);
+                    //console.log("?res.data 모달 모딩???", res.data);
+                    setTableData(res.data);
+                    setPage(1);
+                    //console.log("Updated tableData: ", tableData);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -173,22 +179,85 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
         }
     }, [searchParams]);
 
-// 검색 버튼 클릭 핸들러 함수
-const handleSearchClick = () => {
-    const selectedGenders = genders.filter((_, index) => checkedGender[index]);
-    const selectedAgeGroups = ageGroups.filter((_, index) => checkedAgeGroup[index]);
-    const selectedCountries = selectedNations.map(nation => nation.code);
-    const selectedPeriod = { startMonth: selectStartMonth, endMonth: selectEndMonth };
-    const selectedPriceRange = { startPrice: searchStPrice, endPrice: searchEdPrice };
+    useEffect(() => {
+        console.log("Updated tableData useEffect: ", tableData);
+    }, [tableData]);
 
-    setSearchParams({
-        genders: selectedGenders,
-        ageGroups: selectedAgeGroups,
-        priceRange: selectedPriceRange,
-        countries: selectedCountries,
-        period: selectedPeriod
+    // 검색 버튼 클릭 핸들러 함수
+    const handleSearchClick = () => {
+        const selectedGenders = genders.filter(
+            (_, index) => checkedGender[index]
+        );
+        const selectedAgeGroups = ageGroups.filter(
+            (_, index) => checkedAgeGroup[index]
+        );
+        const selectedCountries = selectedNations.map((nation) => nation.code);
+        const selectedPeriod = {
+            startMonth: selectStartMonth,
+            endMonth: selectEndMonth,
+        };
+        const selectedPriceRange = {
+            startPrice: searchStPrice,
+            endPrice: searchEdPrice,
+        };
+
+        setSearchParams({
+            genders: selectedGenders,
+            ageGroups: selectedAgeGroups,
+            priceRange: selectedPriceRange,
+            countries: selectedCountries,
+            period: selectedPeriod,
+        });
+    };
+
+    //////////////////페이징////////////////////////////////
+
+    const [pagingDataSet, setPagingDataSet] = useState([]);
+
+    const [page, setPage] = useState(0);
+    const handlePageChange = (page) => {
+        setPage(page);
+    };
+
+    let indexArray = Array.from({ length: 10 }, (item, index) => {
+        return index;
     });
-};
+
+    let pageIndex = [];
+    pageIndex =
+        page === 1
+            ? indexArray
+            : indexArray.map((item) => item + (page - 1) * 10);
+
+    // 현재 페이지 데이터
+    const dataFetching = () => {
+        let tableDataArray = Object.entries(tableData);
+        const pagingData = [];
+        for (let i = 0; i < indexArray.length; i++) {
+            if (tableDataArray && tableDataArray[pageIndex[i]] === undefined) {
+                break;
+            } else {
+                let entry = tableDataArray[pageIndex[i]];
+                let key = entry[0];
+                let value = entry[1];
+                let obj = {};
+                obj[key] = value;
+                pagingData.push(obj);
+            }
+        }
+        setPagingDataSet(pagingData);
+        console.log("setPagingDataSetsetPagingDataSet??", pagingData);
+    };
+
+    useEffect(() => {
+        if (Object.values(tableData).length !== 0) {
+            dataFetching();
+        }
+    }, [tableData, page]);
+
+    useEffect(() => {
+        //console.log("setPagingDataSetsetPagingDataSet??", pagingDataSet);
+    }, [pagingDataSet]);
 
     return (
         <Modal
@@ -199,13 +268,20 @@ const handleSearchClick = () => {
             motionPreset="slideInBottom"
         >
             <ModalOverlay />
-            <ModalContent h="90vh" maxH="1000px" w="90vw" maxW="1260px" padding="10px">
-                <ModalHeader>해외 결제 리포트</ModalHeader>
+            <ModalContent
+                h="90vh"
+                maxH="1000px"
+                w="90vw"
+                maxW="1260px"
+                padding="10px"
+            >
+                <ModalHeader>월간 해외 결제 리포트</ModalHeader>
                 <ModalCloseButton size="lg" />
                 <ModalBody padding="10px 39px">
                     <Box className="filterWrap">
                         <Box className="filterLine chk_wrap">
-                            <span className="heading_option">성별</span>
+                            <span className="heading_option">
+                                주결제 고객 성별</span>
                             <Checkbox
                                 isChecked={allGenderChecked}
                                 isIndeterminate={isIndeterminate(
@@ -243,7 +319,7 @@ const handleSearchClick = () => {
                         </Box>
                         <Box className="filterLine chk_wrap">
                             <span className="heading_option">
-                                주 결제 고객층
+                                주결제 고객 연령
                             </span>
                             <Checkbox
                                 isChecked={allAgeGroup}
@@ -408,7 +484,13 @@ const handleSearchClick = () => {
                         </Box>
                     </Box>
                     <Box m="30px 10px">
-                        <Text pb="5px"pl="5px"  style={{fontSize:"14px"}}>총{" "}<span style={{color:"blue", fontWeight:"bold"}}>100</span>건</Text>
+                        <Text pb="5px" pl="5px" style={{ fontSize: "14px" }}>
+                            총{" "}
+                            <span style={{ color: "blue", fontWeight: "bold" }}>
+                                {tableData && Object.keys(tableData).length}
+                            </span>
+                            건
+                        </Text>
                         <Box
                             border="1px"
                             borderColor="gray.200"
@@ -420,6 +502,7 @@ const handleSearchClick = () => {
                                         <Tr>
                                             <Th>No</Th>
                                             <Th>국가</Th>
+                                            <Th>국가 코드</Th>
                                             <Th>날짜</Th>
                                             <Th>주고객층</Th>
                                             <Th>총 매출액</Th>
@@ -427,19 +510,55 @@ const handleSearchClick = () => {
                                         </Tr>
                                     </Thead>
                                     <Tbody>
-                                        {Array(45)
-                                            .fill()
-                                            .map((_, i) => (
-                                                <TableRow key={i} index={i} />
-                                            ))}
-                                        {/* <Tr>
-                                            <Td colSpan="6" textAlign="center" p="100px 0">검색된 결제 리포트가 없습니다.</Td>
-                                        </Tr> */}
+                                        {pagingDataSet &&
+                                        pagingDataSet.length !== 0 ? (
+                                            pagingDataSet.map((item, index) => {
+                                                let country =
+                                                    Object.keys(item)[0];
+                                                let data = item[country];
+                                                return (
+                                                    <TableRow
+                                                        key={index}
+                                                        index={
+                                                            (page - 1) * 10 +
+                                                            index +
+                                                            1
+                                                        }
+                                                        country={country}
+                                                        data={data}
+                                                    />
+                                                );
+                                            })
+                                        ) : (
+                                            <Tr>
+                                                <Td
+                                                    colSpan="7"
+                                                    textAlign="center"
+                                                    p="100px 0"
+                                                >
+                                                    검색된 결제 리포트가
+                                                    없습니다.
+                                                </Td>
+                                            </Tr>
+                                        )}
                                     </Tbody>
                                 </Table>
                             </TableContainer>
                         </Box>
                     </Box>
+                    {pagingDataSet && pagingDataSet.length !== 0 && (
+                        <Pagination
+                            activePage={page}
+                            itemsCountPerPage={10}
+                            totalItemsCount={Object.keys(tableData).length}
+                            firstPageText={"<<"}
+                            prevPageText={"<"}
+                            lastPageText={">>"}
+                            nextPageText={">"}
+                            handlePageChange={handlePageChange}
+                            maxItems={5}
+                        />
+                    )}
                 </ModalBody>
             </ModalContent>
         </Modal>
@@ -448,33 +567,50 @@ const handleSearchClick = () => {
 
 export default React.memo(ModalInternationalReport);
 
-const TableRow = React.memo(({ index, data }) => (
-    <React.Fragment>
-        <Tr key={index + "a"}>
-            <Td rowSpan={3}>{index + 1}</Td>
-            <Td rowSpan={3}>KOR</Td>
-            <Td>2023-02</Td>
-            <Td>30대 남성</Td>
-            <Td isNumeric>
-                {Math.floor(200000 * Math.random())} 원
-            </Td>
-            <Td>{Math.floor(9 * Math.random()) + 1} 건</Td>
-        </Tr>
-        <Tr key={index + "b"}>
-            <Td>2023-03</Td>
-            <Td>30대 남성</Td>
-            <Td isNumeric>
-                {Math.floor(200000 * Math.random())} 원
-            </Td>
-            <Td>{Math.floor(9 * Math.random()) + 1} 건</Td>
-        </Tr>
-        <Tr key={index + "c"}>
-            <Td>2023-04</Td>
-            <Td>30대 남성</Td>
-            <Td isNumeric>
-                {Math.floor(200000 * Math.random())} 원
-            </Td>
-            <Td>{Math.floor(9 * Math.random()) + 1} 건</Td>
-        </Tr>
-    </React.Fragment>
-));
+const TableRow = ({ index, country, data }) => {
+    const keys = Object.keys(data);
+    const firstKey = keys[0];
+    const restKeys = keys.slice(1);
+    const nationInfo = chartNationInfo.find(
+        (info) => info.nationCode === country
+    );
+
+    return (
+        <>
+            <Tr>
+                <Td rowSpan={keys.length}>{index}</Td>
+                <Td rowSpan={keys.length}>
+                    {nationInfo ? (
+                        <>
+                            {nationInfo.kName}
+                            <br />({nationInfo.eName})
+                        </>
+                    ) : (
+                        country
+                    )}
+                </Td>
+                <Td rowSpan={keys.length}>{country}</Td>
+                <Td>{`${firstKey.split("-")[0]}년 ${
+                    firstKey.split("-")[1]
+                }월`}</Td>
+                <Td>
+                    {data[firstKey].age_range}대{" "}
+                    {data[firstKey].gender_range === "여" ? "여성" : "남성"}
+                </Td>
+                <Td>{numberWithDots(data[firstKey].total_amount)} 원</Td>
+                <Td>{data[firstKey].total_payment_count} 건</Td>
+            </Tr>
+            {restKeys.map((key, idx) => (
+                <Tr key={idx}>
+                    <Td>{`${key.split("-")[0]}년 ${key.split("-")[1]}월`}</Td>
+                    <Td>
+                        {data[key].age_range}대{" "}
+                        {data[key].gender_range === "여" ? "여성" : "남성"}
+                    </Td>
+                    <Td>{numberWithDots(data[key].total_amount)} 원</Td>
+                    <Td>{data[key].total_payment_count} 건</Td>
+                </Tr>
+            ))}
+        </>
+    );
+};

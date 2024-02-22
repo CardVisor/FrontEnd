@@ -22,6 +22,10 @@ export default function AgeInformation(props) {
         const sortedData = sortedLabels.map(age => data[age] || 0);
         // Chart rendering logic
         const ctx = document.getElementById('ageChart');
+        if (ctx === null) {
+          console.error('Cannot find element with id "ageChart".');
+          return;
+        }
         const myBarChart = new Chart(ctx, {
           type: 'bar',
           data: {

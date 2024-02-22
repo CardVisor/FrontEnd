@@ -10,6 +10,7 @@ export default function AmChart({ data }) {
     console.log(data);
     if (!data) return; // data가 없으면 종료
 
+
     // 배열의 길이 확인
     if (data.cardName.length < 5 || data.cardMcc.length < 5) {
       console.error("data.cardName or data.cardMcc is too short!");
