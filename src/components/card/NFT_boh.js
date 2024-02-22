@@ -15,7 +15,7 @@ export default function NFT(props) {
   const [mccChartDataList, setMccChartDataList] = useState([]);
   const Setstate = useSetRecoilState(cardState);
   useEffect(() => {
-    Setstate(true);
+    // Setstate(true);
     axios
       .get(`CardCluster/MccCharts?month=${month}&type=${cardType}`)
       .then((response) => {
@@ -25,7 +25,7 @@ export default function NFT(props) {
         }));
         setMccChartDataList(data);
         //console.log(data);
-        Setstate(false);
+        // Setstate(false);
       })
       .catch((error) => {
         console.error("Error fetching data", error);

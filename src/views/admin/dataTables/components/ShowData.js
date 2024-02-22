@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Heading, Stack, StackDivider, Box } from "@chakra-ui/react";
 import Card from "components/card/Card.js";
+import { useSetRecoilState } from "recoil";
 
-function ShowData(props) {
+import { cardState } from "views/admin/Recoil/CardCluster";
+
+export default function ShowData(props) {
   const { card_annual_fee, cardType, month } = props;
+  const setcardState = useSetRecoilState(cardState);
   const [cardDetails, setCardDetails] = useState({
     payTotal: null,
     male: null,
@@ -17,6 +21,8 @@ function ShowData(props) {
   });
 
   useEffect(() => {
+    //console.log("들어와 시펄");
+    //setcardState(true);
     axios({
       method: "get",
       url: `/CardCluster/CardDetails?type=${cardType}&month=${month}`,
@@ -32,6 +38,8 @@ function ShowData(props) {
           compTotalPayPercentage: res.data.compTotalPayPercentage,
           compCustNum: res.data.compCustNum,
         });
+
+        // console.log(cardDetails);
       })
       .catch((err) => {
         console.log(err);
@@ -105,5 +113,3 @@ function ShowData(props) {
     </Card>
   );
 }
-
-export default ShowData;
