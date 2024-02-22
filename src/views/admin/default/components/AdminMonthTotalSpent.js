@@ -109,6 +109,7 @@ export const TotalProvider = (props) => {
   // });
 
   useEffect(() => {
+    setCheckstat(false);
     axios
       .all([
         axios.get("/main/selectLastYearPerMonthamount"),
