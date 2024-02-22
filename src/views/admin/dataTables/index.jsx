@@ -17,7 +17,9 @@ import axios from "axios";
 import Card from "components/card/Card";
 import { SearchBar } from "components/navbar/searchBar/SearchBar_boh";
 import Modal2 from "views/admin/dataTables/components/Modal";
-
+import { cardState } from "../../admin/Recoil/CardCluster";
+import { useRecoilValue } from "recoil";
+import Loading from "../default/components/Loading";
 const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -101,7 +103,10 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
 };
 
 export default function Settings() {
+  const cardstate = useRecoilValue(cardState);
+  const [maincardstate, setMainCardState] = useState(true);
   const [cards, setCards] = useState([]);
+  const divToRemove = document.querySelector(".hi");
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedSort, setSelectedSort] = useState(null);
 
@@ -130,7 +135,13 @@ export default function Settings() {
   useEffect(() => {
     console.log(clickedCards);
   }, [clickedCards]);
-
+  useEffect(() => {
+    if (cardstate === false) {
+      if (divToRemove != null) divToRemove.remove();
+    } else {
+      // if (divToRemove != null) divToRemove.appendChild();
+    }
+  }, [cardstate]); // Empty dependency array ensures the effect runs only once on mount
   useEffect(() => {
     if (selectedMonth && selectedSort) {
       axios({
@@ -148,6 +159,7 @@ export default function Settings() {
           });
           // 추출된 카드 정보 배열을 상태로 설정
           setCards(filteredCards);
+          setMainCardState(false);
         })
         .catch((err) => {
           console.log(err);
@@ -164,6 +176,10 @@ export default function Settings() {
   // Chakra Color Mode
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      {/* {maincardstate ? (
+        <Loading />
+      ) : (
+        <div> */}
       <TopBar
         setSelectedMonth={setSelectedMonth}
         setSelectedSort={setSelectedSort}
@@ -228,6 +244,23 @@ export default function Settings() {
           month={selectedMonth}
         ></Modal2>
       )}
+      {/* </div>
+      )} */}
+      <Flex
+        className="hi"
+        position="absolute"
+        background="#F4F7FE"
+        top="-100px"
+        width="100%"
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="flex-start"
+        paddingTop={350}
+        filter="opacity(0.95)"
+      >
+        <Loading />
+      </Flex>
     </Box>
   );
 }

@@ -49,7 +49,6 @@ import CustomFilter from "./components/CustomFilter";
 import Loading from "../default/components/Loading";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { loadState } from "../../admin/Recoil/Atom";
-import { MdOpacity } from "react-icons/md";
 
 export default function Overview() {
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -61,11 +60,6 @@ export default function Overview() {
   const ageRef = useRef();
   const jobRef = useRef();
   const salaryRef = useRef();
-  const [profileloading, setProfileLoading] = useState(true);
-
-  useEffect(() => {
-    // if (divToRemove != null) divToRemove.appendChild();
-  }, []);
 
   useEffect(() => {
     if (holy === false) {
