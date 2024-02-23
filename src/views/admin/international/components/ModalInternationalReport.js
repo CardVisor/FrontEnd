@@ -183,7 +183,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
     }, [searchParams]);
 
     useEffect(() => {
-        console.log("Updated tableData useEffect: ", tableData);
+        //console.log("Updated tableData useEffect: ", tableData);
         if (Object.keys(tableData).length === 0) {
             setPagingDataSet([]);
         } else {
@@ -264,7 +264,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
             }
         }
         setPagingDataSet(pagingData);
-        console.log("setPagingDataSetsetPagingDataSet??", pagingData);
+        //console.log("setPagingDataSetsetPagingDataSet??", pagingData);
     };
 
     // 현재 페이지 데이터
@@ -308,11 +308,9 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
         >
             <ModalOverlay />
             <ModalContent
-                h="90vh"
-                maxH="1000px"
+                maxH="860px"
                 w="90vw"
                 maxW="1260px"
-                padding="10px"
             >
                 <ModalHeader>월간 해외 결제 검색</ModalHeader>
                 <ModalCloseButton size="lg" />
