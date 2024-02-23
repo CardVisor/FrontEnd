@@ -1,7 +1,24 @@
-import { Button, Grid, Text } from '@chakra-ui/react';
+import { Box, Button, Grid, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import NFTBenefit from './NFTBenefit';
 import axios from 'axios';
+import styled from 'styled-components';
+
+
+const CardUnitWrap = styled.div`
+    width: 50%;
+    & .cardUnitBody {
+        & .cardUnit {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            & + .cardUnit {
+                margin-top: 15px;
+            }
+        }
+    }
+
+`;
+
 function Combination({ newCombination }) {
     const [combival, setCombival] = useState(0);
     const [curRankVal, SetCurRankVal] = useState(0);
@@ -39,31 +56,38 @@ function Combination({ newCombination }) {
 
     return (
         <>
-            {newCombination &&
-                newCombination.map((benefit, index) => (
-                    <Grid
-                        key={index}
-                        mb="30px"
-                        mr="60px"
-                        ml="60px"
-                        templateColumns={{
-                            base: '1fr',
-                            lg: '2fr 3.5fr',
-                        }}
-                        templateRows={{
-                            base: 'repeat(1, 5fr)',
-                            lg: '5fr',
-                        }}
-                        gap={{ base: '50px', xl: '20px' }}
-                    >
-                        <NFTBenefit
-                            data={benefit}
-                            benefit_pct={benefit.benefit_pct}
-                            benefit_detail={benefit.benefit_detail}
-                        />
-                    </Grid>
-                ))}
-            <hr></hr>
+        <CardUnitWrap>
+            <Box className="subTitle cardTit">Card Recommended</Box>
+            <Box className="cardUnitBody">
+                {newCombination &&
+                    newCombination.map((benefit, index) => (
+                        <Box
+                            className="cardUnit"
+                        >
+                            {/* 
+                            <Grid
+                                key={index}
+                                templateColumns={{
+                                    base: '1fr',
+                                    lg: '2fr 3.5fr',
+                                }}
+                                templateRows={{
+                                    base: 'repeat(1, 5fr)',
+                                    lg: '5fr',
+                                }}
+                                gap={{ base: '50px', xl: '20px' }}
+                            > */}
+                                <NFTBenefit
+                                    data={benefit}
+                                    benefit_pct={benefit.benefit_pct}
+                                    benefit_detail={benefit.benefit_detail}
+                                />
+                            
+                            {/* </Grid> */}
+                        </Box>
+                    ))}
+                </Box>
+        </CardUnitWrap>
             {combival > 0 && (
                 <>
                     <div>{'카드 조합에 따른 혜택 가치 합: ' + combival}</div>

@@ -10,7 +10,6 @@ function BenefitRecommendParent({ data }) {
     return (
         <Fragment>
             <BenefitRecommendResult data={data} setNewCombination={setNewCombination}></BenefitRecommendResult>
-            <hr></hr>
             {newCombination && <Combination newCombination={newCombination}></Combination>}
         </Fragment>
     );

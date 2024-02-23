@@ -1,4 +1,5 @@
 import {
+  Box,
     Button,
     Checkbox,
     Modal,
@@ -12,6 +13,7 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
+import "assets/css/benefitCluster/Modal.css";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import BenefitRecommendResult from './BenefitRecommendResult';
@@ -80,6 +82,102 @@ function BenefitRecommend(props) {
 
     return (
         <>
+        <Button
+            onClick={onOpen}
+            colorScheme="facebook"
+            variant="solid"
+            size="sm"
+        >
+            타겟 기반 혜택 추천
+        </Button>
+        <Modal
+        isCentered
+            onClose={onClose}
+            isOpen={isOpen}
+            motionPreset="slideInBottom"
+            scrollBehavior={scrollBehavior}
+        >
+            <ModalOverlay />
+            <ModalContent
+              maxH="860px" maxW="1500px"
+            >
+                <ModalHeader>타겟 기반 혜택 추천</ModalHeader>
+                <ModalCloseButton size="lg" />
+                <ModalBody padding="10px 39px" className="benefitBody">
+                    <Text className="subTitle">고객층 필터</Text>
+                    <Box className="benefitFilterWrap">
+                        {Object.keys(categories).map((category) => (
+                            <Box
+                                key={category}
+                                className="filterLine"
+                            >
+                                <Text className="filterHeader">{category}</Text>
+                                <div key={category}>
+                                    <Checkbox
+                                        isChecked={checkedOptions[
+                                            category
+                                        ].every((item) => item)}
+                                        onChange={handleParentChange(category)}
+                                        className="chk_item"
+                                    >
+                                        전체
+                                    </Checkbox>
+                                    {categories[category].map((item, index) => (
+                                        <Checkbox
+                                            key={category + index}
+                                            isChecked={
+                                                checkedOptions[category][index]
+                                            }
+                                            onChange={handleChildChange(
+                                                category,
+                                                index
+                                            )}
+                                            className="chk_item"
+                                        >
+                                            {item}
+                                        </Checkbox>
+                                    ))}
+                                </div>
+                            </Box>
+                        ))}
+                        <Box
+                            display="flex"
+                            justifyContent="flex-end"
+                            mr="20px"
+                            mt="10px"
+                        >
+                            <Button
+                                disabled={!searchFlag}
+                                colorScheme="blue"
+                                borderRadius="10px"
+                                onClick={handleSearchAction}
+                            >
+                                조회
+                            </Button>
+                        </Box>
+                    </Box>
+                    {loadingDndComp && (
+                        // <Stack pl={5} mt={1} spacing={1} mb="5">
+                        <Box className="benefitSearchResult">
+                            <BenefitRecommendParent
+                                data={benefitCustomData}
+                            />
+                        </Box>
+                    )}
+                </ModalBody>
+                <ModalFooter>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+        </>
+    );
+}
+
+export default BenefitRecommend;
+
+
+{/* 이전 코드
+
             <Button onClick={onOpen} colorScheme="facebook" variant="solid" size="sm">
                 타겟 기반 혜택 추천
             </Button>
@@ -143,8 +241,5 @@ function BenefitRecommend(props) {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-        </>
-    );
-}
 
-export default BenefitRecommend;
+*/}

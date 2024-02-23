@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
-import { styled } from './stitches.config';
-import { Flex } from '@chakra-ui/react';
+//import { styled } from './stitches.config';
+import { Box, Flex } from '@chakra-ui/react';
 import { Fragment } from 'react';
+import { styled } from "styled-components";
 
 const StyledColumns = styled('div', {
     display: 'grid',
@@ -29,6 +30,23 @@ const Styledleff = styled('div', {
 //   width: "80%",
 //   gap: "8px",
 // });
+
+const DragNDropWrapper = styled.div`
+    width: 50%;
+    & .cateBody {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+    }
+    & .cateStaticWrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    & .cateBasketWrap {
+      & .cateUnitBody {
+        
+      }
+    }
+`;
 
 function BenefitRecommendResult({ data, setNewCombination }) {
     const [columns, setColumns] = useState({});
@@ -144,6 +162,37 @@ function BenefitRecommendResult({ data, setNewCombination }) {
     return (
         <>
             <DragDropContext onDragEnd={onDragEnd}>
+                <DragNDropWrapper>
+                  <Box className="subTitle cateTit">Category</Box>
+                  <Box className="cateBody">
+                    <Box className="cateWrap cateStaticWrap">
+                      {Object.values(columns)
+                          .filter((col) => col.id !== "신규 조합")
+                          .map((col) => (
+                            <Column col={col} key={col.id} />
+                      ))}
+                    </Box>
+                    <Box className="cateWrap cateBasketWrap">
+                        {/* 신규조합 상자는 크기 제한이 없었으면 좋겠다. 최소 150이상 부터 가능하도록 */}
+                        {Object.values(columns)
+                            .filter((col) => col.id === "신규 조합")
+                            .map((col) => (
+                              <Fragment key={col.id}>
+                                <Column col={col} key={col.id} />
+                              </Fragment>
+                        ))}
+                    </Box>
+                  </Box>
+                </DragNDropWrapper>
+            </DragDropContext>
+        </>
+    );
+}
+
+export default BenefitRecommendResult;
+
+{/* 이전코드
+            <DragDropContext onDragEnd={onDragEnd}>
                 <Flex>
                     <StyledColumns>
                         {Object.values(columns)
@@ -154,19 +203,14 @@ function BenefitRecommendResult({ data, setNewCombination }) {
                     </StyledColumns>
                     <Styledleff />
                     <Flex minHeight={150} maxHeight={300} position="fixed" minH="100%" left={1000}>
-                        {/* 신규조합 상자는 크기 제한이 없었으면 좋겠다. 최소 150이상 부터 가능하도록 */}
                         {Object.values(columns)
-                            .filter((col) => col.id === '신규 조합')
-                            .map((col) => (
-                                <Fragment key={col.id}>
-                                    <Column col={col} key={col.id} />
-                                </Fragment>
-                            ))}
-                    </Flex>
-                </Flex>
-            </DragDropContext>
-        </>
-    );
-}
-
-export default BenefitRecommendResult;
+                          .filter((col) => col.id === '신규 조합')
+                          .map((col) => (
+                              <Fragment key={col.id}>
+                                  <Column col={col} key={col.id} />
+                              </Fragment>
+                          ))}
+                  </Flex>
+              </Flex>
+          </DragDropContext>
+*/}
