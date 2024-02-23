@@ -82,21 +82,21 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
 
   return (
     <Grid
-      mb="30px"
+      mb="20px"
       mr="60px"
       ml="60px"
       templateColumns={{
         base: "1fr",
-        lg: "1fr 1fr",
+        lg: "2fr 3.5fr",
       }}
-      templateRows={{
-        base: "repeat(1, 5fr)",
-        lg: "5fr",
-      }}
-      gap={{ base: "50px", xl: "500px" }}
+      gap="20px"
+      backgroundColor="#fff"
+      borderRadius="20px"
     >
-      <Card>
-        <Box bg="white.200" p={4}>
+      <Card
+      padding="0"
+      >
+        <Box bg="white.200" p="10px 20px">
           <Flex>
             <DatePickerMonthly
               onChange={handleMonthChange}
@@ -115,7 +115,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
                 </option>
               ))}
             </Select>*/}
-            <Select defaultValue="high" onChange={handleSortChange} mr={2}>
+            <Select defaultValue="high" onChange={handleSortChange} mr={2} minW="279px">
               <option value="high">이용률 높은순</option>
               <option value="low">이용률 낮은순</option>
             </Select>
@@ -127,6 +127,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
                 setSelectedMonth(localMonth);
                 setSelectedSort(localSort);
               }}
+              p="0 24px"
             />
           </Flex>
         </Box>
@@ -240,7 +241,7 @@ export default function Settings() {
         cards.map((card, index) => (
           <Grid
             key={index}
-            mb="30px"
+            mb="20px"
             mr="60px"
             ml="60px"
             templateColumns={{
