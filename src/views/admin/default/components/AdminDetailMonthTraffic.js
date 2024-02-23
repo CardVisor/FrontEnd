@@ -9,9 +9,8 @@ import Card from "components/card/Card.js";
 import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
-import AdminMonthTransactionModal from "./AdminMonthTransactionModal ";
 
-export const MonthTrafficContext = createContext();
+export const MonthDetailTrafficContext = createContext();
 export const TrafficProvider = (props) => {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const [barChartDataMonthTraffic, setBarChartDataMonthTraffic] = useState([]);
@@ -20,22 +19,18 @@ export const TrafficProvider = (props) => {
   var total6transaction = [];
   const [transaction, setTransaction] = useState([]);
   var month = [];
-  var maxIdx = -1;
-  var maxCol = -1;
-  var formattedMonths1 = "";
   const [memo, SetMemo] = useState();
   useEffect(() => {
     axios
       .all([
-        axios.get("/main/selectPerMonthtransaction"),
-        axios.get("/main/selectMonthtransaction"),
+        axios.get("/main/detailselectPerMonthtransaction"),
+        axios.get("/main/detailselectMonthtransaction"),
       ])
       .then(
         axios.spread((res1, res2) => {
-          let Message = "6개월간 매달 거래건수를 나타낸 차트입니다.";
+          let Message = "1년간 매달 거래건수를 나타낸 차트입니다.";
           SetMemo(Message);
           const monthname = res1.data.map((item) => item.month);
-
           const formattedMonths = monthname.map((month) => {
             const [year, monthNumber] = month.split("-");
             const date = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
@@ -44,29 +39,6 @@ export const TrafficProvider = (props) => {
           month = formattedMonths;
 
           total6transaction = res1.data.map((item) => item.transaction);
-
-          total6transaction.forEach((data, idx) => {
-            if (data > maxCol) {
-              maxCol = data;
-              maxIdx = idx;
-            }
-          });
-          // res1.data.forEach((data, idx) => {
-          //   if (maxCol === data.transaction) {
-          //     maxIdx = data.month;
-          //   }
-          // });
-
-          const [year, monthNumber] = maxIdx.split("-");
-          const date = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
-          formattedMonths1 = date.toLocaleDateString("ko-KR", {
-            month: "long",
-          }); // Get Korean full month name
-
-          console.log(maxIdx);
-          console.log(
-            "maxCOl & idx : " + maxCol + ".................." + maxIdx
-          );
           setTransaction(res2.data);
         })
       )
@@ -182,7 +154,7 @@ export const TrafficProvider = (props) => {
 
   return (
     <>
-      <MonthTrafficContext.Provider
+      <MonthDetailTrafficContext.Provider
         value={{
           memo,
           textColor,
@@ -192,12 +164,12 @@ export const TrafficProvider = (props) => {
         }}
       >
         {props.children}
-      </MonthTrafficContext.Provider>
+      </MonthDetailTrafficContext.Provider>
     </>
   );
 };
 
-export default function AdminMonthTraffic(props) {
+export default function AdminDetailMonthTraffic(props) {
   return (
     <Card align="center" direction="column" w="100%">
       <TrafficProvider>
@@ -214,7 +186,7 @@ function AdminMonthTrafficDisplay(props) {
     barChartDataMonthTraffic,
     barChartOptionsDailyTraffic,
     transaction,
-  } = useContext(MonthTrafficContext);
+  } = useContext(MonthDetailTrafficContext);
 
   return (
     <>
@@ -249,11 +221,7 @@ function AdminMonthTrafficDisplay(props) {
             </Text>
           </Flex>
         </Flex>
-        <Flex display="flex">
-          <AdminMonthTransactionModal />
-
-          <Menu memo={memo} />
-        </Flex>
+        <Menu memo={memo} />
       </Flex>
       <Box h="240px" mt="auto">
         {barChartDataMonthTraffic.length > 0 &&

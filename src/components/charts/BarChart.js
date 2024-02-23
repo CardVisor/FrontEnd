@@ -22,9 +22,9 @@ class ColumnChart extends Component {
       <Chart
         options={this.state.chartOptions}
         series={this.state.chartData}
-        type='bar'
-        width='100%'
-        height='100%'
+        type="bar"
+        width="100%"
+        height="100%"
       />
     );
   }
