@@ -14,7 +14,7 @@ const formatNumber = (number) => {
 function ShowDataBenefit({ data, cardData }) {
     useEffect(() => {
         console.log(cardData);
-    }, [cardData, data]);
+    }, [data]);
 
     return (
         <>
