@@ -10,26 +10,22 @@ export default function NFTBenefit({ data, benefit_pct, benefit_detail }) {
         <>
             {data.card_benefit_info.map((cardData, index) => (
                 <Card key={index} p="20px">
-                    <Flex direction={{ base: 'column' }} justify="center">
-                        <Box mb={{ base: '1px', '2xl': '1px' }} position="relative">
-                            <Heading size="md">{cardData.card_name}</Heading>
-                            <SimpleGrid columns={2} spacingX="0px">
-                                <ShowDataBenefit data={data} cardData={cardData}></ShowDataBenefit>
-                                <Box position={'relative'}>
-                                    <Image
-                                        position={'absolute'}
-                                        left="50%"
-                                        transform="translate(-50%, -50%)"
-                                        top="50%"
-                                        src={cardData.card_img_url}
-                                        w={{ base: '200px' }}
-                                        h={{ base: '120px' }}
-                                        borderRadius="20px"
-                                    />
-                                </Box>
-                            </SimpleGrid>
-                        </Box>
-                    </Flex>
+                    <Box mb={{ base: '1px', '2xl': '1px' }} position="relative">
+                        <Heading size="md" mb="16px">{cardData.card_name}</Heading>
+                        <SimpleGrid columns={2} spacingX="0px">
+                            <Box m="0 10px" position={'relative'}>
+                                <Image
+                                    position={'absolute'}
+                                    left="50%"
+                                    top="50%"
+                                    transform="translate(-50%, -50%)"
+                                    src={cardData.card_img_url}
+                                    w="100%"
+                                />
+                            </Box>
+                            <ShowDataBenefit data={data} cardData={cardData}></ShowDataBenefit>
+                        </SimpleGrid>
+                    </Box>
                 </Card>
             ))}
         </>

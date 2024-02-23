@@ -8,6 +8,7 @@ const CateUnitWrap = styled.div`
 
     &.basketItem {
       background-coloe: pink;
+      position:
     }
 
     & .cateUnitTit {
@@ -41,7 +42,7 @@ const formatNumber = (number) => {
   }
 };
 
-function Column({ col }) {
+function Column({ col, combival }) {
   return (
     <Droppable droppableId={col.id}>
       {(provided) => (
@@ -54,7 +55,7 @@ function Column({ col }) {
                     <Item key={item.benefit_id} item={item} index={index} />
                   ))}
                   {provided.placeholder}
-                  {col.id === "신규 조합" && <span className="cateUnitFoot">카드 조합에 따른 혜택<br />가치 합:&nbsp;&nbsp;<span>{formatNumber(226111)}</span>&nbsp;원</span>}
+                  {col.id === "신규 조합" && combival > 0 && <span className="cateUnitFoot">카드 조합에 따른 혜택<br />가치 합:&nbsp;&nbsp;<span>{formatNumber(combival)}</span>&nbsp;원</span>}
               </Box>
           </CateUnitWrap>
       )}
