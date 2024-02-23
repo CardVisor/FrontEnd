@@ -24,11 +24,11 @@ import Card from 'components/card/Card';
 import { SearchIcon } from '@chakra-ui/icons';
 import BenefitRecommendModal from './components/BenefitRecommendModal';
 import Loading from '../default/components/Loading';
-import { useRecoilValue } from 'recoil';
+//import { useRecoilValue } from 'recoil';
 import { benefitState } from '../Recoil/BenefitCluster';
 
 export default function BenefitSetting() {
-    const bState = useRecoilValue(benefitState);
+    //const bState = useRecoilValue(benefitState);
     const divToRemove = document.querySelector('.hi');
     const [benefitList, setBenefitist] = useState([]);
     const [benefitTreeList, setbBenefitTreeList] = useState([]);
@@ -105,14 +105,13 @@ export default function BenefitSetting() {
 
         //검색 날짜 제한
     }, [date, selectOption, allPeriodChecked]);
-    useEffect(() => {
-        if (bState === false) {
-            if (divToRemove != null) divToRemove.remove();
-        } else {
-            // if (divToRemove != null) divToRemove.appendChild();
-        }
-    }, [bState]); // Empty dependency array ensures the effect runs only once on mount
-
+    // useEffect(() => {
+    //     if (bState === false) {
+    //         if (divToRemove != null) divToRemove.remove();
+    //     } else {
+    //         // if (divToRemove != null) divToRemove.appendChild();
+    //     }
+    // }, [bState]);
     useEffect(() => {
         setMinDate(new Date(monthOptions[monthOptions.length - 1].value));
 

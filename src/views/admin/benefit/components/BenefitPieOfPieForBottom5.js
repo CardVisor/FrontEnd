@@ -5,7 +5,8 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import Card from 'components/card/Card';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import * as am5plugins_exporting from '@amcharts/amcharts5/plugins/exporting';
-
+//import { benefitState } from "views/admin/Recoil/BenefitCluster";
+//import { useSetRecoilState } from "recoil";
 function BenefitPieOfPieForBottom5(props) {
     const { data, val, id } = props;
     useEffect(() => {
