@@ -18,8 +18,9 @@ import {
   MdOutlineLightbulb,
   MdOutlineSettings,
 } from "react-icons/md";
+import AdminDetailMonthTotalSpent from "./AdminDetailMonthTotalSpent";
 
-export default function Banner({ memo }) {
+export default function Banner() {
   const textColor = useColorModeValue("secondaryGray.500", "white");
   const textHover = useColorModeValue(
     { color: "secondaryGray.900", bg: "unset" },
@@ -65,9 +66,6 @@ export default function Banner({ memo }) {
         <Icon as={MdInfoOutline} color={iconColor} w="24px" h="24px" />
       </MenuButton>
       <MenuList
-        w="330px"
-        minW="unset"
-        maxW="330px !important"
         border="transparent"
         backdropFilter="blur(63px)"
         bg={bgList}
@@ -77,7 +75,6 @@ export default function Banner({ memo }) {
       >
         <MenuItem
           display="flex"
-          width={300}
           transition="0.2s linear"
           p="0px"
           borderRadius="8px"
@@ -92,16 +89,7 @@ export default function Banner({ memo }) {
           mb="10px"
         >
           <Flex align="center">
-            <Icon
-              as={MdOutlineLightbulb}
-              h="16px"
-              w="16px"
-              me="8px"
-              color="#FFE50D"
-            />
-            <Text fontSize="sm" fontWeight="400">
-              {memo}
-            </Text>
+            <AdminDetailMonthTotalSpent />
           </Flex>
         </MenuItem>
       </MenuList>

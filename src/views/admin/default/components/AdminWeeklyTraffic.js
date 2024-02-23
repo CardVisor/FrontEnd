@@ -9,6 +9,7 @@ import Card from "components/card/Card.js";
 import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
+import AdminWeeklyTranSactionModal from "./AdminWeeklyTranSactionModal ";
 
 export const WeekTrafficContext = createContext();
 export const TrafficProvider = (props) => {
@@ -217,7 +218,11 @@ function AdminMonthTrafficDisplay(props) {
             </Text>
           </Flex>
         </Flex>
-        <Menu memo={memo} />
+        <Flex display="flex">
+          <AdminWeeklyTranSactionModal />
+
+          <Menu memo={memo} />
+        </Flex>
       </Flex>
       <Box h="240px" mt="auto">
         {barChartDataWeekTraffic.length > 0 &&

@@ -42,6 +42,10 @@ import AdminAbPayCheckTable from "./components/AdminAbPayCheckTable";
 import { useRecoilValue } from "recoil";
 import { mainState } from "../Recoil/MainState";
 import Loading from "./components/Loading";
+import AdminDetailMonthTotalSpent from "./components/AdminDetailMonthTotalSpent";
+import AdminDetailMonthTraffic from "./components/AdminDetailMonthTraffic";
+import AdminDetailWeeklyTotalSpent from "./components/AdminDetailWeeklyTotalSpent";
+import AdminDetailWeeklyTraffic from "./components/AdminDetailWeeklyTraffic";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -71,6 +75,7 @@ export default function UserReports() {
         <AbroadTotalAmount></AbroadTotalAmount>
         <LatestCurrencyData></LatestCurrencyData>
       </SimpleGrid>
+
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
         {showMonthly ? (
           <>
