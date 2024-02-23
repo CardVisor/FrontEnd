@@ -48,14 +48,14 @@ export const TrafficProvider = (props) => {
           total6transaction.forEach((data, idx) => {
             if (data > maxCol) {
               maxCol = data;
-              maxIdx = idx;
+              maxIdx = data.month;
             }
           });
-          // res1.data.forEach((data, idx) => {
-          //   if (maxCol === data.transaction) {
-          //     maxIdx = data.month;
-          //   }
-          // });
+          res1.data.forEach((data, idx) => {
+            if (maxCol === data.transaction) {
+              maxIdx = data.month;
+            }
+          });
 
           const [year, monthNumber] = maxIdx.split("-");
           const date = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
