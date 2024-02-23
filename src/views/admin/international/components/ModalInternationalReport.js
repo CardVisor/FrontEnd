@@ -237,7 +237,38 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
             ? indexArray
             : indexArray.map((item) => item + (page - 1) * 10);
 
+    const tableDataArray = Object.entries(tableData).map(([country, data]) => {
+        const sortedData = Object.entries(data).sort(([dateA], [dateB]) => {
+            return Date.parse(dateA) - Date.parse(dateB);  // 날짜 오름차순 정렬
+        }).reduce((acc, [date, value]) => {
+            acc[date] = value;
+            return acc;
+        }, {});
+        return [country, sortedData];
+    }).sort(([countryA], [countryB]) => {
+        return countryA.localeCompare(countryB);  // 국가 코드 알파벳 순 정렬
+    });
+    
+    const dataFetching = () => {
+        const pagingData = [];
+        for (let i = 0; i < indexArray.length; i++) {
+            if (tableDataArray[pageIndex[i]] === undefined) {
+                break;
+            } else {
+                let entry = tableDataArray[pageIndex[i]];
+                let key = entry[0];
+                let value = entry[1];
+                let obj = {};
+                obj[key] = value;
+                pagingData.push(obj);
+            }
+        }
+        setPagingDataSet(pagingData);
+        console.log("setPagingDataSetsetPagingDataSet??", pagingData);
+    };
+
     // 현재 페이지 데이터
+    /*
     const dataFetching = () => {
         let tableDataArray = Object.entries(tableData);
         const pagingData = [];
@@ -256,7 +287,7 @@ const ModalInternationalReport = ({ isOpen, onClose }) => {
         setPagingDataSet(pagingData);
         console.log("setPagingDataSetsetPagingDataSet??", pagingData);
     };
-
+ */
     useEffect(() => {
         if (Object.values(tableData).length !== 0) {
             dataFetching();
