@@ -27,16 +27,20 @@ const PagingUl = styled.ul`
         border: 1px solid #eaeaea;
         color: #555;
         &:not([data-disabled="disabled"]):hover {
-            border: 1px solid #5e3aff;
+            //border: 1px solid #5e3aff;
             color: #000;
+            background-color: #c4aeec;
+            color: #fff;
         }
         &[data-disabled="disabled"] {
             cursor: auto;
         }
     }
     & .activePage {
-        border: 1px solid #5e3aff;
+        //border: 1px solid #5e3aff;
         color: #000;
+        background-color: #aa7bff;
+        color: #fff;
     }
 `;
 
