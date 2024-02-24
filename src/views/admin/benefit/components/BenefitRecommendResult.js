@@ -228,7 +228,7 @@ function BenefitRecommendResult({ data }) {
         {newCombination && Array.isArray(newCombination) && combival > 0 && (
           <>
             <CardUnitWrap>
-              <Box className="subTitle cardTit">Card Recommended
+              <Box className="subTitle cardTit">Combination Result
                   {newCombination && combival > 0 && (
                       <Box 
                       ml="auto">
