@@ -151,6 +151,9 @@ export const TotalProvider = (props) => {
             toolbar: {
               show: false,
             },
+            tooltip: {
+              y: { formatter: (value) => `$ ${value.toFixed(2)}` },
+            },
             dropShadow: {
               enabled: true,
               top: 13,
@@ -204,7 +207,15 @@ export const TotalProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
+            color: "black",
+            labels: {
+              show: true,
+              style: {
+                colors: "#CBD5E0",
+                fontSize: "14px",
+              },
+            },
           },
           legend: {
             show: false,
@@ -277,6 +288,7 @@ export function DisplayTotal({ handleToggle }) {
   return (
     <>
       <Flex justify="space-between" align="center" w="100%">
+       
         <Button
           bg={boxBg}
           fontSize="sm"

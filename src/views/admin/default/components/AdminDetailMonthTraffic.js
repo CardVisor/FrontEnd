@@ -88,7 +88,7 @@ export const TrafficProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
             color: "black",
             labels: {
               show: true,
@@ -108,7 +108,7 @@ export const TrafficProvider = (props) => {
             },
             xaxis: {
               lines: {
-                show: false,
+                show: true,
               },
             },
           },

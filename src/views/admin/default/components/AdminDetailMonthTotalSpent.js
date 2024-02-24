@@ -13,8 +13,7 @@ import Card from "components/card/Card.js";
 import LineChart from "components/charts/LineChart";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import Menu from "./AdminMainMenu";
-import { MdOutlineCalendarToday } from "react-icons/md";
+
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 
@@ -225,7 +224,15 @@ export const TotalProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
+            color: "black",
+            labels: {
+              show: true,
+              style: {
+                colors: "#CBD5E0",
+                fontSize: "14px",
+              },
+            },
           },
           legend: {
             show: false,
