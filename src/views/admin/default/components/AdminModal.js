@@ -8,11 +8,9 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Lorem } from "react-lorem-generator";
 import AdminDetailMonthTotalSpent from "./AdminDetailMonthTotalSpent";
 
 export default function AdminModal() {

@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
 //import { styled } from './stitches.config';
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Text } from '@chakra-ui/react';
 import { Fragment } from 'react';
 import { styled } from "styled-components";
 import NFTBenefit from './NFTBenefit';
 import axios from 'axios';
 
 const DragNDropWrapper = styled.div`
-    width: 50%;
+    display: table-cell;
+    transition: 5s;
     & .cateBody {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -18,16 +19,12 @@ const DragNDropWrapper = styled.div`
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
-    & .cateBasketWrap {
-        position: re
-      & .cateUnitBody {
-        
-      }
-    }
 `;
 
 const CardUnitWrap = styled.div`
-    width: 50%;
+    display: table-cell;
+    transition: 5s;
+    padding-left: 10px;
     & .subTitle.cardTit {
         display: flex;
         justify-content: space-between;
@@ -39,7 +36,8 @@ const CardUnitWrap = styled.div`
         & p {
             color: #e52c2c;
             text-align: right;
-            margin: 10px 15px 0 0;
+            margin: 10px 15px -18px 0;
+            font-size: 26px;
         }
     }
     & .cardUnitBody {
@@ -83,7 +81,7 @@ function BenefitRecommendResult({ data }) {
 
     useEffect(() => {
       console.log('조합배열: Combination에서 호출');
-      console.log(newCombination);
+      console.log("newCombination",newCombination);
       let combiSum = 0;
 
       newCombination.forEach((data, i) => {
@@ -227,7 +225,7 @@ function BenefitRecommendResult({ data }) {
             </Box>
           </DragNDropWrapper>
         </DragDropContext>
-        {newCombination && Array.isArray(newCombination) && (
+        {newCombination && Array.isArray(newCombination) && combival > 0 && (
           <>
             <CardUnitWrap>
               <Box className="subTitle cardTit">Card Recommended
@@ -247,7 +245,7 @@ function BenefitRecommendResult({ data }) {
               </Box>
               <Box className="cardUnitBody">
                 {newCombination.map((benefit, index) => (
-                  <Box className="cardUnit">
+                  <Box className="cardUnit" key={benefit.benefit_id}>
                     <NFTBenefit
                       data={benefit}
                       benefit_pct={benefit.benefit_pct}

@@ -8,12 +8,10 @@ import {
     Flex,
     Grid,
     Checkbox,
-    CheckboxGroup,
     Text,
     useColorModeValue,
     Select,
     IconButton,
-    Button,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
