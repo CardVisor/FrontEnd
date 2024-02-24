@@ -6,9 +6,10 @@ import styled from "styled-components";
 const StyledItem = styled.div`
     background-color: #fff;
     border: 1px solid #ccc;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 8px;
     border-radius: 8px;
+    transition: 0.3s ease-in-out;
     &:last-child {
       margin-bottom: 0;
     }
@@ -21,8 +22,9 @@ const StyledTooltip = styled.div`
   background-color: #fff;
   border-radius: 4px;
   font-weight: 500;
-  margin-top: 5px;
-
+  margin-top: 2px;
+  color: #d2471b;
+  transition: opacity 0.3s ease-in-out;
 `;
 
 const formatNumber = (number) => {
@@ -54,7 +56,7 @@ function Item({ item, index }) {
             onMouseEnter={() => setTooltipVisible(true)}
             onMouseLeave={() => setTooltipVisible(false)}
           >
-            <div style={{ fontSize: "13px" }}>
+            <div style={{ fontSize: "14px" }} >
               {item.rank +
                 "위  : " +
                 item.benefit_detail +
