@@ -134,7 +134,11 @@ export default function AdminAbPayCheckTable(props) {
             clist.map((card, index) => (
               <Tr key={`id${index}`}>
                 <Td>
-                  <Text color={textColor} fontSize="sm" fontWeight="700">
+                  <Text
+                    color={index === 0 ? "#5E3AFF" : textColor}
+                    fontSize="sm"
+                    fontWeight="700"
+                  >
                     {card.benefit_detail}
                   </Text>
                 </Td>
@@ -142,7 +146,7 @@ export default function AdminAbPayCheckTable(props) {
                   <Flex align="center">
                     <Text
                       me="10px"
-                      color={textColor}
+                      color={index === 0 ? "#5E3AFF" : textColor}
                       fontSize="sm"
                       fontWeight="700"
                     >
@@ -154,7 +158,7 @@ export default function AdminAbPayCheckTable(props) {
                   <Flex align="center">
                     <Text
                       me="10px"
-                      color={textColor}
+                      color={index === 0 ? "#5E3AFF" : textColor}
                       fontSize="sm"
                       fontWeight="700"
                     >
@@ -166,7 +170,7 @@ export default function AdminAbPayCheckTable(props) {
                   <Flex align="center">
                     <Text
                       me="10px"
-                      color={textColor}
+                      color={index === 0 ? "#5E3AFF" : textColor}
                       fontSize="sm"
                       fontWeight="700"
                     >

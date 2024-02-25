@@ -9,44 +9,48 @@ import Card from "components/card/Card.js";
 import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
-import AdminWeeklyTranSactionModal from "./AdminWeeklyTranSactionModal ";
 
-export const WeekTrafficContext = createContext();
+export const MonthDetailTrafficContext = createContext();
 export const TrafficProvider = (props) => {
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const [total6transaction, setTotal6Transaction] = useState([]);
-  var weektransaction = [];
-  var week = [];
-  const [barChartDataWeekTraffic, setBarChartDataWeekTraffic] = useState([]);
-  const [barChartOptionsWeekTraffic, setBarChartOptionsWeekTraffic] = useState(
-    []
-  );
+  const [barChartDataMonthTraffic, setBarChartDataMonthTraffic] = useState([]);
+  const [barChartOptionsDailyTraffic, setBarChartOptionsDailyTraffic] =
+    useState([]);
+  var total6transaction = [];
+  const [transaction, setTransaction] = useState([]);
+  var month = [];
   const [memo, SetMemo] = useState();
   useEffect(() => {
     axios
       .all([
-        axios.get("/main/selectWeektransaction"),
-        axios.get("/main/selectPerWeeklytransaction"),
+        axios.get("/main/detailselectPerMonthtransaction"),
+        axios.get("/main/detailselectMonthtransaction"),
       ])
       .then(
         axios.spread((res1, res2) => {
-          let Message = "6주간 매주 건수를 나타낸 차트입니다.";
+          let Message = "1년간 매달 거래건수를 나타낸 차트입니다.";
           SetMemo(Message);
-          setTotal6Transaction(res1.data);
-          const weekname = res2.data.map((item) => item.week);
-          week = weekname;
-          weektransaction = res2.data.map((item) => item.transaction);
+          const monthname = res1.data.map((item) => item.month);
+          const formattedMonths = monthname.map((month) => {
+            const [year, monthNumber] = month.split("-");
+            const date = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
+            return date.toLocaleDateString("ko-KR", { month: "long" }); // Get Korean full month name
+          });
+          month = formattedMonths;
+
+          total6transaction = res1.data.map((item) => item.transaction);
+          setTransaction(res2.data);
         })
       )
       .then(() => {
-        const barChartDataMonthTraffic = [
+        const barChartDataMonthTraffic1 = [
           {
             name: "월 거래건수",
-            data: weektransaction,
+            data: total6transaction,
           },
         ];
-        setBarChartDataWeekTraffic(barChartDataMonthTraffic);
-        const barChartOptionsDailyTraffic = {
+        setBarChartDataMonthTraffic(barChartDataMonthTraffic1);
+        const barChartOptionsDailyTraffic1 = {
           chart: {
             toolbar: {
               show: false,
@@ -66,7 +70,7 @@ export const TrafficProvider = (props) => {
             theme: "dark",
           },
           xaxis: {
-            categories: week,
+            categories: month,
             show: false,
             labels: {
               show: true,
@@ -84,7 +88,7 @@ export const TrafficProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
             color: "black",
             labels: {
               show: true,
@@ -104,7 +108,7 @@ export const TrafficProvider = (props) => {
             },
             xaxis: {
               lines: {
-                show: false,
+                show: true,
               },
             },
           },
@@ -124,8 +128,8 @@ export const TrafficProvider = (props) => {
                   },
                   {
                     offset: 100,
-                    color: "rgba(67, 24, 255, 1)",
-                    opacity: 0.28,
+                    color: "rgba(67, 24, 255, 1)", //색바꾸기
+                    opacity: 0.7,
                   },
                 ],
               ],
@@ -141,30 +145,31 @@ export const TrafficProvider = (props) => {
             },
           },
         };
-        setBarChartOptionsWeekTraffic(barChartOptionsDailyTraffic);
+        setBarChartOptionsDailyTraffic(barChartOptionsDailyTraffic1);
       })
       .catch((err) => {
         console.log("Error fetching currency data:", err);
       });
   }, []);
+
   return (
     <>
-      <WeekTrafficContext.Provider
+      <MonthDetailTrafficContext.Provider
         value={{
           memo,
           textColor,
-          barChartDataWeekTraffic,
-          barChartOptionsWeekTraffic,
-          total6transaction,
+          transaction,
+          barChartDataMonthTraffic,
+          barChartOptionsDailyTraffic,
         }}
       >
         {props.children}
-      </WeekTrafficContext.Provider>
+      </MonthDetailTrafficContext.Provider>
     </>
   );
 };
 
-export default function AdminWeeklyTraffic(props) {
+export default function AdminDetailMonthTraffic(props) {
   return (
     <Card align="center" direction="column" w="100%">
       <TrafficProvider>
@@ -178,25 +183,23 @@ function AdminMonthTrafficDisplay(props) {
   const {
     memo,
     textColor,
-    barChartDataWeekTraffic,
-    barChartOptionsWeekTraffic,
-    total6transaction,
-  } = useContext(WeekTrafficContext);
+    barChartDataMonthTraffic,
+    barChartOptionsDailyTraffic,
+    transaction,
+  } = useContext(MonthDetailTrafficContext);
 
   return (
     <>
       <Flex justify="space-between" align="start" px="10px" pt="5px">
-        <Flex flexDirection="column" align="start" me="20px">
-          <Flex w="100%">
-            <Text
-              me="auto"
-              color="secondaryGray.600"
-              fontSize="sm"
-              fontWeight="500"
-            >
-              주간 거래건수
-            </Text>
-          </Flex>
+        <Flex w="100%" display="flex" direction="column">
+          <Text
+            me="auto"
+            color="secondaryGray.600"
+            fontSize="sm"
+            fontWeight="500"
+          >
+            월 거래건수
+          </Text>
           <Flex align="end">
             <Text
               color={textColor}
@@ -204,7 +207,7 @@ function AdminMonthTrafficDisplay(props) {
               fontWeight="700"
               lineHeight="100%"
             >
-              {total6transaction}
+              {transaction}
             </Text>
             <Text
               ms="6px"
@@ -212,25 +215,21 @@ function AdminMonthTrafficDisplay(props) {
               fontSize="sm"
               fontWeight="500"
               display="flex"
-              alignItems="center"
+              align-items="center"
             >
               건
             </Text>
           </Flex>
         </Flex>
-        <Flex display="flex">
-          <AdminWeeklyTranSactionModal />
-
-          <Menu memo={memo} />
-        </Flex>
+        <Menu memo={memo} />
       </Flex>
       <Box h="240px" mt="auto">
-        {barChartDataWeekTraffic.length > 0 &&
-          barChartOptionsWeekTraffic.xaxis &&
-          barChartOptionsWeekTraffic.xaxis.categories.length > 0 && (
+        {barChartDataMonthTraffic.length > 0 &&
+          barChartOptionsDailyTraffic.xaxis &&
+          barChartOptionsDailyTraffic.xaxis.categories.length > 0 && (
             <BarChart
-              chartData={barChartDataWeekTraffic}
-              chartOptions={barChartOptionsWeekTraffic}
+              chartData={barChartDataMonthTraffic}
+              chartOptions={barChartOptionsDailyTraffic}
             />
           )}
       </Box>

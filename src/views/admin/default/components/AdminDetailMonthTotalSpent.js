@@ -1,4 +1,5 @@
 // Chakra imports
+
 import {
   Box,
   Button,
@@ -9,41 +10,52 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
+import LineChart from "components/charts/LineChart";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { MdOutlineCalendarToday } from "react-icons/md";
+
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
-import Menu from "./AdminMainMenu";
+
 import axios from "axios";
-import AdminLineChart from "./AdminLineChart";
-import AdminWeeklyTotalSpentModal from "./AdminWeeklyTotalSpentModal ";
 
-export const TotalWeekSpentcontext = createContext();
+export const TotalDetailSpentcontext = createContext();
 export const TotalProvider = (props) => {
-  var data = [];
-  var lastweeklydata = [];
-  var week = [];
-  const [lineChartOptionsWeekTotalSpent, setOptionWeekLineChart] = useState({});
-  const [lineChartDataWeekTotalSpent, setLineChartDataWeekTotalSpent] =
-    useState([]);
+  var data1 = [];
+  var lastmonthdata = [];
+  var month = [];
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorSecondary = useColorModeValue("secondarybody.600", "white");
+  const textColorSecondary = useColorModeValue("secondarybody.800", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-
-  const [Weekpertotal, setWeekPerTotal] = useState();
+  const iconColor = useColorModeValue("brand.500", "white");
+  const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const [pertotal, setPerTotal] = useState();
   const [increse, setIncrese] = useState();
+  const [lineChartDetailOptionsTotalSpent, setOptionDetailLineChart] = useState(
+    {}
+  );
+  const [lineChartDetailDataTotalSpent, setLineChartDetailDataTotalSpent] =
+    useState([]);
+  const bgHover = useColorModeValue(
+    { bg: "secondaryGray.400" },
+    { bg: "whiteAlpha.50" }
+  );
+
+  const bgFocus = useColorModeValue(
+    { bg: "secondaryGray.300" },
+    { bg: "whiteAlpha.100" }
+  );
   const [memo, setMemo] = useState();
-  const [checkstat, setCheckstat] = useState(false);
-  // 6주간 총결제내역 작년 올해 비교 상승률
+  const [checkdetailstat, setCheckDetailstat] = useState(false);
+  // 6개월간 총결제내역 작년 올해 비교 상승률
   const formatpercent = (number) => {
     // Check if the input is a valid number
     if (typeof number === "number") {
       // Perform formatting based on the sign of the number
       if (number > 0) {
-        return "+" + number.toFixed(1) + "%"; // Using toFixed to format to two decimal places
+        return "+" + number.toFixed(0) + "%"; // Using toFixed to format to two decimal places
       } else if (number < 0) {
-        return "-" + Math.abs(number).toFixed(2) + "%"; // Using Math.abs to handle negative numbers
+        return "-" + Math.abs(number).toFixed(1) + "%"; // Using Math.abs to handle negative numbers
       } else {
         return "0.0%"; // Handle zero case
       }
@@ -74,81 +86,87 @@ export const TotalProvider = (props) => {
   // useEffect(() => {
   //   axios({
   //     method: "get",
-  //     url: "/main/perWeekTotalAmount",
+  //     url: "/main/perMonthTotalAmount",
   //   })
   //     .then((res) => {
-  //       console.log(res.data);
-  //       setWeekPerTotal(res.data);
+
   //     })
   //     .catch((err) => {
   //       console.log("Error fetching currency data:", err);
   //     });
-  // }, []);
+  // });
   // useEffect(() => {
   //   axios({
   //     method: "get",
-  //     url: "/main/weektotalIncrese",
+  //     url: "",
   //   })
   //     .then((res) => {
-  //       console.log(res.data);
   //       setIncrese(res.data);
-  //       let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
+  //       let Message = "백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.";
   //       setMemo(Message);
   //     })
   //     .catch((err) => {
   //       console.log("Error fetching currency data:", err);
   //     });
-  // }, []);
+  // });
 
   useEffect(() => {
+    setCheckDetailstat(false);
     axios
       .all([
-        axios.get("/main/selectPerWeeklyamount"),
-        axios.get("/main/selectLastYearPerMonthamount"),
-        axios.get("/main/weektotalIncrese"),
-        axios.get("/main/perWeekTotalAmount"),
+        axios.get("/main/detailselectLastYearPerMonthamount"),
+        axios.get("/main/detailselectPerMonthamount"),
+        axios.get("/main/detailperMonthTotalAmount"),
+        axios.get("/main/detailtotalIncrese"),
       ])
       .then(
         axios.spread((res1, res2, res3, res4) => {
-          setWeekPerTotal(res4.data);
-          setIncrese(res3.data);
-          console.log("지금", res1.data);
-          console.log("작년", res2.data);
-          let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
+          setPerTotal(res3.data);
+          setIncrese(res4.data);
+          let Message = "백만원 기준 1년간 매달 결제금액을 나타낸 차트입니다.";
           setMemo(Message);
-          const weeklyname = res1.data.map((item) => item.week);
-          week = weeklyname;
-          const formattedweeknumber = res1.data.map((item) => {
+          const monthname = res2.data.map((item) => item.month);
+
+          const formattedMonths = monthname.map((month) => {
+            const [year, monthNumber] = month.split("-");
+            return monthNumber + "월";
+          });
+
+          month = formattedMonths;
+
+          const formattedNumbers1 = res2.data.map((item) => {
+            if (item.total_amount >= 1000000) {
+              return (item.total_amount / 1000000).toFixed(1); // Convert to millions and append 'M'
+            } else {
+              return item.total_amount.toLocaleString(); // Format number with comma separators
+            }
+          });
+          data1 = formattedNumbers1; //data
+
+          const formattedNumbers = res1.data.map((item) => {
             if (item.total_amount >= 1000000) {
               return (item.total_amount / 1000000).toFixed(2); // Convert to millions and append 'M'
             } else {
               return item.total_amount.toLocaleString(); // Format number with comma separators
             }
           });
-          data = formattedweeknumber;
-          const formattedweeknumbers = res2.data.map((item) => {
-            if (item.total_amount >= 1000000) {
-              return (item.total_amount / 1000000).toFixed(2); // Convert to millions and append 'M'
-            } else {
-              return item.total_amount.toLocaleString(); // Format number with comma separators
-            }
-          });
-          lastweeklydata = formattedweeknumbers; //lastmonthdata
+          lastmonthdata = formattedNumbers; //lastmonthdata
         })
       )
       .then(() => {
-        const lineChartDataTotalSpent2 = [
+        const lineChartDetailDataTotalSpent1 = [
           {
             name: "올해",
-            data: data,
+            data: data1,
           },
           {
             name: "작년",
-            data: lastweeklydata,
+            data: lastmonthdata,
           },
         ];
-        setLineChartDataWeekTotalSpent(lineChartDataTotalSpent2);
-        const lineChartOptionsTotalSpent2 = {
+
+        setLineChartDetailDataTotalSpent(lineChartDetailDataTotalSpent1);
+        const lineChartDetailOptionsTotalSpent1 = {
           chart: {
             toolbar: {
               show: false,
@@ -190,7 +208,7 @@ export const TotalProvider = (props) => {
           },
           xaxis: {
             type: "numeric",
-            categories: week,
+            categories: month,
             labels: {
               style: {
                 colors: "#A3AED0",
@@ -206,7 +224,15 @@ export const TotalProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
+            color: "black",
+            labels: {
+              show: true,
+              style: {
+                colors: "#CBD5E0",
+                fontSize: "14px",
+              },
+            },
           },
           legend: {
             show: false,
@@ -220,43 +246,42 @@ export const TotalProvider = (props) => {
           },
           color: ["#7551FF", "#39B8FF"],
         };
-        setOptionWeekLineChart(lineChartOptionsTotalSpent2);
-        setCheckstat(true);
+        setOptionDetailLineChart(lineChartDetailOptionsTotalSpent1);
+        setCheckDetailstat(true);
       })
       .catch((err) => console.log(err));
   }, []);
   return (
     <>
-      {checkstat && (
-        <TotalWeekSpentcontext.Provider
+      {checkdetailstat && (
+        <TotalDetailSpentcontext.Provider
           value={{
-            textColor,
-            formatabroad,
+            memo,
+            month,
+            lineChartDetailOptionsTotalSpent,
             increse,
-            lineChartOptionsWeekTotalSpent,
+            lineChartDetailDataTotalSpent,
             formatpercent,
-            lineChartDataWeekTotalSpent,
-            Weekpertotal,
+            textColor,
+            pertotal,
+            formatabroad,
             textColorSecondary,
             boxBg,
-            memo,
+            iconColor,
+            bgButton,
+            bgHover,
+            bgFocus,
           }}
         >
           {props.children}
-        </TotalWeekSpentcontext.Provider>
+        </TotalDetailSpentcontext.Provider>
       )}
     </>
   );
 };
-export default function AdminWeeklyTotalSpent({ handleToggle }) {
+export default function AdminDetailMonthTotalSpent({ handleToggle }) {
   return (
-    <Card
-      justifyContent="center"
-      align="center"
-      direction="column"
-      w="100%"
-      mb="0px"
-    >
+    <Card direction="column" mb="0px">
       <TotalProvider>
         <DisplayTotal handleToggle={handleToggle}></DisplayTotal>
       </TotalProvider>
@@ -265,41 +290,20 @@ export default function AdminWeeklyTotalSpent({ handleToggle }) {
 }
 export function DisplayTotal({ handleToggle }) {
   const {
+    memo,
     textColor,
     formatabroad,
     increse,
-    lineChartOptionsWeekTotalSpent,
+    lineChartDetailOptionsTotalSpent,
     formatpercent,
-    lineChartDataWeekTotalSpent,
-    Weekpertotal,
+    lineChartDetailDataTotalSpent,
+    pertotal,
     textColorSecondary,
     boxBg,
-    memo,
-  } = useContext(TotalWeekSpentcontext);
+  } = useContext(TotalDetailSpentcontext);
+
   return (
     <>
-      <Flex justify="space-between" align="center" w="100%">
-        <Button
-          bg={boxBg}
-          fontSize="sm"
-          fontWeight="500"
-          color={textColorSecondary}
-          borderRadius="7px"
-          onClick={handleToggle}
-        >
-          <Icon
-            as={MdOutlineCalendarToday}
-            color={textColorSecondary}
-            me="4px"
-          />
-          This Week
-        </Button>
-        <Flex display="flex">
-          <AdminWeeklyTotalSpentModal />
-
-          <Menu memo={memo} />
-        </Flex>
-      </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <Flex flexDirection="column" me="20px" mt="28px">
           <Text
@@ -309,7 +313,7 @@ export function DisplayTotal({ handleToggle }) {
             fontWeight="700"
             lineHeight="100%"
           >
-            {formatabroad(Weekpertotal)}
+            {formatabroad(pertotal)}
           </Text>
           <Flex align="center" mb="20px">
             <Text
@@ -337,12 +341,12 @@ export function DisplayTotal({ handleToggle }) {
           </Flex>
         </Flex>
         <Box minH="260px" minW="75%" mt="auto">
-          {lineChartDataWeekTotalSpent.length > 0 &&
-            lineChartOptionsWeekTotalSpent.xaxis &&
-            lineChartOptionsWeekTotalSpent.xaxis.categories.length > 0 && (
-              <AdminLineChart
-                chartData={lineChartDataWeekTotalSpent}
-                chartOptions={lineChartOptionsWeekTotalSpent}
+          {lineChartDetailDataTotalSpent.length > 0 &&
+            lineChartDetailOptionsTotalSpent.xaxis &&
+            lineChartDetailOptionsTotalSpent.xaxis.categories.length > 0 && (
+              <LineChart
+                chartData={lineChartDetailDataTotalSpent}
+                chartOptions={lineChartDetailOptionsTotalSpent}
               />
             )}
         </Box>

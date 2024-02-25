@@ -96,7 +96,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
       <Card
       padding="0"
       >
-        <Box bg="white.200" p="10px 20px">
+        <Box p="10px 0px 10px 30px">
           <Flex>
             <DatePickerMonthly
               onChange={handleMonthChange}

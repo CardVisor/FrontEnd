@@ -9,9 +9,8 @@ import Card from "components/card/Card.js";
 import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
-import AdminWeeklyTranSactionModal from "./AdminWeeklyTranSactionModal ";
 
-export const WeekTrafficContext = createContext();
+export const WeekDetailTrafficContext = createContext();
 export const TrafficProvider = (props) => {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const [total6transaction, setTotal6Transaction] = useState([]);
@@ -25,12 +24,12 @@ export const TrafficProvider = (props) => {
   useEffect(() => {
     axios
       .all([
-        axios.get("/main/selectWeektransaction"),
-        axios.get("/main/selectPerWeeklytransaction"),
+        axios.get("/main/detailselectWeektransaction"),
+        axios.get("/main/detailselectPerWeeklytransaction"),
       ])
       .then(
         axios.spread((res1, res2) => {
-          let Message = "6주간 매주 건수를 나타낸 차트입니다.";
+          let Message = "12주간 매주 건수를 나타낸 차트입니다.";
           SetMemo(Message);
           setTotal6Transaction(res1.data);
           const weekname = res2.data.map((item) => item.week);
@@ -41,7 +40,7 @@ export const TrafficProvider = (props) => {
       .then(() => {
         const barChartDataMonthTraffic = [
           {
-            name: "월 거래건수",
+            name: "주간 거래건수",
             data: weektransaction,
           },
         ];
@@ -84,7 +83,7 @@ export const TrafficProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
             color: "black",
             labels: {
               show: true,
@@ -149,7 +148,7 @@ export const TrafficProvider = (props) => {
   }, []);
   return (
     <>
-      <WeekTrafficContext.Provider
+      <WeekDetailTrafficContext.Provider
         value={{
           memo,
           textColor,
@@ -159,12 +158,12 @@ export const TrafficProvider = (props) => {
         }}
       >
         {props.children}
-      </WeekTrafficContext.Provider>
+      </WeekDetailTrafficContext.Provider>
     </>
   );
 };
 
-export default function AdminWeeklyTraffic(props) {
+export default function AdminDetailWeeklyTraffic(props) {
   return (
     <Card align="center" direction="column" w="100%">
       <TrafficProvider>
@@ -181,7 +180,7 @@ function AdminMonthTrafficDisplay(props) {
     barChartDataWeekTraffic,
     barChartOptionsWeekTraffic,
     total6transaction,
-  } = useContext(WeekTrafficContext);
+  } = useContext(WeekDetailTrafficContext);
 
   return (
     <>
@@ -218,11 +217,7 @@ function AdminMonthTrafficDisplay(props) {
             </Text>
           </Flex>
         </Flex>
-        <Flex display="flex">
-          <AdminWeeklyTranSactionModal />
-
-          <Menu memo={memo} />
-        </Flex>
+        <Menu memo={memo} />
       </Flex>
       <Box h="240px" mt="auto">
         {barChartDataWeekTraffic.length > 0 &&

@@ -9,6 +9,7 @@ import Card from "components/card/Card.js";
 import Menu from "./AdminMainMenu";
 // Assets
 import axios from "axios";
+import AdminMonthTransactionModal from "./AdminMonthTransactionModal ";
 
 export const MonthTrafficContext = createContext();
 export const TrafficProvider = (props) => {
@@ -19,6 +20,9 @@ export const TrafficProvider = (props) => {
   var total6transaction = [];
   const [transaction, setTransaction] = useState([]);
   var month = [];
+  var maxIdx = -1;
+  var maxCol = -1;
+  var formattedMonths1 = "";
   const [memo, SetMemo] = useState();
   useEffect(() => {
     axios
@@ -31,6 +35,7 @@ export const TrafficProvider = (props) => {
           let Message = "6개월간 매달 거래건수를 나타낸 차트입니다.";
           SetMemo(Message);
           const monthname = res1.data.map((item) => item.month);
+
           const formattedMonths = monthname.map((month) => {
             const [year, monthNumber] = month.split("-");
             const date = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
@@ -39,6 +44,29 @@ export const TrafficProvider = (props) => {
           month = formattedMonths;
 
           total6transaction = res1.data.map((item) => item.transaction);
+
+          total6transaction.forEach((data, idx) => {
+            if (data > maxCol) {
+              maxCol = data;
+              maxIdx = data.month;
+            }
+          });
+          res1.data.forEach((data, idx) => {
+            if (maxCol === data.transaction) {
+              maxIdx = data.month;
+            }
+          });
+
+          const [year, monthNumber] = maxIdx.split("-");
+          const date = new Date(parseInt(year), parseInt(monthNumber) - 1, 1);
+          formattedMonths1 = date.toLocaleDateString("ko-KR", {
+            month: "long",
+          }); // Get Korean full month name
+
+          console.log(maxIdx);
+          console.log(
+            "maxCOl & idx : " + maxCol + ".................." + maxIdx
+          );
           setTransaction(res2.data);
         })
       )
@@ -221,7 +249,11 @@ function AdminMonthTrafficDisplay(props) {
             </Text>
           </Flex>
         </Flex>
-        <Menu memo={memo} />
+        <Flex display="flex">
+          <AdminMonthTransactionModal />
+
+          <Menu memo={memo} />
+        </Flex>
       </Flex>
       <Box h="240px" mt="auto">
         {barChartDataMonthTraffic.length > 0 &&

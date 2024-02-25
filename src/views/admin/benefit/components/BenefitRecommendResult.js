@@ -1,37 +1,63 @@
 import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
-import { styled } from './stitches.config';
-import { Flex } from '@chakra-ui/react';
+//import { styled } from './stitches.config';
+import { Box, Button, Text } from '@chakra-ui/react';
 import { Fragment } from 'react';
+import { styled } from "styled-components";
+import NFTBenefit from './NFTBenefit';
+import axios from 'axios';
 
-const StyledColumns = styled('div', {
-    display: 'grid',
-    gridTemplateColumns: '1fr 2fr',
-    //   margin: "1vh auto",
-    //   width: "80%",
-    height: '100%',
-    width: '50%',
-    gap: '8px',
-});
-const Styledleff = styled('div', {
-    height: '100rem',
+const DragNDropWrapper = styled.div`
+    display: table-cell;
+    transition: 5s;
+    & .cateBody {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+    }
+    & .cateStaticWrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+`;
 
-    width: '0.005rem',
-    border: '0.01rem solid',
-    borderColor: '#000000',
-    margin: '0.5rem',
-});
-// const DynamicStyledColumns = styled("div", {
-//   display: "grid",
-//   gridTemplateColumns: "1fr 1fr 1fr",
-//   margin: "1vh auto",
-//   width: "80%",
-//   gap: "8px",
-// });
+const CardUnitWrap = styled.div`
+    display: table-cell;
+    transition: 5s;
+    padding-left: 10px;
+    & .subTitle.cardTit {
+        display: flex;
+        justify-content: space-between;
+        & .btnValChk {
+          font-size: 14px;
+          height: 38px;
+          border-radius: 15px;
+        }
+        & p {
+            color: #e52c2c;
+            text-align: right;
+            margin: 10px 15px -18px 0;
+            font-size: 26px;
+        }
+    }
+    & .cardUnitBody {
+        padding: 10px 7px;
+        & .cardUnit {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            & + .cardUnit {
+                margin-top: 15px;
+            }
+        }
+    }
 
-function BenefitRecommendResult({ data, setNewCombination }) {
+`;
+
+function BenefitRecommendResult({ data }) {
     const [columns, setColumns] = useState({});
+    const [newCombination, setNewCombination] = useState([]);
+    const [combival, setCombival] = useState(0);
+    const [curRankVal, SetCurRankVal] = useState(0);
 
     useEffect(() => {
         const newData = {};
@@ -52,6 +78,39 @@ function BenefitRecommendResult({ data, setNewCombination }) {
         setColumns(newData);
         setNewCombination([]);
     }, [data]);
+
+    useEffect(() => {
+      console.log('조합배열: Combination에서 호출');
+      console.log("newCombination",newCombination);
+      let combiSum = 0;
+
+      newCombination.forEach((data, i) => {
+          let curCombiIdx = data.card_benefit_info.length;
+          let curCombiSum = 0;
+          data.card_benefit_info.forEach((d, i2) => {
+              curCombiSum += d.expectedBenefitValue;
+          });
+          combiSum += curCombiSum / curCombiIdx;
+      });
+
+      setCombival(combiSum.toFixed(0));
+  }, [newCombination]);
+
+  const handleSecondAction = () => {
+      axios({
+          url: '/benefitCluster/benefitCombination',
+          method: 'post',
+          data: { combival: combival },
+      })
+          .then((res) => {
+              console.log(res.data);
+              SetCurRankVal(res.data[res.data.length - 1].cur_rank_val);
+          })
+          .catch((err) => {
+              console.log(err);
+          });
+  };
+
 
     const onDragEnd = (result) => {
         const { source, destination } = result;
@@ -142,30 +201,64 @@ function BenefitRecommendResult({ data, setNewCombination }) {
     };
 
     return (
-        <>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Flex>
-                    <StyledColumns>
-                        {Object.values(columns)
-                            .filter((col) => col.id !== '신규 조합')
-                            .map((col) => (
-                                <Column col={col} key={col.id} />
-                            ))}
-                    </StyledColumns>
-                    <Styledleff />
-                    <Flex minHeight={150} maxHeight={300} position="fixed" minH="100%" left={1000}>
-                        {/* 신규조합 상자는 크기 제한이 없었으면 좋겠다. 최소 150이상 부터 가능하도록 */}
-                        {Object.values(columns)
-                            .filter((col) => col.id === '신규 조합')
-                            .map((col) => (
-                                <Fragment key={col.id}>
-                                    <Column col={col} key={col.id} />
-                                </Fragment>
-                            ))}
-                    </Flex>
-                </Flex>
-            </DragDropContext>
-        </>
+      <>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <DragNDropWrapper>
+            <Box className="subTitle cateTit">Category</Box>
+            <Box className="cateBody">
+              <Box className="cateWrap cateStaticWrap">
+                {Object.values(columns)
+                  .filter((col) => col.id !== "신규 조합")
+                  .map((col) => (
+                    <Column col={col} key={col.id} />
+                  ))}
+              </Box>
+              <Box className="cateWrap cateBasketWrap">
+                {Object.values(columns)
+                  .filter((col) => col.id === "신규 조합")
+                  .map((col) => (
+                    <Fragment key={col.id}>
+                      <Column col={col} key={col.id} combival={combival} />
+                    </Fragment>
+                  ))}
+              </Box>
+            </Box>
+          </DragNDropWrapper>
+        </DragDropContext>
+        {newCombination && Array.isArray(newCombination) && combival > 0 && (
+          <>
+            <CardUnitWrap>
+              <Box className="subTitle cardTit">Combination Result
+                  {newCombination && combival > 0 && (
+                      <Box 
+                      ml="auto">
+                        <Button
+                          className="btnValChk"
+                          colorScheme="facebook"
+                          onClick={handleSecondAction}
+                        >
+                          기존 카드와 가치 평가
+                        </Button>
+                        {curRankVal !== 0 && <Text>{curRankVal} 위</Text>}
+                      </Box>
+                  )}
+              </Box>
+              <Box className="cardUnitBody">
+                {newCombination.map((benefit, index) => (
+                  <Box className="cardUnit" key={benefit.benefit_id}>
+                    <NFTBenefit
+                      data={benefit}
+                      benefit_pct={benefit.benefit_pct}
+                      benefit_detail={benefit.benefit_detail}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </CardUnitWrap>
+            
+          </>
+        )}
+      </>
     );
 }
 

@@ -14,17 +14,22 @@ import LineChart from "components/charts/LineChart";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import Menu from "./AdminMainMenu";
+import MonthMenu from "./MonthMenu";
 import { MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 
 import axios from "axios";
+import { SearchIcon } from "@chakra-ui/icons";
+import AdminDetailMonthTotalSpent from "./AdminDetailMonthTotalSpent";
+import AdminModal from "./AdminModal";
 
 export const TotalSpentcontext = createContext();
 export const TotalProvider = (props) => {
   var data1 = [];
   var lastmonthdata = [];
   var month = [];
+  const [showDetail, setShowDetail] = useState(true);
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondarybody.800", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -38,7 +43,7 @@ export const TotalProvider = (props) => {
     { bg: "secondaryGray.400" },
     { bg: "whiteAlpha.50" }
   );
-
+  const DetailToggle = () => {};
   const bgFocus = useColorModeValue(
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
@@ -262,6 +267,8 @@ export const TotalProvider = (props) => {
             bgButton,
             bgHover,
             bgFocus,
+            DetailToggle,
+            showDetail,
           }}
         >
           {props.children}
@@ -297,10 +304,17 @@ export function DisplayTotal({ handleToggle }) {
     pertotal,
     textColorSecondary,
     boxBg,
+    bgHover,
+    iconColor,
+    DetailToggle,
+    bgFocus,
+    showDetail,
   } = useContext(TotalSpentcontext);
 
   return (
     <>
+      {/* {showDetail ? (
+      <div> */}
       <Flex justify="space-between" align="center" w="100%">
         <Button
           bg={boxBg}
@@ -317,7 +331,11 @@ export function DisplayTotal({ handleToggle }) {
           />
           This Month
         </Button>
-        <Menu memo={memo} />
+        <Flex display="flex">
+          <AdminModal />
+
+          <Menu memo={memo} />
+        </Flex>
       </Flex>
 
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
@@ -367,6 +385,8 @@ export function DisplayTotal({ handleToggle }) {
             )}
         </Box>
       </Flex>
+      {/* </div>
+      ) : (<AdminDetailMonthTotalSpent/>) } */}
     </>
   );
 }

@@ -17,9 +17,8 @@ import { RiArrowUpSFill } from "react-icons/ri";
 import Menu from "./AdminMainMenu";
 import axios from "axios";
 import AdminLineChart from "./AdminLineChart";
-import AdminWeeklyTotalSpentModal from "./AdminWeeklyTotalSpentModal ";
 
-export const TotalWeekSpentcontext = createContext();
+export const TotalDetailWeekSpentcontext = createContext();
 export const TotalProvider = (props) => {
   var data = [];
   var lastweeklydata = [];
@@ -103,18 +102,17 @@ export const TotalProvider = (props) => {
   useEffect(() => {
     axios
       .all([
-        axios.get("/main/selectPerWeeklyamount"),
-        axios.get("/main/selectLastYearPerMonthamount"),
-        axios.get("/main/weektotalIncrese"),
-        axios.get("/main/perWeekTotalAmount"),
+        axios.get("/main/detailselectPerWeeklyamount"),
+        axios.get("/main/detailselectLastYearPerMonthamount"),
+        axios.get("/main/detailweektotalIncrese"),
+        axios.get("/main/detailperWeekTotalAmount"),
       ])
       .then(
         axios.spread((res1, res2, res3, res4) => {
           setWeekPerTotal(res4.data);
           setIncrese(res3.data);
-          console.log("지금", res1.data);
-          console.log("작년", res2.data);
-          let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
+
+          let Message = "12주간 매주 결제금액을 나타낸 차트입니다.";
           setMemo(Message);
           const weeklyname = res1.data.map((item) => item.week);
           week = weeklyname;
@@ -152,6 +150,9 @@ export const TotalProvider = (props) => {
           chart: {
             toolbar: {
               show: false,
+            },
+            tooltip: {
+              y: { formatter: (value) => `$ ${value.toFixed(2)}` },
             },
             dropShadow: {
               enabled: true,
@@ -206,7 +207,15 @@ export const TotalProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
+            color: "black",
+            labels: {
+              show: true,
+              style: {
+                colors: "#CBD5E0",
+                fontSize: "14px",
+              },
+            },
           },
           legend: {
             show: false,
@@ -228,7 +237,7 @@ export const TotalProvider = (props) => {
   return (
     <>
       {checkstat && (
-        <TotalWeekSpentcontext.Provider
+        <TotalDetailWeekSpentcontext.Provider
           value={{
             textColor,
             formatabroad,
@@ -243,12 +252,12 @@ export const TotalProvider = (props) => {
           }}
         >
           {props.children}
-        </TotalWeekSpentcontext.Provider>
+        </TotalDetailWeekSpentcontext.Provider>
       )}
     </>
   );
 };
-export default function AdminWeeklyTotalSpent({ handleToggle }) {
+export default function AdminDetailWeeklyTotalSpent({ handleToggle }) {
   return (
     <Card
       justifyContent="center"
@@ -275,10 +284,11 @@ export function DisplayTotal({ handleToggle }) {
     textColorSecondary,
     boxBg,
     memo,
-  } = useContext(TotalWeekSpentcontext);
+  } = useContext(TotalDetailWeekSpentcontext);
   return (
     <>
       <Flex justify="space-between" align="center" w="100%">
+       
         <Button
           bg={boxBg}
           fontSize="sm"
@@ -294,11 +304,7 @@ export function DisplayTotal({ handleToggle }) {
           />
           This Week
         </Button>
-        <Flex display="flex">
-          <AdminWeeklyTotalSpentModal />
-
-          <Menu memo={memo} />
-        </Flex>
+        <Menu memo={memo} />
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <Flex flexDirection="column" me="20px" mt="28px">
