@@ -27,7 +27,7 @@ import Loading from "../default/components/Loading";
 
 export default function BenefitSetting() {
   //const bState = useRecoilValue(benefitState);
-  // const divToRemove = document.querySelector('.hi');
+   const divToRemove = document.querySelector('.hi');
   const [benefitList, setBenefitist] = useState([]);
   const [benefitTreeList, setbBenefitTreeList] = useState([]);
   const [benefitTitle, setBenefitTitle] = useState();
@@ -37,6 +37,7 @@ export default function BenefitSetting() {
   const [date, setDate] = useState(null);
   const [selectOption, setSelectOption] = useState("high");
   const [seachState, setSeachState] = useState(true);
+
 
   const handleCheckboxChange = (e) => {
     setDate(null);
@@ -92,7 +93,12 @@ export default function BenefitSetting() {
       monthOptions.push({ text: optionText, value: optionValue });
     }
   }
+  useEffect(() => {
+if(loading===true){
+  if (divToRemove != null) divToRemove.remove();
 
+}
+  }, [loading]);
   useEffect(() => {
     if (allPeriodChecked === true) {
       setSeachState(true);
