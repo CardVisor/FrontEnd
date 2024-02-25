@@ -67,7 +67,7 @@ const JobInformation = (props) => {
   }, [jobTypes]);
 
   return (
-    <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
+    <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
       <div
         id="chartdiv"
         ref={chartRef}

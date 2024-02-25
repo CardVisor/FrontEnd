@@ -19,7 +19,7 @@ export default function AmChart({ data }) {
 
     const dataForChart = [
       {
-        year: "주 사용카드",
+        year: "TOP6 사용카드",
         [data.cardName[0][0]]: data.cardName[0][1],
         [data.cardName[1][0]]: data.cardName[1][1],
         [data.cardName[2][0]]: data.cardName[2][1],
@@ -27,7 +27,7 @@ export default function AmChart({ data }) {
         [data.cardName[4][0]]: data.cardName[4][1],
       },
       {
-        year: "주 사용처",
+        year: "TOP6 사용처",
         [data.cardMcc[0][0]]: data.cardMcc[0][1],
         [data.cardMcc[1][0]]: data.cardMcc[1][1],
         [data.cardMcc[2][0]]: data.cardMcc[2][1],
@@ -40,9 +40,9 @@ export default function AmChart({ data }) {
       const root = am5.Root.new("chartdiv");
       root.setThemes([am5themes_Animated.new(root)]);
 
-      //   if (root._logo) {
-      //     root._logo.dispose();
-      //   }
+         if (root._logo) {
+           root._logo.dispose();
+         }
 
       chartRef.current = root.container.children.push(
         am5xy.XYChart.new(root, {
@@ -80,9 +80,9 @@ export default function AmChart({ data }) {
         })
       );
 
-      const legend = chartRef.current.children.push(
-        am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
-      );
+      // const legend = chartRef.current.children.push(
+      //   am5.Legend.new(root, { centerX: am5.p50, x: am5.p50 })
+      // );
 
       function makeSeries(name, dataField) {
         const series = chartRef.current.series.push(
@@ -96,7 +96,7 @@ export default function AmChart({ data }) {
           })
         );
         series.columns.template.setAll({
-          tooltipText: "{name}, {categoryX}: {valueY}",
+          tooltipText: "{categoryX}: {valueY}",
           tooltipY: am5.percent(10),
         });
         series.data.setAll(dataForChart);
@@ -104,7 +104,7 @@ export default function AmChart({ data }) {
         series.bullets.push(function () {
           return am5.Bullet.new(root, {
             sprite: am5.Label.new(root, {
-              text: "{valueY}",
+              text: "{name}",
               fill: root.interfaceColors.get("alternativeText"),
               centerY: am5.p50,
               centerX: am5.p50,
@@ -112,7 +112,7 @@ export default function AmChart({ data }) {
             }),
           });
         });
-        legend.data.push(series);
+        //legend.data.push(series);
       }
 
       data.cardName.forEach((card) => makeSeries(card[0], card[0]));
