@@ -2,35 +2,58 @@ import { Droppable } from "react-beautiful-dnd";
 import Item from "./Item";
 import styled from "styled-components";
 import { Box } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
 
 const CateUnitWrap = styled.div`
     padding: 10px 7px;
-
     &.basketItem {
-      background-coloe: pink;
-      position:
+      & .cateUnitBody {     
+        display: flex;
+        flex-direction: column;
+        height: 100%;   
+      }
+      &.basketFixed {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        background: pink;
+      }
     }
-
     & .cateUnitTit {
-        font-size: 14px;
+        position: relative;
+        font-size: 16px;
         font-weight: bold;
         padding-bottom: 5px;
         padding-left: 5px;
+        & .tip {
+          position: absolute;
+          top: 50%;
+          right: 0;
+          font-size: 11px;
+          transform: translateY(-50%);
+          color: #ff6565;
+          padding-right: 5px;
+        }
     }
     & .cateUnitBody {
         min-height: 200px;
         background-color: #f5f5f5;
         border-radius: 8px;
         padding: 10px;
+        height: calc( 100% - 29px);
     }
     & .cateUnitFoot {
-        font-size: 14px;
-        background: #fffad0;
+        margin-top: auto;
+        align-self: flex-end;
         & span {
+          font-size: 14px;
+          background: #fffad0;
+          & strong {
             color: #3f51b5;
             font-size: 18px;
             font-weight: bold;
-        } 
+          } 
+        }
     }
 `;
 
@@ -43,11 +66,13 @@ const formatNumber = (number) => {
 };
 
 function Column({ col, combival }) {
+
+
   return (
     <Droppable droppableId={col.id}>
       {(provided) => (
-        <CateUnitWrap className={col.id === "신규 조합" ? "basketItem" : ""}>
-              <h2 className="cateUnitTit">{col.id}</h2>
+        <CateUnitWrap id={col.id === "신규 조합" ? "combination" : null} className={col.id === "신규 조합" ? "basketItem" : ""}>
+              <h2 className="cateUnitTit">{col.id}{col.id === "신규 조합" && <span className="tip">* 최대 3개 조합 가능</span>}</h2>
               <Box className="cateUnitBody" {...provided.droppableProps} ref={provided.innerRef}
                   
               >
@@ -55,7 +80,7 @@ function Column({ col, combival }) {
                     <Item key={item.benefit_id} item={item} index={index} />
                   ))}
                   {provided.placeholder}
-                  {col.id === "신규 조합" && combival > 0 && <span className="cateUnitFoot">카드 조합에 따른 혜택<br />가치 합:&nbsp;&nbsp;<span>{formatNumber(combival)}</span>&nbsp;원</span>}
+                  {col.id === "신규 조합" && combival > 0 && <div className="cateUnitFoot"><span>카드 조합에 따른 혜택<br />가치 합:&nbsp;&nbsp;<strong>{formatNumber(combival)}</strong>&nbsp;원</span></div>}
               </Box>
           </CateUnitWrap>
       )}
