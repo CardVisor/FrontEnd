@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { Text } from "@chakra-ui/react";
 import styled from "styled-components";
 
 const StyledItem = styled.div`
