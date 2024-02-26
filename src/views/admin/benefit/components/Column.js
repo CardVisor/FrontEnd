@@ -2,21 +2,26 @@ import { Droppable } from "react-beautiful-dnd";
 import Item from "./Item";
 import styled from "styled-components";
 import { Box } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
 
 const CateUnitWrap = styled.div`
     padding: 10px 7px;
     &.basketItem {
-      & .cateUnitBody {     
+      & .cateUnitBody {
         display: flex;
         flex-direction: column;
-        height: 100%;   
+        height: 100%;
       }
-      &.basketFixed {
+      &.fixedItem {
         position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-        background: pink;
+        top: 33%;
+        top: calc( 50% - 124px );
+        transform: initial;
+        & .cateUnitBody > div {
+          display: fixed;
+          transform: rotate(0);
+          top: 0;
+          left: 0;
+        }
       }
     }
     & .cateUnitTit {
@@ -66,12 +71,10 @@ const formatNumber = (number) => {
 };
 
 function Column({ col, combival }) {
-
-
   return (
     <Droppable droppableId={col.id}>
       {(provided) => (
-        <CateUnitWrap id={col.id === "신규 조합" ? "combination" : null} className={col.id === "신규 조합" ? "basketItem" : ""}>
+        <CateUnitWrap className={col.id === "신규 조합" ? "basketItem" : ""}>
               <h2 className="cateUnitTit">{col.id}{col.id === "신규 조합" && <span className="tip">* 최대 3개 조합 가능</span>}</h2>
               <Box className="cateUnitBody" {...provided.droppableProps} ref={provided.innerRef}
                   

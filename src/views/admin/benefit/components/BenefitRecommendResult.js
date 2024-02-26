@@ -9,8 +9,8 @@ import NFTBenefit from './NFTBenefit';
 import axios from 'axios';
 
 const DragNDropWrapper = styled.div`
+    //width: 50%;
     display: table-cell;
-    transition: 5s;
     & .cateBody {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -22,8 +22,8 @@ const DragNDropWrapper = styled.div`
 `;
 
 const CardUnitWrap = styled.div`
+    //width: 50%;
     display: table-cell;
-    transition: 5s;
     padding-left: 10px;
     & .subTitle.cardTit {
         display: flex;
@@ -227,7 +227,7 @@ function BenefitRecommendResult({ data }) {
         </DragDropContext>
         {newCombination && Array.isArray(newCombination) && combival > 0 && (
           <>
-            <CardUnitWrap>
+            <CardUnitWrap className="cardUnitWrapper">
               <Box className="subTitle cardTit">Combination Result
                   {newCombination && combival > 0 && (
                       <Box 
