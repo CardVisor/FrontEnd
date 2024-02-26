@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Column from './Column';
 //import { styled } from './stitches.config';
@@ -53,7 +53,7 @@ const CardUnitWrap = styled.div`
 
 `;
 
-function BenefitRecommendResult({ data }) {
+const BenefitRecommendResult = forwardRef(({ data }, responseRef) => {
     const [columns, setColumns] = useState({});
     const [newCombination, setNewCombination] = useState([]);
     const [combival, setCombival] = useState(0);
@@ -203,7 +203,7 @@ function BenefitRecommendResult({ data }) {
     return (
       <>
         <DragDropContext onDragEnd={onDragEnd}>
-          <DragNDropWrapper>
+          <DragNDropWrapper ref={responseRef}>
             <Box className="subTitle cateTit">Category</Box>
             <Box className="cateBody">
               <Box className="cateWrap cateStaticWrap">
@@ -260,6 +260,6 @@ function BenefitRecommendResult({ data }) {
         )}
       </>
     );
-}
+});
 
 export default BenefitRecommendResult;
