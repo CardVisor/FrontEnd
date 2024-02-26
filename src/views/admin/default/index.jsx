@@ -42,10 +42,6 @@ import AdminAbPayCheckTable from "./components/AdminAbPayCheckTable";
 import { useRecoilValue } from "recoil";
 import { mainState } from "../Recoil/MainState";
 import Loading from "./components/Loading";
-import AdminDetailMonthTotalSpent from "./components/AdminDetailMonthTotalSpent";
-import AdminDetailMonthTraffic from "./components/AdminDetailMonthTraffic";
-import AdminDetailWeeklyTotalSpent from "./components/AdminDetailWeeklyTotalSpent";
-import AdminDetailWeeklyTraffic from "./components/AdminDetailWeeklyTraffic";
 
 export default function UserReports() {
   // Chakra Color Mode
