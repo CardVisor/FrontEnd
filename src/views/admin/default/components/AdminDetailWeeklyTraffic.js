@@ -83,7 +83,7 @@ export const TrafficProvider = (props) => {
             },
           },
           yaxis: {
-            show: false,
+            show: true,
             color: "black",
             labels: {
               show: true,
