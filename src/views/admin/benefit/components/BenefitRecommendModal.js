@@ -134,25 +134,16 @@ function BenefitRecommend(props) {
 }, [handleSearchAction, scrollPosition]);
 
 useLayoutEffect(() => {
-    //console.log("responseRef.current111", responseRef && responseRef.current);
     if (responseRef.current) {
-        //console.log("responseRef.current222", responseRef.current);
         const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
                 requestAnimationFrame(() => {
-                    //console.log("Previous width:", entry.contentRect.width);
-                    //console.log("responseRef.current : ", responseRef.current);
                     const combiElement = document.querySelector(".basketItem");
 
-                    //console.log("combiElement : ", combiElement);
-
                     if (responseRef.current && combiElement) {
-                        //console.log("entry.contentRect.width", entry.contentRect.width);
                         if (entry.contentRect.width <= 672) {
-                            //console.log("672보다 작다 !!");
                             combiElement.style.width = "224px";
                         } else {
-                            //console.log("672보다 크다 !!");
                             combiElement.style.width = "448px";
                         }
                     }
