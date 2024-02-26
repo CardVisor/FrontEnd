@@ -188,6 +188,7 @@ function BenefitPieOfPie(props) {
                     i++;
                 });
             }
+     
 
             var middleAngle = slice.get('startAngle') + slice.get('arc') / 2;
             var firstAngle = series.dataItems[0].get('slice').get('startAngle');
@@ -204,6 +205,7 @@ function BenefitPieOfPie(props) {
                 duration: 1000,
                 easing: am5.ease.out(am5.ease.cubic),
             });
+
         }
         // 컨테이너의 애니메이션 동작시간
         container.appear(1000, 10);

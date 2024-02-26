@@ -1,5 +1,6 @@
 import {
   Flex,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -12,10 +13,11 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "components/card/Card";
-import { benefitState } from "views/admin/Recoil/BenefitCluster";
-import { useSetRecoilState } from "recoil";
+//import { benefitState } from "views/admin/Recoil/BenefitCluster";
+//import { useSetRecoilState } from "recoil";
 export default function BenefitDetailInfoTable(props) {
-  const SetbState = useSetRecoilState(benefitState);
+  //const SetbState = useSetRecoilState(benefitState);
+  const [tableloading,SetTableLoading]= useState(true);
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   const { clickedChartEl, data, clickFlag, date, selectOption } = props;
@@ -29,7 +31,8 @@ export default function BenefitDetailInfoTable(props) {
   };
   useEffect(() => {
     const fetchData = async () => {
-      SetbState(true);
+      SetTableLoading(true);
+      // SetbState(true);
       // 비동기 작업을 수행하는 함수를 따로 선언
       var formattedDate = null;
       if (date) {
@@ -51,7 +54,8 @@ export default function BenefitDetailInfoTable(props) {
           data: senddata,
         });
         setBenefitList(res.data);
-        SetbState(false);
+        SetTableLoading(false);
+        // SetbState(false);
       } catch (err) {}
     };
 
@@ -67,6 +71,12 @@ export default function BenefitDetailInfoTable(props) {
       px="0px"
       overflowX={{ sm: "scroll", lg: "hidden" }}
     >
+       {tableloading ? (
+        <Flex marginLeft={21}>
+          <Spinner />
+          </Flex>
+        ) : (
+          <div>
       <Flex px="25px" justify="space-between" align="center">
         <Text
           color={textColor}
@@ -283,6 +293,7 @@ export default function BenefitDetailInfoTable(props) {
             ))}
         </Tbody>
       </Table>
+      </div>)}
     </Card>
   );
 }

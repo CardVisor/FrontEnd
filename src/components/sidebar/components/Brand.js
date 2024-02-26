@@ -14,10 +14,10 @@ export function SidebarBrand() {
   return (
     <Flex align="center" direction="column">
       <Image
-        w="160px"
+        w="180px"
         mt="14px"
         mb="32px"
-        src="https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/paylogo.png"
+        src="https://farmfarmimagess.s3.ap-northeast-2.amazonaws.com/MainLogo.png"
       ></Image>
 
       <HSeparator mb="20px" />
