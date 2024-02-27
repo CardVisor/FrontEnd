@@ -1,6 +1,5 @@
 {
-  "homepage": "/",
-  "name": "cardvisor",
+  "name": "payboard",
   "version": "1.0.1",
   "private": true,
   "dependencies": {
