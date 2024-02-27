@@ -33,11 +33,45 @@ const CardUnitWrap = styled.div`
           height: 38px;
           border-radius: 15px;
         }
-        & p {
-            color: #e52c2c;
-            text-align: right;
-            margin: 10px 15px -18px 0;
-            font-size: 26px;
+        & .rankBox {
+          display: inline-block;
+          position: relative;
+          color: #e52c2c;
+          text-align: right;
+          margin: 10px 15px -18px 0;
+          font-size: 26px;
+          & .rank {
+            cursor: default;
+          }
+        }
+        & .rankBox:hover span.tip {
+          display: inline-block;
+        }
+        & span.tip {
+          display: none;
+          position: absolute;
+          width: 200px;
+          top: 40px;
+          right: -14px;
+          border: 1px solid #ccc;
+          padding: 10px;
+          border-radius: 10px;
+          font-size: 11px;
+          color: #ab5512;
+          background: #fff;
+          z-index: 1;
+        }
+        & span.tip::after {
+          content: '';
+          position: absolute;
+          top: -5px;
+          right: 46px;
+          width: 10px;
+          height: 10px;
+          transform: rotate(45deg);
+          border-top: 1px solid #ccc;
+          border-left: 1px solid #ccc;
+          background: #fff;
         }
     }
     & .cardUnitBody {
@@ -231,15 +265,25 @@ const BenefitRecommendResult = forwardRef(({ data }, responseRef) => {
               <Box className="subTitle cardTit">Combination Result
                   {newCombination && combival > 0 && (
                       <Box 
-                      ml="auto">
-                        <Button
-                          className="btnValChk"
-                          colorScheme="facebook"
-                          onClick={handleSecondAction}
-                        >
-                          기존 카드와 가치 평가
-                        </Button>
-                        {curRankVal !== 0 && <Text>{curRankVal} 위</Text>}
+                        ml="auto"
+                        textAlign="right"
+                      >
+                        <Box>
+                            <Button
+                              className="btnValChk"
+                              colorScheme="facebook"
+                              onClick={handleSecondAction}
+                            >
+                              기존 카드와 가치 평가
+                            </Button>
+                        </Box>
+                        {
+                            curRankVal !== 0 && 
+                            <Box className="rankBox">
+                                <span className="rank">{curRankVal} 위</span>
+                                <span className="tip">혜택 가치 순으로 현재 상품 중<br/>{curRankVal}순위에 위치할 것이라는 정보입니다.</span>
+                            </Box>
+                        }
                       </Box>
                   )}
               </Box>
