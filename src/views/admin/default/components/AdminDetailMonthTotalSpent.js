@@ -1,13 +1,6 @@
 // Chakra imports
 
-import {
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
 import LineChart from "components/charts/LineChart";
@@ -49,18 +42,16 @@ export const TotalProvider = (props) => {
   const [checkdetailstat, setCheckDetailstat] = useState(false);
   // 6개월간 총결제내역 작년 올해 비교 상승률
   const formatpercent = (number) => {
-    // Check if the input is a valid number
     if (typeof number === "number") {
-      // Perform formatting based on the sign of the number
       if (number > 0) {
-        return "+" + number.toFixed(0) + "%"; // Using toFixed to format to two decimal places
+        return "+" + number.toFixed(0) + "%";
       } else if (number < 0) {
-        return "-" + Math.abs(number).toFixed(1) + "%"; // Using Math.abs to handle negative numbers
+        return "-" + Math.abs(number).toFixed(1) + "%";
       } else {
-        return "0.0%"; // Handle zero case
+        return "0.0%";
       }
     } else {
-      return "Invalid input"; // Handle invalid input
+      return "Invalid input";
     }
   };
 
@@ -74,41 +65,12 @@ export const TotalProvider = (props) => {
           return `${number.toString()}만`;
         }
       } else {
-        // Handle negative numbers if needed
         return `${number.toString()}`;
       }
     } else {
-      return "N/A"; // Handle undefined or null case
+      return "N/A";
     }
   };
-
-  // 6개월간 총결제내역
-  // useEffect(() => {
-  //   axios({
-  //     method: "get",
-  //     url: "/main/perMonthTotalAmount",
-  //   })
-  //     .then((res) => {
-
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error fetching currency data:", err);
-  //     });
-  // });
-  // useEffect(() => {
-  //   axios({
-  //     method: "get",
-  //     url: "",
-  //   })
-  //     .then((res) => {
-  //       setIncrese(res.data);
-  //       let Message = "백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.";
-  //       setMemo(Message);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error fetching currency data:", err);
-  //     });
-  // });
 
   useEffect(() => {
     setCheckDetailstat(false);
@@ -136,21 +98,21 @@ export const TotalProvider = (props) => {
 
           const formattedNumbers1 = res2.data.map((item) => {
             if (item.total_amount >= 1000000) {
-              return (item.total_amount / 1000000).toFixed(1); // Convert to millions and append 'M'
+              return (item.total_amount / 1000000).toFixed(1);
             } else {
-              return item.total_amount.toLocaleString(); // Format number with comma separators
+              return item.total_amount.toLocaleString();
             }
           });
-          data1 = formattedNumbers1; //data
+          data1 = formattedNumbers1;
 
           const formattedNumbers = res1.data.map((item) => {
             if (item.total_amount >= 1000000) {
-              return (item.total_amount / 1000000).toFixed(2); // Convert to millions and append 'M'
+              return (item.total_amount / 1000000).toFixed(2);
             } else {
-              return item.total_amount.toLocaleString(); // Format number with comma separators
+              return item.total_amount.toLocaleString();
             }
           });
-          lastmonthdata = formattedNumbers; //lastmonthdata
+          lastmonthdata = formattedNumbers;
         })
       )
       .then(() => {
@@ -279,18 +241,17 @@ export const TotalProvider = (props) => {
     </>
   );
 };
-export default function AdminDetailMonthTotalSpent({ handleToggle }) {
+export default function AdminDetailMonthTotalSpent(props) {
   return (
     <Card direction="column" mb="0px">
       <TotalProvider>
-        <DisplayTotal handleToggle={handleToggle}></DisplayTotal>
+        <DisplayTotal></DisplayTotal>
       </TotalProvider>
     </Card>
   );
 }
-export function DisplayTotal({ handleToggle }) {
+export function DisplayTotal(props) {
   const {
-    memo,
     textColor,
     formatabroad,
     increse,
@@ -298,8 +259,6 @@ export function DisplayTotal({ handleToggle }) {
     formatpercent,
     lineChartDetailDataTotalSpent,
     pertotal,
-    textColorSecondary,
-    boxBg,
   } = useContext(TotalDetailSpentcontext);
 
   return (
