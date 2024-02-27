@@ -1,0 +1,52 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "hwasoo" ]
+  pull_request:
+    branches: [ "hwasoo" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # React build NODE
+    - name: 'Checkout frontend repository'
+      uses: actions/checkout@v3
+      with:
+        repository: CardVisor/FrontEnd
+        ref: 'hwasoo'
+        token: ${{ secrets.REPO_PAT }}
+    - name: 'Set up .env for frontend'
+      run: |
+        touch ./.env
+        echo "REACT_APP_BACKEND_URL=http://backend:7777" > ./.env
+      
+    - name: 'Set up Node.js'
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14' 
+
+    - name: 'Install frontend dependencies and build'
+      run: |
+        npm install
+        npm run build
+      env:
+          CI: "false"
+
+    - name: 'Azure Container Login AND Build and push Docker image'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }} 
+    - run: |
+        docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/cardvisor-frontend:latest -f ./Dockerfile .
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/cardvisor-frontend:latest
+    
+
+        
+
+      
