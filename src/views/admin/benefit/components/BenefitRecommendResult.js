@@ -50,7 +50,7 @@ const CardUnitWrap = styled.div`
         & span.tip {
           display: none;
           position: absolute;
-          width: 200px;
+          width: 205px;
           top: 40px;
           right: -14px;
           border: 1px solid #ccc;
