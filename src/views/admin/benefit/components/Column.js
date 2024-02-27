@@ -13,9 +13,10 @@ const CateUnitWrap = styled.div`
       }
       &.fixedItem {
         position: fixed;
-        top: 33%;
         top: calc( 50% - 124px );
+        top: calc( 50% - 110px );
         transform: initial;
+        z-index: 1;
         & .cateUnitBody > div {
           display: fixed;
           transform: rotate(0);

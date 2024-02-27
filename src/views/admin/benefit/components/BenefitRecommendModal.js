@@ -2,7 +2,6 @@ import {
     Box,
     Button,
     Checkbox,
-    Flex,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -15,13 +14,14 @@ import {
 } from "@chakra-ui/react";
 import "assets/css/benefitCluster/Modal.css";
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import BenefitRecommendResult from "./BenefitRecommendResult";
 
 function BenefitRecommend(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [scrollPosition, setScrollPosition] = useState(0);
     const modalContentRef = useRef(null);
+    const responseRef = useRef(null);
 
     const [scrollBehavior, setScrollBehavior] = useState("inside");
     const [benefitCustomData, setBenefitCustomData] = useState();
@@ -95,52 +95,70 @@ function BenefitRecommend(props) {
     };
 
     const [searchFlag, setSearchFlag] = useState(false);
+
     useEffect(() => {
         setSearchFlag(allCategoriesChecked);
     }, [checkedOptions]);
 
     useEffect(() => {
-        const handleScroll = async () => {
+        const handleScroll = () => {
             if (modalContentRef.current) {
                 setScrollPosition(modalContentRef.current.scrollTop);
             }
-
-            const combiElement = document.querySelector(".basketItem");
-            const CardUnitWrapper = document.querySelector(".cardUnitWrapper");
-            const cateBasketWrapElement = document.querySelector(".cateBasketWrap");
-            const windowWidth = window.innerWidth;
-            if (combiElement) {
-                if (scrollPosition >= 400) {
-                    if (CardUnitWrapper) {
-                        combiElement.style.width = "224px";
-                        //console.log("wraper 있다 !!");
+        
+            requestAnimationFrame(() => {
+                const combiElement = document.querySelector(".basketItem");
+        
+                if (combiElement) {
+                    if (scrollPosition >= 400) {
+                        combiElement.classList.add("fixedItem");
                     } else {
-                        combiElement.style.width = "448px";
-                        //console.log("wraper 없다 !!");
+                        combiElement.classList.remove("fixedItem");
                     }
-                    const adjustedLeft = cateBasketWrapElement.offsetLeft + (windowWidth - 1420) / 2;
-                    //combiElement.style.left = `${adjustedLeft}px`;
-                    combiElement.classList.add("fixedItem");
-                } else {
-                    combiElement.style.width = "";
-                    combiElement.classList.remove("fixedItem");
                 }
-            }
+            });
         };
 
+    if (modalContentRef.current) {
+        modalContentRef.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
         if (modalContentRef.current) {
-            modalContentRef.current.addEventListener("scroll", handleScroll);
+            modalContentRef.current.removeEventListener(
+                "scroll",
+                handleScroll
+            );
         }
+    };
+}, [handleSearchAction, scrollPosition]);
+
+useLayoutEffect(() => {
+    if (responseRef.current) {
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                requestAnimationFrame(() => {
+                    const combiElement = document.querySelector(".basketItem");
+
+                    if (responseRef.current && combiElement) {
+                        if (entry.contentRect.width <= 672) {
+                            combiElement.style.width = "224px";
+                        } else {
+                            combiElement.style.width = "448px";
+                        }
+                    }
+                });
+            }
+        });
+
+        resizeObserver.observe(responseRef.current);
 
         return () => {
-            if (modalContentRef.current) {
-                modalContentRef.current.removeEventListener(
-                    "scroll",
-                    handleScroll
-                );
-            }
+            resizeObserver.disconnect();
         };
-    }, [handleSearchAction, scrollPosition]);
+    }
+}, [loadingDndComp]);
+
 
     return (
         <>
@@ -229,11 +247,11 @@ function BenefitRecommend(props) {
                             </Box>
                         </Box>
                         {loadingDndComp && (
-                            // <Stack pl={5} mt={1} spacing={1} mb="5">
                             <Box className="benefitSearchResult">
                                 <BenefitRecommendResult
                                     data={benefitCustomData}
                                     scrollPosition={scrollPosition}
+                                    ref={responseRef}
                                 />
                             </Box>
                         )}
