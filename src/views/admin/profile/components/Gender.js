@@ -6,13 +6,17 @@ import axios from "axios";
 
 // Assets
 export default function GenderInformation(props) {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { ...rest } = props;
   const [genderData, setGenderData] = useState([]);
   const chartRef = useRef(null);
 
   useEffect(() => {
-    axios.get("/customer/genderRatio")
-      .then((response) => setGenderData([response.data.남성, response.data.여성]));
+    axios
+      .get(API_SERVER + "/customer/genderRatio")
+      .then((response) =>
+        setGenderData([response.data.남성, response.data.여성])
+      );
   }, []);
 
   const renderGenderChart = () => {
@@ -26,25 +30,27 @@ export default function GenderInformation(props) {
         type: "doughnut",
         data: {
           labels: ["남성", "여성"],
-          datasets: [{
-            label: "#",
-            data: genderData,
-            borderWidth: 1,
-            backgroundColor: ["#5E3AFF", "#57C3FF"],
-          }],
+          datasets: [
+            {
+              label: "#",
+              data: genderData,
+              borderWidth: 1,
+              backgroundColor: ["#5E3AFF", "#57C3FF"],
+            },
+          ],
         },
         options: {
           responsive: true,
           plugins: {
             legend: {
-              position: 'top',
+              position: "top",
             },
             title: {
               display: true,
-              text: '성별 비율'
-            }
-          }
-        }
+              text: "성별 비율",
+            },
+          },
+        },
       };
       chartRef.current = new Chart(ctx, config);
     } else {
@@ -61,8 +67,18 @@ export default function GenderInformation(props) {
   return (
     <>
       <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
-        <div style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', width: '330px' }}>
-          <canvas id="genderChart" style={{ width: "100%", height: "auto" }}></canvas>
+        <div
+          style={{
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "330px",
+          }}
+        >
+          <canvas
+            id="genderChart"
+            style={{ width: "100%", height: "auto" }}
+          ></canvas>
         </div>
       </Card>
     </>

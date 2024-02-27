@@ -31,6 +31,7 @@ import axios from "axios";
 import BarChartTest from "./BarChartClear";
 
 function Modal2(props) {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { isOpen, onClose, clickedCardInfo, month } = props;
 
   const card1 = clickedCardInfo[0] ? clickedCardInfo[0] : {};
@@ -46,7 +47,10 @@ function Modal2(props) {
       return;
     }
     axios
-      .get(`CardCluster/MccChartsAll?month=${month}&type=${card1.cardType}`)
+      .get(
+        API_SERVER +
+          `CardCluster/MccChartsAll?month=${month}&type=${card1.cardType}`
+      )
       .then((res) => {
         setCard1DataList({
           fit: res.data.의료건강피트니스,
@@ -72,7 +76,10 @@ function Modal2(props) {
       });
 
     axios
-      .get(`CardCluster/MccChartsAll?month=${month}&type=${card2.cardType}`)
+      .get(
+        API_SERVER +
+          `CardCluster/MccChartsAll?month=${month}&type=${card2.cardType}`
+      )
       .then((res) => {
         setCard2DataList({
           fit: res.data.의료건강피트니스,

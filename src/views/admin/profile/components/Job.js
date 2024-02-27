@@ -8,13 +8,14 @@ import Card from "components/card/Card";
 am4core.useTheme(am4themes_animated);
 
 const JobInformation = (props) => {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { ...rest } = props;
   const [jobTypes, setJobTypes] = useState([]);
   const chartRef = useRef(null);
 
   useEffect(() => {
     axios
-      .get("/customer/jobTypes")
+      .get(API_SERVER + "/customer/jobTypes")
       .then((response) => {
         const jobTypesData = response.data;
         jobTypesData.sort((a, b) => b.count - a.count); // 값이 큰 순서대로 정렬
@@ -67,7 +68,15 @@ const JobInformation = (props) => {
   }, [jobTypes]);
 
   return (
-    <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
+    <Card
+      mb={{ base: "0px", "2xl": "20px" }}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      {...rest}
+    >
       <div
         id="chartdiv"
         ref={chartRef}

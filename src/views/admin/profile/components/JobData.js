@@ -1,9 +1,19 @@
-import { Text, useColorModeValue, Select, Spinner, Box, Heading, Stack, StackDivider } from "@chakra-ui/react";
+import {
+  Text,
+  useColorModeValue,
+  Select,
+  Spinner,
+  Box,
+  Heading,
+  Stack,
+  StackDivider,
+} from "@chakra-ui/react";
 import Card from "components/card/Card.js";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function JobData(props) {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const [filter, setFilter] = useState("all");
   const [countByJobTypeAndAll, setCountByJobTypeAndAll] = useState(null);
   const [averageAgeByJobTypeAndAll, setAverageAgeByJobTypeAndAll] =
@@ -26,12 +36,12 @@ export default function JobData(props) {
     setLoading(true);
 
     Promise.all([
-      axios.get("/customer/countByJobTypeAndAll"),
-      axios.get("/customer/getAverageAgeByJobTypeAndAll"),
-      axios.get("/customer/mostsalaryData"),
-      axios.get("/customer/paymentByJobTypeAndAll"),
-      axios.get("/customer/topCardsByJobType"),
-      axios.get("/customer/findTop3CardTypesByJobType"),
+      axios.get(API_SERVER + "/customer/countByJobTypeAndAll"),
+      axios.get(API_SERVER + "/customer/getAverageAgeByJobTypeAndAll"),
+      axios.get(API_SERVER + "/customer/mostsalaryData"),
+      axios.get(API_SERVER + "/customer/paymentByJobTypeAndAll"),
+      axios.get(API_SERVER + "/customer/topCardsByJobType"),
+      axios.get(API_SERVER + "/customer/findTop3CardTypesByJobType"),
     ])
       .then(
         ([
@@ -119,24 +129,24 @@ export default function JobData(props) {
               }}
             >
               <div>
-              <Text
-                    color={textColorPrimary}
-                    fontWeight="bold"
-                    fontSize="2xl"
-                    mt="10px"
-                    mb="4px"
-                    mr="10px"  
+                <Text
+                  color={textColorPrimary}
+                  fontWeight="bold"
+                  fontSize="2xl"
+                  mt="10px"
+                  mb="4px"
+                  mr="10px"
+                >
+                  All DATA{" "}
+                  <Text
+                    as="span"
+                    color={textColorSecondary}
+                    fontSize="md"
+                    ml="10px"
                   >
-                    All DATA{" "}
-                    <Text
-                      as="span"  
-                      color={textColorSecondary}  
-                      fontSize="md"  
-                      ml="10px"  
-                    >
-                      종합데이터
-                    </Text>
+                    종합데이터
                   </Text>
+                </Text>
               </div>
               <div>
                 <Select
@@ -158,38 +168,43 @@ export default function JobData(props) {
               </div>
             </div>
             <Stack divider={<StackDivider />} spacing="3" mt="20px">
-            <Box>
-              <Heading size="s" textTransform="uppercase">
-              포함된 고객 수 : {countByJobTypeAndAll}명
-              </Heading>
-            </Box>
-            <Box>
-              <Heading size="s" textTransform="uppercase">
-              평균 연령 : {averageAgeByJobTypeAndAll}세
-              </Heading>
-            </Box>
-            <Box>
-              <Heading size="s" textTransform="uppercase">
-              평균 연봉 : {mostsalaryData}
-              </Heading>
-            </Box>
-            <Box>
-              <Heading size="s" textTransform="uppercase">
-              평균 소비금액 : {paymentByJobTypeAndAll}
-              </Heading>
-            </Box>
-            <Box>
-              <Heading size="s" textTransform="uppercase">
-              가장 많이 사용한 카드 : {topCardsByJobType ? topCardsByJobType.join(', ') : '데이터를 불러오는 중...'}
-              </Heading>
-            </Box>
-            <Box>
-              <Heading size="s" textTransform="uppercase">
-              주 사용처 : {findTop3CardTypesByJobType ? findTop3CardTypesByJobType.join(', ') : '데이터를 불러오는 중...'}
-              </Heading>
-            </Box>
+              <Box>
+                <Heading size="s" textTransform="uppercase">
+                  포함된 고객 수 : {countByJobTypeAndAll}명
+                </Heading>
+              </Box>
+              <Box>
+                <Heading size="s" textTransform="uppercase">
+                  평균 연령 : {averageAgeByJobTypeAndAll}세
+                </Heading>
+              </Box>
+              <Box>
+                <Heading size="s" textTransform="uppercase">
+                  평균 연봉 : {mostsalaryData}
+                </Heading>
+              </Box>
+              <Box>
+                <Heading size="s" textTransform="uppercase">
+                  평균 소비금액 : {paymentByJobTypeAndAll}
+                </Heading>
+              </Box>
+              <Box>
+                <Heading size="s" textTransform="uppercase">
+                  가장 많이 사용한 카드 :{" "}
+                  {topCardsByJobType
+                    ? topCardsByJobType.join(", ")
+                    : "데이터를 불러오는 중..."}
+                </Heading>
+              </Box>
+              <Box>
+                <Heading size="s" textTransform="uppercase">
+                  주 사용처 :{" "}
+                  {findTop3CardTypesByJobType
+                    ? findTop3CardTypesByJobType.join(", ")
+                    : "데이터를 불러오는 중..."}
+                </Heading>
+              </Box>
             </Stack>
-
           </div>
         )}
       </Card>

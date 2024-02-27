@@ -9,14 +9,15 @@ import { useSetRecoilState } from "recoil";
 import { loadState } from "../../Recoil/Atom";
 
 export default function SalaryInformation(props) {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { ...rest } = props;
   const chartRef = useRef(null); // 차트에 대한 참조를 생성
   const SetChartState = useSetRecoilState(loadState);
   useEffect(() => {
     SetChartState(true);
     Promise.all([
-      axios.get("/customer/custSalary"),
-      axios.get("/customer/paymentBySalaryAndAll"),
+      axios.get(API_SERVER + "/customer/custSalary"),
+      axios.get(API_SERVER + "/customer/paymentBySalaryAndAll"),
     ]).then((responses) => {
       const responseData1 = responses[0].data;
       const responseData2 = responses[1].data;
@@ -24,8 +25,12 @@ export default function SalaryInformation(props) {
       const labels1 = responseData1.map((item) => item[0]); // cust_salary
       const dataset1 = responseData1.map((item) => item[1]); // 고객 수
 
-      const dataset2Filtered = responseData2.filter(item => item.cust_salary !== "all");
-      const dataset2 = responseData2.map((item) => parseFloat(item.avg_payment.replace(/[^0-9.-]+/g,""))); // 숫자로 변환
+      const dataset2Filtered = responseData2.filter(
+        (item) => item.cust_salary !== "all"
+      );
+      const dataset2 = responseData2.map((item) =>
+        parseFloat(item.avg_payment.replace(/[^0-9.-]+/g, ""))
+      ); // 숫자로 변환
       // const dataset2 = labels1.map((label) => {
       //   const dataPair = responseData2.find((pair) => pair[0] === label);
       //   return dataPair
@@ -46,7 +51,9 @@ export default function SalaryInformation(props) {
       );
 
       responseData2.sort(
-        (a, b) => salaryOrder.indexOf(a.cust_salary) - salaryOrder.indexOf(b.cust_salary)
+        (a, b) =>
+          salaryOrder.indexOf(a.cust_salary) -
+          salaryOrder.indexOf(b.cust_salary)
       );
       // responseData2.sort(
       //   (a, b) => salaryOrder.indexOf(a[0]) - salaryOrder.indexOf(b[0])
@@ -59,10 +66,12 @@ export default function SalaryInformation(props) {
       });
 
       const sortedData2 = salaryOrder.map((salary) => {
-        const index = dataset2Filtered.findIndex(item => item.cust_salary === salary);
+        const index = dataset2Filtered.findIndex(
+          (item) => item.cust_salary === salary
+        );
         return index !== -1 ? dataset2[index] : 0;
       });
-      
+
       const data = {
         labels: sortedLabels,
         datasets: [
@@ -91,8 +100,8 @@ export default function SalaryInformation(props) {
         type: "bar",
         data: data,
         options: {
-          responsive: true,  // 차트를 반응형으로
-          maintainAspectRatio: false,  // 캔버스의 원래 가로 세로 비율을 유지하지 않음
+          responsive: true, // 차트를 반응형으로
+          maintainAspectRatio: false, // 캔버스의 원래 가로 세로 비율을 유지하지 않음
           scales: {
             y: {
               stacked: true,
@@ -116,20 +125,19 @@ export default function SalaryInformation(props) {
 
       // 각 데이터셋에 대한 색상 설정
       config.data.datasets[0].backgroundColor = [
-        '#6794DC', // "3000만원 미만"에 해당하는 바의 색상
-        '#6771DC', // "3000만원 이상 5000만원 미만"에 해당하는 바의 색상
-        '#8067DC', // "5000만원 이상 7000만원 미만"에 해당하는 바의 색상
-        '#A367DC', // "7000만원 이상 1억 미만"에 해당하는 바의 색상
-        '#C767DC' // "1억 이상"에 해당하는 바의 색상 
+        "#6794DC", // "3000만원 미만"에 해당하는 바의 색상
+        "#6771DC", // "3000만원 이상 5000만원 미만"에 해당하는 바의 색상
+        "#8067DC", // "5000만원 이상 7000만원 미만"에 해당하는 바의 색상
+        "#A367DC", // "7000만원 이상 1억 미만"에 해당하는 바의 색상
+        "#C767DC", // "1억 이상"에 해당하는 바의 색상
       ];
-
 
       if (chartRef.current) {
         // 차트가 이미 그려져 있다면 그 차트를 파괴
         chartRef.current.destroy();
       }
 
-      const ctx = document.getElementById('salaryChart');
+      const ctx = document.getElementById("salaryChart");
       if (ctx !== null) {
         chartRef.current = new Chart(ctx, config);
       } else {
@@ -141,8 +149,16 @@ export default function SalaryInformation(props) {
   }, []); // 의존성 배열은 비어있음
 
   return (
-    <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
-      <canvas id="salaryChart" width="500px" height="300" ></canvas>
+    <Card
+      mb={{ base: "0px", "2xl": "20px" }}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      {...rest}
+    >
+      <canvas id="salaryChart" width="500px" height="300"></canvas>
     </Card>
   );
 }

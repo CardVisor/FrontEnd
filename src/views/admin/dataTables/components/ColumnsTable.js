@@ -19,6 +19,7 @@ import axios from "axios";
 // Custom components
 import Card from "components/card/Card";
 export default function ColumnsTable(props) {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { clickedCardInfo, month } = props;
 
   const [card1Details, setCard1Details] = useState({
@@ -55,7 +56,9 @@ export default function ColumnsTable(props) {
     console.log({ month });
     axios({
       method: "get",
-      url: `/CardCluster/CardDetails?type=${cardType1}&month=${month}`,
+      url:
+        API_SERVER +
+        `/CardCluster/CardDetails?type=${cardType1}&month=${month}`,
     })
       .then((res) => {
         setCard1Details({
@@ -82,7 +85,9 @@ export default function ColumnsTable(props) {
   useEffect(() => {
     axios({
       method: "get",
-      url: `/CardCluster/CardDetails?type=${cardType2}&month=${month}`,
+      url:
+        API_SERVER +
+        `/CardCluster/CardDetails?type=${cardType2}&month=${month}`,
     })
       .then((res) => {
         setCard2Details({

@@ -26,8 +26,9 @@ import Loading from "../default/components/Loading";
 //import { benefitState } from "../Recoil/BenefitCluster";
 
 export default function BenefitSetting() {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   //const bState = useRecoilValue(benefitState);
-   const divToRemove = document.querySelector('.hi');
+  const divToRemove = document.querySelector(".hi");
   const [benefitList, setBenefitist] = useState([]);
   const [benefitTreeList, setbBenefitTreeList] = useState([]);
   const [benefitTitle, setBenefitTitle] = useState();
@@ -37,7 +38,6 @@ export default function BenefitSetting() {
   const [date, setDate] = useState(null);
   const [selectOption, setSelectOption] = useState("high");
   const [seachState, setSeachState] = useState(true);
-
 
   const handleCheckboxChange = (e) => {
     setDate(null);
@@ -56,13 +56,19 @@ export default function BenefitSetting() {
       formattedDate = `${year}-${month}`;
     }
     try {
-      const res = await axios.post("/benefitCluster/benefitTopAndBottom", {
-        date: formattedDate,
-        selectOption: selectOption,
-      });
-      const res2 = await axios.post("/benefitCluster/benefitTreeChart", {
-        date: formattedDate,
-      });
+      const res = await axios.post(
+        API_SERVER + "/benefitCluster/benefitTopAndBottom",
+        {
+          date: formattedDate,
+          selectOption: selectOption,
+        }
+      );
+      const res2 = await axios.post(
+        API_SERVER + "/benefitCluster/benefitTreeChart",
+        {
+          date: formattedDate,
+        }
+      );
       setBenefitist(res.data.list);
       setBenefitTitle(res.data.title);
       setbBenefitTreeList(res2.data);
@@ -94,10 +100,9 @@ export default function BenefitSetting() {
     }
   }
   useEffect(() => {
-if(loading===true){
-  if (divToRemove != null) divToRemove.remove();
-
-}
+    if (loading === true) {
+      if (divToRemove != null) divToRemove.remove();
+    }
   }, [loading]);
   useEffect(() => {
     if (allPeriodChecked === true) {

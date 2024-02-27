@@ -93,9 +93,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
       backgroundColor="#fff"
       borderRadius="20px"
     >
-      <Card
-      padding="0"
-      >
+      <Card padding="0">
         <Box p="10px 0px 10px 30px">
           <Flex>
             <DatePickerMonthly
@@ -115,7 +113,12 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
                 </option>
               ))}
             </Select>*/}
-            <Select defaultValue="high" onChange={handleSortChange} mr={2} minW="279px">
+            <Select
+              defaultValue="high"
+              onChange={handleSortChange}
+              mr={2}
+              minW="279px"
+            >
               <option value="high">이용률 높은순</option>
               <option value="low">이용률 낮은순</option>
             </Select>
@@ -142,6 +145,7 @@ const TopBar = ({ setSelectedMonth, setSelectedSort }) => {
 };
 
 export default function Settings() {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const card1state = useRecoilValue(cardState);
   const [maincardstate, setMainCardState] = useState(true);
   const [cards, setCards] = useState([]);
@@ -195,7 +199,9 @@ export default function Settings() {
       setDataDetailState(true);
       axios({
         method: "get",
-        url: `/CardCluster/Cards?month=${selectedMonth}&sort=${selectedSort}`,
+        url:
+          API_SERVER +
+          `/CardCluster/Cards?month=${selectedMonth}&sort=${selectedSort}`,
       })
         .then((res) => {
           const filteredCards = res.data.map((card) => {

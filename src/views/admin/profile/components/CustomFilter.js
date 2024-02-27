@@ -14,6 +14,7 @@ import Overview from "./CustomFilterData";
 import axios from "axios";
 
 export default function CustomFilter() {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { isOpen, onToggle } = useDisclosure();
   const [jobType, setJobType] = useState("NONE");
   const [salaryRange, setSalaryRange] = useState("NONE");
@@ -50,7 +51,7 @@ export default function CustomFilter() {
     };
 
     axios
-      .post("/customer/filterstats", filters)
+      .post(API_SERVER + "/customer/filterstats", filters)
       .then(function (response) {
         setData(response.data);
         console.log(response);

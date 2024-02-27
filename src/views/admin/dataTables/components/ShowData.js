@@ -7,6 +7,7 @@ import { useSetRecoilState } from "recoil";
 import { cardState } from "views/admin/Recoil/CardCluster";
 
 export default function ShowData(props) {
+  const API_SERVER = process.env.REACT_APP_API_SERVER;
   const { card_annual_fee, cardType, month } = props;
   const setcardState = useSetRecoilState(cardState);
   const [cardDetails, setCardDetails] = useState({
@@ -25,7 +26,8 @@ export default function ShowData(props) {
     //setcardState(true);
     axios({
       method: "get",
-      url: `/CardCluster/CardDetails?type=${cardType}&month=${month}`,
+      url:
+        API_SERVER + `/CardCluster/CardDetails?type=${cardType}&month=${month}`,
     })
       .then((res) => {
         setCardDetails({
