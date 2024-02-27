@@ -7,15 +7,15 @@ on:
     branches: [ "hwasoo" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # React build NODE
     - name: 'Checkout frontend repository'
       uses: actions/checkout@v3
       with:
+        repository: CardVisor/FrontEnd
+        ref: 'hwasoo'
         token: ${{ secrets.REPO_PAT }}
     - name: 'Set up .env for frontend'
       run: |
