@@ -13,7 +13,7 @@ ReactDOM.render(
     <React.StrictMode>
         <ChakraProvider theme={theme}>
             <ThemeEditorProvider>
-                <BrowserRouter basename={process.env.public}>
+                <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <RecoilRoot>
                         <Routes>
                             <Route path="/*" element={<AdminLayout />} />
