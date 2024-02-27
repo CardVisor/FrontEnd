@@ -71,7 +71,6 @@ export default function UserReports() {
         <AbroadTotalAmount></AbroadTotalAmount>
         <LatestCurrencyData></LatestCurrencyData>
       </SimpleGrid>
-
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
         {showMonthly ? (
           <>
@@ -94,6 +93,7 @@ export default function UserReports() {
         <AdminAbroadPayCheckTable />
         <AdminAbPayCheckTable />
       </SimpleGrid>
+
       <Flex
         className="hi"
         position="absolute"
