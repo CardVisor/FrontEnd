@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "hwasoo" ]
+    branches: [ hwasoo ]
   pull_request:
-    branches: [ "hwasoo" ]
+    branches: [ hwasoo ]
 
 jobs:
   build:
@@ -13,10 +13,6 @@ jobs:
     steps:
     - name: 'Checkout frontend repository'
       uses: actions/checkout@v3
-      with:
-        repository: CardVisor/FrontEnd
-        ref: 'hwasoo'
-        token: ${{ secrets.REPO_PAT }}
     - name: 'Set up .env for frontend'
       run: |
         touch ./.env
