@@ -16,13 +16,11 @@ jobs:
     - name: 'Checkout frontend repository'
       uses: actions/checkout@v3
       with:
-        repository: CardVisor/FrontEnd
-        ref: 'hwasoo'
         token: ${{ secrets.REPO_PAT }}
     - name: 'Set up .env for frontend'
       run: |
         touch ./.env
-        echo "REACT_APP_BACKEND_URL=http://backend:7777" > ./.env
+        echo "${{ secrets.REACT_ENV }}" > ./.env
       
     - name: 'Set up Node.js'
       uses: actions/setup-node@v3
