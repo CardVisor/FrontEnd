@@ -37,18 +37,16 @@ export const TotalProvider = (props) => {
   const [checkstat, setCheckstat] = useState(false);
   // 6주간 총결제내역 작년 올해 비교 상승률
   const formatpercent = (number) => {
-    // Check if the input is a valid number
     if (typeof number === "number") {
-      // Perform formatting based on the sign of the number
       if (number > 0) {
-        return "+" + number.toFixed(1) + "%"; // Using toFixed to format to two decimal places
+        return "+" + number.toFixed(1) + "%";
       } else if (number < 0) {
-        return "-" + Math.abs(number).toFixed(2) + "%"; // Using Math.abs to handle negative numbers
+        return "-" + Math.abs(number).toFixed(2) + "%";
       } else {
-        return "0.0%"; // Handle zero case
+        return "0.0%";
       }
     } else {
-      return "Invalid input"; // Handle invalid input
+      return "Invalid input";
     }
   };
 
@@ -62,43 +60,12 @@ export const TotalProvider = (props) => {
           return `${number.toString()}만`;
         }
       } else {
-        // Handle negative numbers if needed
         return `${number.toString()}`;
       }
     } else {
-      return "N/A"; // Handle undefined or null case
+      return "N/A";
     }
   };
-
-  // 6개월간 총결제내역
-  // useEffect(() => {
-  //   axios({
-  //     method: "get",
-  //     url: "/main/perWeekTotalAmount",
-  //   })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setWeekPerTotal(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error fetching currency data:", err);
-  //     });
-  // }, []);
-  // useEffect(() => {
-  //   axios({
-  //     method: "get",
-  //     url: "/main/weektotalIncrese",
-  //   })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setIncrese(res.data);
-  //       let Message = "6주간 매주 결제금액을 나타낸 차트입니다.";
-  //       setMemo(Message);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error fetching currency data:", err);
-  //     });
-  // }, []);
 
   useEffect(() => {
     axios
