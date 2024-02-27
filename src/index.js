@@ -16,8 +16,8 @@ ReactDOM.render(
                 <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <RecoilRoot>
                         <Routes>
-                            <Route path="/*" element={<AdminLayout />} />
                             <Route path="/" element={<Navigate replace to="/main" />} />
+                            <Route path="/*" element={<AdminLayout />} />
                         </Routes>
                     </RecoilRoot>
                 </BrowserRouter>
