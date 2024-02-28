@@ -18,7 +18,7 @@ export default function NFT(props) {
     useEffect(() => {
         // Setstate(true);
         axios
-            .get(API_SERVER + `CardCluster/MccCharts?month=${month}&type=${cardType}`)
+            .get(`${API_SERVER}/CardCluster/MccCharts?month=${month}&type=${cardType}`)
             .then((response) => {
                 const data = response.data.map((item) => ({
                     value: item.total,
