@@ -21,6 +21,9 @@ export default function AdminCheckTable(props) {
         }
     };
     useEffect(() => {
+        console.log(process.env.REACT_APP_API_SERVER);
+        console.log(API_SERVER);
+
         axios({
             method: 'get',
             url: API_SERVER + '/main/selectTop5CardList',
