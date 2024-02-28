@@ -1,43 +1,30 @@
 // Chakra imports
 
-import { Box, Button, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
+import { Button, Flex, Icon, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
 import Card from 'components/card/Card.js';
-import LineChart from 'components/charts/LineChart';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import Menu from './AdminMainMenu';
-import MonthMenu from './MonthMenu';
 import { MdOutlineCalendarToday } from 'react-icons/md';
 // Assets
 import { RiArrowUpSFill } from 'react-icons/ri';
 
 import axios from 'axios';
-import { SearchIcon } from '@chakra-ui/icons';
-import AdminDetailMonthTotalSpent from './AdminDetailMonthTotalSpent';
 import AdminModal from './AdminModal';
+import YourComponent from 'views/admin/Recoil/AdminMonthRecoil';
 
 export const TotalSpentcontext = createContext();
 export const TotalProvider = (props) => {
     const API_SERVER = process.env.REACT_APP_API_SERVER;
-    var data1 = [];
-    var lastmonthdata = [];
     var month = [];
-    const [showDetail, setShowDetail] = useState(true);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorSecondary = useColorModeValue('secondarybody.800', 'white');
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
-    const iconColor = useColorModeValue('brand.500', 'white');
-    const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
     const [pertotal, setPerTotal] = useState();
     const [increse, setIncrese] = useState();
-    const [lineChartOptionsTotalSpent, setOptionLineChart] = useState({});
-    const [lineChartDataTotalSpent, setLineChartDataTotalSpent] = useState([]);
-    const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' });
-    const DetailToggle = () => {};
-    const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' });
+
     const [memo, setMemo] = useState();
-    const [checkstat, setCheckstat] = useState(false);
     // 6개월간 총결제내역 작년 올해 비교 상승률
     const formatpercent = (number) => {
         // Check if the input is a valid number
@@ -69,198 +56,40 @@ export const TotalProvider = (props) => {
                 return `${number.toString()}`;
             }
         } else {
-            return 'N/A'; // Handle undefined or null case
+            return '로드중'; // Handle undefined or null case
         }
     };
 
-    // 6개월간 총결제내역
-    // useEffect(() => {
-    //   axios({
-    //     method: "get",
-    //     url: "/main/perMonthTotalAmount",
-    //   })
-    //     .then((res) => {
-
-    //     })
-    //     .catch((err) => {
-    //       console.log("Error fetching currency data:", err);
-    //     });
-    // });
-    // useEffect(() => {
-    //   axios({
-    //     method: "get",
-    //     url: "",
-    //   })
-    //     .then((res) => {
-    //       setIncrese(res.data);
-    //       let Message = "백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.";
-    //       setMemo(Message);
-    //     })
-    //     .catch((err) => {
-    //       console.log("Error fetching currency data:", err);
-    //     });
-    // });
-
     useEffect(() => {
-        setCheckstat(false);
         axios
-            .all([
-                axios.get(API_SERVER + '/main/selectLastYearPerMonthamount'),
-                axios.get(API_SERVER + '/main/selectPerMonthamount'),
-                axios.get(API_SERVER + '/main/perMonthTotalAmount'),
-                axios.get(API_SERVER + '/main/totalIncrese'),
-            ])
+            .all([axios.get(API_SERVER + '/main/perMonthTotalAmount'), axios.get(API_SERVER + '/main/totalIncrese')])
             .then(
-                axios.spread((res1, res2, res3, res4) => {
-                    setPerTotal(res3.data);
-                    setIncrese(res4.data);
+                axios.spread((res1, res2) => {
+                    setPerTotal(res1.data);
+                    setIncrese(res2.data);
                     let Message = '백만원 기준 6개월간 매달 결제금액을 나타낸 차트입니다.';
                     setMemo(Message);
-                    const monthname = res2.data.map((item) => item.month);
-
-                    const formattedMonths = monthname.map((month) => {
-                        const [year, monthNumber] = month.split('-');
-                        return monthNumber + '월';
-                    });
-
-                    month = formattedMonths;
-
-                    const formattedNumbers1 = res2.data.map((item) => {
-                        if (item.total_amount >= 1000000) {
-                            return (item.total_amount / 1000000).toFixed(1); // Convert to millions and append 'M'
-                        } else {
-                            return item.total_amount.toLocaleString(); // Format number with comma separators
-                        }
-                    });
-                    data1 = formattedNumbers1; //data
-
-                    const formattedNumbers = res1.data.map((item) => {
-                        if (item.total_amount >= 1000000) {
-                            return (item.total_amount / 1000000).toFixed(2); // Convert to millions and append 'M'
-                        } else {
-                            return item.total_amount.toLocaleString(); // Format number with comma separators
-                        }
-                    });
-                    lastmonthdata = formattedNumbers; //lastmonthdata
                 })
             )
-            .then(() => {
-                const lineChartDataTotalSpent1 = [
-                    {
-                        name: '올해',
-                        data: data1,
-                    },
-                    {
-                        name: '작년',
-                        data: lastmonthdata,
-                    },
-                ];
-
-                setLineChartDataTotalSpent(lineChartDataTotalSpent1);
-                const lineChartOptionsTotalSpent1 = {
-                    chart: {
-                        toolbar: {
-                            show: false,
-                        },
-                        dropShadow: {
-                            enabled: true,
-                            top: 13,
-                            left: 0,
-                            blur: 10,
-                            opacity: 0.1,
-                            color: '#4318FF',
-                        },
-                    },
-                    colors: ['#4318FF', '#39B8FF'],
-                    markers: {
-                        size: 0,
-                        colors: 'white',
-                        strokeColors: '#7551FF',
-                        strokeWidth: 3,
-                        strokeOpacity: 0.9,
-                        strokeDashArray: 0,
-                        fillOpacity: 1,
-                        discrete: [],
-                        shape: 'circle',
-                        radius: 2,
-                        offsetX: 0,
-                        offsetY: 0,
-                        showNullDataPoints: true,
-                    },
-                    tooltip: {
-                        theme: 'dark',
-                    },
-                    dataLabels: {
-                        enabled: false,
-                    },
-                    stroke: {
-                        curve: 'smooth',
-                        type: 'line',
-                    },
-                    xaxis: {
-                        type: 'numeric',
-                        categories: month,
-                        labels: {
-                            style: {
-                                colors: '#A3AED0',
-                                fontSize: '12px',
-                                fontWeight: '500',
-                            },
-                        },
-                        axisBorder: {
-                            show: false,
-                        },
-                        axisTicks: {
-                            show: false,
-                        },
-                    },
-                    yaxis: {
-                        show: false,
-                    },
-                    legend: {
-                        show: false,
-                    },
-                    grid: {
-                        show: false,
-                        column: {
-                            color: ['#7551FF', '#39B8FF'],
-                            opacity: 0.5,
-                        },
-                    },
-                    color: ['#7551FF', '#39B8FF'],
-                };
-                setOptionLineChart(lineChartOptionsTotalSpent1);
-                setCheckstat(true);
-            })
             .catch((err) => console.log(err));
     }, []);
     return (
         <>
-            {checkstat && (
-                <TotalSpentcontext.Provider
-                    value={{
-                        memo,
-                        month,
-                        lineChartOptionsTotalSpent,
-                        increse,
-                        lineChartDataTotalSpent,
-                        formatpercent,
-                        textColor,
-                        pertotal,
-                        formatabroad,
-                        textColorSecondary,
-                        boxBg,
-                        iconColor,
-                        bgButton,
-                        bgHover,
-                        bgFocus,
-                        DetailToggle,
-                        showDetail,
-                    }}
-                >
-                    {props.children}
-                </TotalSpentcontext.Provider>
-            )}
+            <TotalSpentcontext.Provider
+                value={{
+                    memo,
+                    month,
+                    increse,
+                    formatpercent,
+                    textColor,
+                    pertotal,
+                    formatabroad,
+                    textColorSecondary,
+                    boxBg,
+                }}
+            >
+                {props.children}
+            </TotalSpentcontext.Provider>
         </>
     );
 };
@@ -274,28 +103,13 @@ export default function AdminMonthTotalSpent({ handleToggle }) {
     );
 }
 export function DisplayTotal({ handleToggle }) {
-    const {
-        memo,
-        textColor,
-        formatabroad,
-        increse,
-        lineChartOptionsTotalSpent,
-        formatpercent,
-        lineChartDataTotalSpent,
-        pertotal,
-        textColorSecondary,
-        boxBg,
-        bgHover,
-        iconColor,
-        DetailToggle,
-        bgFocus,
-        showDetail,
-    } = useContext(TotalSpentcontext);
+    const { memo, textColor, formatabroad, increse, formatpercent, pertotal, textColorSecondary, boxBg } =
+        useContext(TotalSpentcontext);
 
     return (
         <>
             {/* {showDetail ? (
-      <div> */}
+        <div> */}
             <Flex justify="space-between" align="center" w="100%">
                 <Button
                     bg={boxBg}
@@ -339,16 +153,10 @@ export function DisplayTotal({ handleToggle }) {
                         </Text>
                     </Flex>
                 </Flex>
-                <Box minH="260px" minW="75%" mt="auto">
-                    {lineChartDataTotalSpent.length > 0 &&
-                        lineChartOptionsTotalSpent.xaxis &&
-                        lineChartOptionsTotalSpent.xaxis.categories.length > 0 && (
-                            <LineChart chartData={lineChartDataTotalSpent} chartOptions={lineChartOptionsTotalSpent} />
-                        )}
-                </Box>
+                <YourComponent />
             </Flex>
             {/* </div>
-      ) : (<AdminDetailMonthTotalSpent/>) } */}
+        ) : (<AdminDetailMonthTotalSpent/>) } */}
         </>
     );
 }
