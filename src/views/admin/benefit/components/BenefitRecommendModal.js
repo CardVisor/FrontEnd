@@ -9,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -31,7 +32,7 @@ function BenefitRecommend(props) {
   const responseRef = useRef(null);
 
   const [scrollBehavior, setScrollBehavior] = useState("inside");
-  const [benefitCustomData, setBenefitCustomData] = useState();
+  const [benefitCustomData, setBenefitCustomData] = useState(null);
   const [loadingDndComp, setLoadingDndComp] = useState(false);
   //const [fetchNeeded, setFetchNeeded] = useState(false); // fetchData 호출 제어를 위한 상태
   const categories = {
@@ -81,6 +82,7 @@ function BenefitRecommend(props) {
   };
 
   const handleSearchAction = useCallback(async () => {
+    setLoadingDndComp(true);
     try {
       const res = await axios({
         method: "post",
@@ -92,6 +94,8 @@ function BenefitRecommend(props) {
       setLoadingDndComp(true);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoadingDndComp(false);
     }
   }, [checkedOptions]);
 
@@ -102,6 +106,18 @@ function BenefitRecommend(props) {
   };
 
   const [searchFlag, setSearchFlag] = useState(false);
+
+  const onCloseCustom = () => {
+    setCheckedOptions({
+      // 체크박스 상태 초기화
+      성별: Array(categories.성별.length).fill(false),
+      연령: Array(categories.연령.length).fill(false),
+      직업: Array(categories.직업.length).fill(false),
+      연소득: Array(categories.연소득.length).fill(false),
+    });
+    setBenefitCustomData(null); // 조회 결과 초기화
+    onClose(); // 모달 닫기
+  };
 
   useEffect(() => {
     setSearchFlag(allCategoriesChecked);
@@ -170,7 +186,7 @@ function BenefitRecommend(props) {
       </Button>
       <Modal
         isCentered
-        onClose={onClose}
+        onClose={onCloseCustom}
         isOpen={isOpen}
         motionPreset="slideInBottom"
         scrollBehavior={scrollBehavior}
@@ -222,7 +238,9 @@ function BenefitRecommend(props) {
                 </Button>
               </Box>
             </Box>
-            {loadingDndComp && (
+            {loadingDndComp ? (
+              <Spinner /> // 로딩 중일 때는 spinner를 보여줍니다.
+            ) : benefitCustomData ? (
               <Box className="benefitSearchResult">
                 <BenefitRecommendResult
                   data={benefitCustomData}
@@ -230,7 +248,7 @@ function BenefitRecommend(props) {
                   ref={responseRef}
                 />
               </Box>
-            )}
+            ) : null}
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>

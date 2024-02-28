@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Column from "./Column";
 //import { styled } from './stitches.config';
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Spinner, Text } from "@chakra-ui/react";
 import { Fragment } from "react";
 import { styled } from "styled-components";
 import NFTBenefit from "./NFTBenefit";
@@ -57,7 +57,8 @@ const BenefitRecommendResult = forwardRef(({ data }, responseRef) => {
   const [columns, setColumns] = useState({});
   const [newCombination, setNewCombination] = useState([]);
   const [combival, setCombival] = useState(0);
-  const [curRankVal, SetCurRankVal] = useState(0);
+  const [curRankVal, setCurRankVal] = useState(0);
+  const [searchState, setSearchState] = useState(false);
 
   useEffect(() => {
     const newData = {};
@@ -97,6 +98,7 @@ const BenefitRecommendResult = forwardRef(({ data }, responseRef) => {
   }, [newCombination]);
 
   const handleSecondAction = () => {
+    setSearchState(true);
     axios({
       url: API_SERVER + "/benefitCluster/benefitCombination",
       method: "post",
@@ -104,10 +106,12 @@ const BenefitRecommendResult = forwardRef(({ data }, responseRef) => {
     })
       .then((res) => {
         console.log(res.data);
-        SetCurRankVal(res.data[res.data.length - 1].cur_rank_val);
+        setCurRankVal(res.data[res.data.length - 1].cur_rank_val);
+        setSearchState(false);
       })
       .catch((err) => {
         console.log(err);
+        setSearchState(false);
       });
   };
 
@@ -261,7 +265,19 @@ const BenefitRecommendResult = forwardRef(({ data }, responseRef) => {
                   >
                     기존 카드와 가치 평가
                   </Button>
-                  {curRankVal !== 0 && <Text>{curRankVal} 위</Text>}
+
+                  {searchState ? (
+                    <Box
+                      display="flex"
+                      justifyContent="flex-end"
+                      mr="20px"
+                      mt="10px"
+                    >
+                      <Spinner />
+                    </Box>
+                  ) : (
+                    curRankVal !== 0 && <Text>{curRankVal} 위</Text>
+                  )}
                 </Box>
               )}
             </Box>
