@@ -1,70 +1,38 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
+import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
 
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
+import React, { useEffect, useState } from "react";
 
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
-import {
-  Avatar,
-  Box,
-  Flex,
-  FormLabel,
-  Icon,
-  Select,
-  SimpleGrid,
-  useColorModeValue,
-} from "@chakra-ui/react";
-// Assets
-import Usa from "assets/img/dashboards/usa.png";
-// Custom components
-import MiniCalendar from "components/calendar/MiniCalendar";
-import MiniStatistics from "components/card/MiniStatistics";
-import IconBox from "components/icons/IconBox";
-import React from "react";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdBarChart,
-  MdFileCopy,
-} from "react-icons/md";
-import CheckTable from "views/admin/default/components/CheckTable";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import {
-  columnsDataCheck,
-  columnsDataComplex,
-} from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
-import CustomerCount from "./components/CustomerCount";
+import CustomerCount from "./components/AdminCustomerCount";
 import KrwTotalAmount from "./components/KrwTotalAmount";
 import AbroadTotalAmount from "./components/AbroadTotalAmount";
+import LatestCurrencyData from "./components/LatestCurrencyData";
+import AdminMonthTotalSpent from "./components/AdminMonthTotalSpent";
+import AdminWeeklyTotalSpent from "./components/AdminWeeklyTotalSpent";
+import AdminMonthTraffic from "./components/AdminMonthTraffic";
+import AdminWeeklyTraffic from "./components/AdminWeeklyTraffic";
+import AdminCheckTable from "./components/AdminCheckTable";
+import AdminPayCheckTable from "./components/AdminPayCheckTable";
+import AdminAbroadPayCheckTable from "./components/AdminAbroadPayCheckTable";
+import AdminAbPayCheckTable from "./components/AdminAbPayCheckTable";
+import { useRecoilValue } from "recoil";
+import { mainState } from "../Recoil/MainState";
+import Loading from "./components/Loading";
 
 export default function UserReports() {
   // Chakra Color Mode
-  const brandColor = useColorModeValue("brand.500", "white");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const [showMonthly, setShowMonthly] = useState(true);
+  const divToRemove = document.querySelector(".hi");
+  const mState = useRecoilValue(mainState);
+  const handleToggle = () => {
+    setShowMonthly(!showMonthly);
+  };
+  useEffect(() => {
+    if (mState === false) {
+      if (divToRemove != null) divToRemove.remove();
+    } else {
+      // if (divToRemove != null) divToRemove.appendChild();
+    }
+  }, [mState]);
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -76,52 +44,46 @@ export default function UserReports() {
 
         <KrwTotalAmount></KrwTotalAmount>
         <AbroadTotalAmount></AbroadTotalAmount>
-
-        <MiniStatistics
-          endContent={
-            <Flex me="-16px" mt="10px">
-              <FormLabel htmlFor="balance">
-                <Avatar src={Usa} />
-              </FormLabel>
-              <Select
-                id="balance"
-                variant="mini"
-                mt="5px"
-                me="0px"
-                defaultValue="usd"
-              >
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="gba">GBA</option>
-              </Select>
-            </Flex>
-          }
-          name="환율"
-          value="$1,000"
-        />
+        <LatestCurrencyData></LatestCurrencyData>
       </SimpleGrid>
-
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <TotalSpent />
-        <WeeklyRevenue />
+        {showMonthly ? (
+          <>
+            <AdminMonthTotalSpent handleToggle={handleToggle} />
+            <AdminMonthTraffic />
+          </>
+        ) : (
+          <>
+            <AdminWeeklyTotalSpent handleToggle={handleToggle} />
+            <AdminWeeklyTraffic />
+          </>
+        )}
       </SimpleGrid>
+
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <DailyTraffic />
-          <PieCard />
-        </SimpleGrid>
+        <AdminCheckTable />
+        <AdminPayCheckTable></AdminPayCheckTable>
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px" mb="20px">
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px">
-          <Tasks />
-          <MiniCalendar h="100%" minW="100%" selectRange={false} />
-        </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap="20px">
+        <AdminAbroadPayCheckTable />
+        <AdminAbPayCheckTable />
       </SimpleGrid>
+
+      <Flex
+        className="hi"
+        position="absolute"
+        background="#F4F7FE"
+        top="-100px"
+        width="100%"
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="flex-start"
+        paddingTop={350}
+        filter="opacity(0.95)"
+      >
+        <Loading />
+      </Flex>
     </Box>
   );
 }

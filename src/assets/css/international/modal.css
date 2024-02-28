@@ -1,0 +1,76 @@
+.filterWrap {
+    padding-bottom: 17px;
+    border-bottom: 1px solid #dcdcdc;
+}
+.filterWrap .filterLine {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    height: 40px;
+    margin-top: 10px;
+}
+.filterWrap .heading_option {
+    display: inline-block;
+    min-width: 170px;
+    font-weight: bold;
+    font-size: 16px;
+}
+.filterWrap .selectTip {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.filterWrap .chk_item:not(:first-of-type) {
+    margin-left: 20px;
+}
+
+.filterWrap .filterLine.hasBranch {
+    display: block;
+    height: auto;
+}
+.filterWrap .filterLine .filterTop {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.filterWrap .filterLine .filterBottom {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: gray;
+    padding-left: 170px;
+    padding-top: 5px;
+    margin-top: 10px;
+/*
+    padding-bottom: 10px;
+*/
+}
+
+.filterWrap .filterLine .filterBottom .tag {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+/* interTbl */
+.interTbl .interTblTh {
+    text-align: center !important;
+    border-right: 1px solid #eee !important;
+    border-bottom: 1px solid #eee !important;
+    font-size: 14px;
+}
+.interTbl .interTblTh:last-child {
+    border-right: none !important;
+}
+.interTbl .interTblTd {
+    border-right: 1px solid #eee !important;
+    border-bottom: 1px solid #eee !important;
+    box-sizing: border-box;
+    padding: 16px 14px;
+    text-align: center;
+    font-size: 14px;
+}
+.interTbl .interTblTd:last-child {
+    border-right: none !important;
+}

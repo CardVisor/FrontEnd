@@ -22,8 +22,6 @@ function KrwTotalAmount(props) {
       url: "/main/totalAmount",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setTotalAmount(res.data);
       })
       .catch((err) => {
@@ -37,8 +35,6 @@ function KrwTotalAmount(props) {
       url: "/main/lastMonthTotalAmount",
     })
       .then((res) => {
-        console.log("??");
-        console.log(res.data);
         setLastMonthTotalAmount(res.data);
       })
       .catch((err) => {
@@ -60,7 +56,7 @@ function KrwTotalAmount(props) {
       }
       name="월 총 결제 금액"
       value={totalamount}
-      growth={lastmonthtotalamount}
+      Krwgrowth={lastmonthtotalamount}
     />
   );
 }

@@ -1,5 +1,3 @@
-// Chakra imports
-import { SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card.js";
 import React, { useEffect, useRef, useState } from "react";
@@ -9,51 +7,64 @@ import axios from "axios";
 // Assets
 export default function GenderInformation(props) {
   const { ...rest } = props;
-  const textColorPrimary = useColorModeValue("secondaryGray.900", "white");
-
   const [genderData, setGenderData] = useState([]);
-  const genderChart = useRef(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
     axios.get("/customer/genderRatio")
-      .then((response) => { console.log(">>>", response.data); setGenderData([response.data.남성, response.data.여성]) });
-
+      .then((response) => setGenderData([response.data.남성, response.data.여성]));
   }, []);
 
-  const renderDoughnutChart = () => {
-    const ctx = document.getElementById("genderChart").getContext("2d");
-    if (genderChart.current) {
-      genderChart.current.destroy(); // 이전에 그려진 차트 파괴
+  const renderGenderChart = () => {
+    if (chartRef.current) {
+      chartRef.current.destroy();
     }
 
-
-    genderChart.current = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["남성", "여성"],
-        datasets: [{
-          label: "#",
-          data: genderData,
-          borderWidth: 1,
-          backgroundColor: ["#689CFE", "#FEBEBE"],
-        }],
-      },
-    });
+    const ctx = document.getElementById("genderChart");
+    if (ctx !== null) {
+      const config = {
+        type: "doughnut",
+        data: {
+          labels: ["남성", "여성"],
+          datasets: [{
+            label: "#",
+            data: genderData,
+            borderWidth: 1,
+            backgroundColor: ["#5E3AFF", "#57C3FF"],
+          }],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: '성별 비율'
+            }
+          }
+        }
+      };
+      chartRef.current = new Chart(ctx, config);
+    } else {
+      console.error("차트를 찾지 못했습니다.");
+    }
   };
 
   useEffect(() => {
     if (genderData.length > 0) {
-      renderDoughnutChart();
+      renderGenderChart();
     }
-  }, [genderData]); // genderData가 변경될 때마다 차트를 다시 렌더링
-
+  }, [genderData]);
 
   return (
     <>
-        <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
-          <canvas id="genderChart" width="300" height="300"></canvas>
-        </Card>  
+      <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
+        <div style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', width: '330px' }}>
+          <canvas id="genderChart" style={{ width: "100%", height: "auto" }}></canvas>
+        </div>
+      </Card>
     </>
   );
 }
-

@@ -18,6 +18,8 @@ import React from "react";
 
 export default function Default(props) {
   const {
+    Krwgrowth,
+    growthPeron,
     startContent,
     endContent,
     name,
@@ -101,7 +103,7 @@ export default function Default(props) {
         justify={{ base: "center", xl: "center" }}
       >
         {startContent}
-        <Stat Cardmy="auto" ms={startContent ? "18px" : "0px"}>
+        <Stat cardmy="auto" ms={startContent ? "18px" : "0px"}>
           <StatLabel
             lineHeight="100%"
             color={textColorSecondary}
@@ -117,7 +119,7 @@ export default function Default(props) {
               base: "2xl",
             }}
           >
-            {totalperson}
+            {totalperson ? totalperson + "명" : null}
           </StatNumber>
           <StatNumber
             color={textColor}
@@ -160,7 +162,31 @@ export default function Default(props) {
                 fontWeight="700"
                 me="5px"
               >
-                {growth ? formatNumber(growth) : null}
+                {growth ? formatabroad(growth) : null}
+              </Text>
+            </Flex>
+          ) : null}
+          {Krwgrowth ? (
+            <Flex align="center">
+              <Text
+                color={Krwgrowth > 0 ? "green.500" : "red.500"}
+                fontSize="xs"
+                fontWeight="700"
+                me="5px"
+              >
+                {Krwgrowth ? formatNumber(Krwgrowth) : null}
+              </Text>
+            </Flex>
+          ) : null}
+          {growthPeron ? (
+            <Flex align="center">
+              <Text
+                color={growthPeron > 0 ? "green.500" : "red.500"}
+                fontSize="xs"
+                fontWeight="700"
+                me="5px"
+              >
+                {growthPeron + "명"}
               </Text>
             </Flex>
           ) : null}

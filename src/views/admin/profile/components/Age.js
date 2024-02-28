@@ -21,7 +21,11 @@ export default function AgeInformation(props) {
         const sortedLabels = ageOrder;
         const sortedData = sortedLabels.map(age => data[age] || 0);
         // Chart rendering logic
-        const ctx = document.getElementById('ageChart').getContext('2d');
+        const ctx = document.getElementById('ageChart');
+        if (ctx === null) {
+          console.error('Cannot find element with id "ageChart".');
+          return;
+        }
         const myBarChart = new Chart(ctx, {
           type: 'bar',
           data: {
@@ -30,20 +34,20 @@ export default function AgeInformation(props) {
               label: '연령대별 고객 수',
               data: sortedData,
               backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                '#67B7DC',
+                '#6794DC',
+                '#6771DC',
+                '#8067DC',
+                '#A367DC',
+                '#C767DC'
               ],
               borderColor: [
-                'rgba(255, 99, 132, 1)',
                 'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
                 'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                'rgba(153, 102, 255, 1)',
+                'rgba(153, 102, 255, 1)'
               ],
               borderWidth: 1
             }]
@@ -60,15 +64,15 @@ export default function AgeInformation(props) {
             }
           }
         });
-
+    
         return () => {
           myBarChart.destroy();
-        };
+        };  
       });
   }, []);
 
   return (
-      <Card mb={{ base: "0px", "2xl": "20px" }} {...rest}>
+      <Card mb={{ base: "0px", "2xl": "20px" }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} {...rest}>
         <canvas id="ageChart" width="300" height="300"></canvas>
       </Card>
   );
