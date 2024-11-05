@@ -56,7 +56,6 @@ Hwasoo-Jeon"><br /><sub><b>전화수</b></sub></a><br /></td>
 <div>
 <img alt="Java" src ="https://img.shields.io/badge/Java-0769AD.svg?&style=for-the-badge&logo=Java&logoColor=white"/>
 <img alt="SpringBoot" src ="https://img.shields.io/badge/SpringBoot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white"/>
-<img alt="Jpa" src ="https://img.shields.io/badge/hibernate-#59666C.svg?&style=for-the-badge&logo=hibernate&logoColor=white"/>
 </div>
 
 ### 🖱️ FrontEndReact
